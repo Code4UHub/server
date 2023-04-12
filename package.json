@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "node dist/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+    "start": "node dist/server.js",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\"",
+    "database": "concurrently"
   },
   "repository": {
     "type": "git",
@@ -20,13 +21,16 @@
   "homepage": "https://github.com/Code4UHub/server#readme",
   "dependencies": {
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.10.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
+    "@types/morgan": "^1.9.4",
     "@types/node": "^18.15.11",
+    "@types/pg": "^8.6.6",
     "concurrently": "^8.0.1",
-    "nodemon": "^2.0.22",
-    "typescript": "^5.0.4"
+    "nodemon": "^2.0.22"
   }
 }
