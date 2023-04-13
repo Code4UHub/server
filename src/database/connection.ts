@@ -29,7 +29,8 @@ export const createDb = async () => {
         },
         timestamps: false,
         freezeTableName: true
-      }
+      },
+      // logging: false
     });
 
     sequelize.addModels([Student]);
@@ -44,9 +45,9 @@ export const createDb = async () => {
 export const authenticateDb = async (client: any) => {
   try {
     await client.authenticate();
-    console.log("Connection has been established successfully.");
+    console.log("***Connection has been established successfully***");
     return true;
   } catch (error) {
-    console.error("Unable to connect to the database:", error);
+    console.error("***Unable to connect to the database:", error);
   }
 };

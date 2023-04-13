@@ -1,25 +1,32 @@
 import { Student } from "./../models/users";
 
+export const listStudents = async () => {
+    try {
+        const students = await Student.findAll({
+            raw: true
+        })
+        // console.log(students)
+        // console.log(students.map(el => el.get({ plain: true})))
 
-export const searchStudent = async () => {
+        // console.log("All users:", JSON.stringify(students));
+        return students
+    } catch (e) {
+        throw e
+    }
+}
+
+export const searchStudent = async (email: string, password: string) => {
     try {
     const students = await Student.findAll({
-        attributes: ['first_name']
+        // attributes: ['first_name', 'last_name', 'email'],
+        where: {
+            email: email,
+            password: password
+        }
     });
-    console.log(students.every(student => student instanceof Student)); // true
-    console.log("All users:", JSON.stringify(students, null, 2));
+    return students[0].dataValues
     } catch (e) {
         // throw new Error("MY ERROR")
         throw e
     }
 }
-
-// export const searchStudent = async () => {
-// Student.findAll()
-//   .then(students => {
-//     console.log(students);
-//   })
-//   .catch(err => {
-//     console.error('Unable to fetch users:', err);
-//   });
-// }
