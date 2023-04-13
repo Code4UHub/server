@@ -1,17 +1,17 @@
-import { Dialect } from "sequelize";
-import { Sequelize, DataType } from "sequelize-typescript";
+import { Dialect } from 'sequelize'
+import { Sequelize, DataType } from 'sequelize-typescript'
 
-import { Student } from "./models/users";
-import dotenv from "dotenv";
-dotenv.config({ path: `${__dirname}/../../.env` });
+import { Student } from './models/users'
+import dotenv from 'dotenv'
+dotenv.config({ path: `${__dirname}/../../.env` })
 
 export const createDb = async () => {
   try {
-    const database: string = process.env.DB_NAME!;
-    const userName: string = process.env.DB_USER!;
-    const hostName: string = process.env.DB_HOST!;
-    const password: string = process.env.DB_PASS!;
-    const dialect: string = process.env.DB_LANG!;
+    const database: string = process.env.DB_NAME!
+    const userName: string = process.env.DB_USER!
+    const hostName: string = process.env.DB_HOST!
+    const password: string = process.env.DB_PASS!
+    const dialect: string = process.env.DB_LANG!
 
     const sequelize = new Sequelize(database, userName, password, {
       host: hostName,
@@ -21,7 +21,7 @@ export const createDb = async () => {
         max: 10,
         min: 0,
         acquire: 20000,
-        idle: 5000,
+        idle: 5000
       },
       define: {
         defaultScope: {
@@ -29,25 +29,24 @@ export const createDb = async () => {
         },
         timestamps: false,
         freezeTableName: true
-      },
+      }
       // logging: false
-    });
+    })
 
-    sequelize.addModels([Student]);
+    sequelize.addModels([Student])
 
-
-    return sequelize;
+    return sequelize
   } catch (e) {
-    throw e;
+    throw e
   }
-};
+}
 
-export const authenticateDb = async (client: any) => {
+export const authenticateDb = async (client: Sequelize) => {
   try {
-    await client.authenticate();
-    console.log("***Connection has been established successfully***");
-    return true;
+    await client.authenticate()
+    console.log('***Connection has been established successfully***')
+    return true
   } catch (error) {
-    console.error("***Unable to connect to the database:", error);
+    console.error('***Unable to connect to the database:', error)
   }
-};
+}

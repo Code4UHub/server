@@ -1,17 +1,18 @@
 // const pg = require('./connection')
-import { createDb, authenticateDb } from "./connection";
-import { searchStudent } from "./query/users";
-const { QueryTypes } = require('sequelize');
-import { Student } from "./models/users";
+import { createDb, authenticateDb } from './connection'
+import { listStudents, searchStudent } from './query/users'
 
 const test = async () => {
-  const sequelize = await createDb();
-  const validConnection = await authenticateDb(sequelize);
+  const sequelize = await createDb()
+  const validConnection = await authenticateDb(sequelize)
   if (validConnection) {
-    console.log("Connected");
-    await searchStudent()
-    sequelize.close();
+    // console.log("Connected");
+    // const res = await searchStudent('a00000001@tec.com','Abc123456')
+    const res = await listStudents()
+    // console.log(res)
+    // await searchStudent()
+    sequelize.close()
   }
-};
+}
 
 test()
