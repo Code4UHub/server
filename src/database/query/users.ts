@@ -1,4 +1,5 @@
 import { Student } from './../models/users'
+import { StudentType } from '../../types/user.type'
 
 export const selectStudents = async () => {
   try {
