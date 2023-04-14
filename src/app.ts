@@ -1,17 +1,17 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from 'express'
 import morgan from 'morgan'
 
-const app: Express = express();
+const app: Express = express()
 
 // const tourRouter = require('./routes/tourRoutes');
-import  { router as userRouter }    from './routes/userRoutes';
+import { router as userRouter } from './routes/userRoutes'
 
 // 1) MIDDLEWARE
 if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+  app.use(morgan('dev'))
 }
 
-app.use(express.json());
+app.use(express.json())
 
 // app.use((req, res, next) => {
 //   console.log('Hello from the midleware 👋');
@@ -28,10 +28,8 @@ app.use(express.json());
 // 3) ROUTES
 // app.use('/api/v1/tours', tourRouter);
 // const url: string = '/api/v1'
-const url: string = ''
+const url = ''
 
-app.use(`${url}/user`, userRouter);
+app.use(`${url}/user`, userRouter)
 
-
-
-module.exports = app;
+export default app

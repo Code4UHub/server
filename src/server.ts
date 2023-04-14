@@ -1,15 +1,15 @@
-import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
+import dotenv from 'dotenv'
+import { createDb } from './database/connection'
+import app from './app'
 
-dotenv.config();
+dotenv.config()
 
-const app: Express = require('./app');
-const port = process.env.PORT;
+// const app = TemplateApp
 
-// app.get("/", (req: Request, res: Response) => {
-//   res.send("Express + TypeScript Server 😀");
-// });
+// const sequelize = createDb()
+createDb()
+const port = process.env.PORT
 
 app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
-});
+  console.log(`⚡️[server]: Server is running at http://localhost:${port}`)
+})
