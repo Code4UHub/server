@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express'
+import express, { Express } from 'express'
 import morgan from 'morgan'
 
 const app: Express = express()
@@ -28,8 +28,8 @@ app.use(express.json())
 // 3) ROUTES
 // app.use('/api/v1/tours', tourRouter);
 // const url: string = '/api/v1'
-const url: string = ''
+const url = ''
 
 app.use(`${url}/user`, userRouter)
 
-module.exports = app
+export default app

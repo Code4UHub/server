@@ -7,10 +7,11 @@ const test = async () => {
   const validConnection = await authenticateDb(sequelize)
   if (validConnection) {
     // console.log("Connected");
-    // const res = await searchStudent('a00000001@tec.com','Abc123456')
-    const res = await listStudents()
+    const res = await searchStudent('a00000001@tec.com', 'Abc123456')
+    // const res = await listStudents()
     // console.log(res)
     // await searchStudent()
+    console.log(res)
     sequelize.close()
   }
 }

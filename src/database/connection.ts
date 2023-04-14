@@ -29,8 +29,8 @@ export const createDb = async () => {
         },
         timestamps: false,
         freezeTableName: true
-      }
-      // logging: false
+      },
+      logging: false
     })
 
     sequelize.addModels([Student])
