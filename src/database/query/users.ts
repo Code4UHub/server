@@ -1,6 +1,7 @@
 import { Student } from './../models/users'
+import { StudentType } from '../../types/user.type'
 
-export const listStudents = async () => {
+export const selectStudents = async () => {
   try {
     const students = await Student.findAll({
       raw: true
@@ -16,24 +17,42 @@ export const listStudents = async () => {
   }
 }
 
-export const searchStudent = async (email: string, password: string) => {
+export const selectStudent = async (email: string, password?: string) => {
   try {
-    const student = await Student.findAll({
-      // attributes: ['first_name', 'last_name', 'email'],
-      raw: true,
-      where: {
-        email: email,
-        password: password
-      }
-    })
-    if (student.length < 1) {
-      return 'Account does not exist'
+    if (password) {
+      const student = await Student.findAll({
+        // attributes: ['first_name', 'last_name', 'email'],
+        raw: true,
+        where: {
+          email: email,
+          password: password
+        }
+      })
+      return student
     } else {
-      //   return JSON.stringify(student)
+      const student = await Student.findAll({ raw: true, attributes: ['email'], where: { email: email } })
       return student
     }
   } catch (e) {
     // throw new Error("MY ERROR")
     throw e
+  }
+}
+
+export const createUser = async (student: StudentType) => {
+  try {
+    const user = await selectStudent(student.email)
+    const userExists = user.length > 0 ? true : false
+    console.log(userExists)
+    if (!userExists) {
+      const res = await Student.create(student)
+      console.log('User succcesfully created')
+      return res
+    } else {
+      return 'User already exists'
+    }
+  } catch (e) {
+    // throw e
+    return 'Couldnt create user'
   }
 }
