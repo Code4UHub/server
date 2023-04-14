@@ -1,13 +1,8 @@
-import express, { Express, Router } from "express";
+import express, { Express, Router } from 'express'
 import * as userController from './../controllers/userController'
 
-export const router: Router = Router();
+export const router: Router = Router()
 
-router
-  .route('/')
-  .get(userController.getAllUsers)
-//   .post(userController.createUser);
+router.route('/').get(userController.getUsers).post(userController.postUser)
 
-router
-  .route('/:email&:pwd')
-  .get(userController.getUser)
+router.route('/:email&:pwd').get(userController.getUser)
