@@ -1,5 +1,5 @@
-import { Student } from './../models/users'
-import { StudentType } from '../../types/user.type'
+import { Student } from '../models/student'
+import { StudentType } from '../../types/student.type'
 
 export const selectStudents = async () => {
   try {
@@ -10,7 +10,7 @@ export const selectStudents = async () => {
     // console.log(students)
     // console.log(students.map(el => el.get({ plain: true})))
 
-    // console.log("All users:", JSON.stringify(students));
+    // console.log("All students:", JSON.stringify(students));
     return students
   } catch (e) {
     throw e
@@ -39,20 +39,20 @@ export const selectStudent = async (email: string, password?: string) => {
   }
 }
 
-export const createUser = async (student: StudentType) => {
+export const createStudent = async (student: StudentType) => {
   try {
-    const user = await selectStudent(student.email)
-    const userExists = user.length > 0 ? true : false
-    console.log(userExists)
-    if (!userExists) {
+    const res = await selectStudent(student.email)
+    const studentExists = res.length > 0 ? true : false
+    console.log(studentExists)
+    if (!studentExists) {
       const res = await Student.create(student)
-      console.log('User succcesfully created')
+      console.log('Student succcesfully created')
       return res
     } else {
-      return 'User already exists'
+      return 'Student already exists'
     }
   } catch (e) {
     // throw e
-    return 'Couldnt create user'
+    return 'Couldnt create Student'
   }
 }
