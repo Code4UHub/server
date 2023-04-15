@@ -3,8 +3,8 @@ import morgan from 'morgan'
 
 const app: Express = express()
 
-// const tourRouter = require('./routes/tourRoutes');
-import { router as userRouter } from './routes/userRoutes'
+import { router as studentRouter } from './routes/studentRoute'
+import { router as teacherRouter } from './routes/teacherRoute'
 
 // 1) MIDDLEWARE
 if (process.env.NODE_ENV === 'development') {
@@ -28,8 +28,9 @@ app.use(express.json())
 // 3) ROUTES
 // app.use('/api/v1/tours', tourRouter);
 // const url: string = '/api/v1'
-const url = ''
+const url = '/v1'
 
-app.use(`${url}/user`, userRouter)
+app.use(`${url}`, studentRouter)
+app.use(`${url}`, teacherRouter)
 
 export default app

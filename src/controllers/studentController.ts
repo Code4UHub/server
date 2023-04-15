@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { createUser, selectStudent, selectStudents } from '../database/query/users'
-import { StudentType } from '../types/user.type'
+import { createStudent, selectStudent, selectStudents } from '../database/query/student'
+import { StudentType } from '../types/student.type'
 
-export const getUsers = async (req: Request, res: Response) => {
+export const getStudents = async (req: Request, res: Response) => {
   // res.status(200).send('It works!')
   try {
     const query = await selectStudents()
@@ -15,7 +15,7 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 }
 
-export const getUser = async (req: Request, res: Response) => {
+export const getStudent = async (req: Request, res: Response) => {
   try {
     const email: string = req.params.email.replace('email=', '')
     const password: string = req.params.pwd.replace('password=', '')
@@ -39,7 +39,7 @@ export const getUser = async (req: Request, res: Response) => {
       } else {
         res.status(404).json({
           status: 'failed',
-          data: 'User not found'
+          data: 'Student not found'
         })
       }
     }
@@ -51,19 +51,19 @@ export const getUser = async (req: Request, res: Response) => {
   }
 }
 
-export const postUser = async (req: Request, res: Response) => {
+export const postStudent = async (req: Request, res: Response) => {
   try {
     const student: StudentType = req.body
 
     console.log(student)
-    const query = await createUser(student)
+    const query = await createStudent(student)
     console.log(query)
     // if (query)
     res.status(200).json({
       status: 'success',
       data: query
     })
-    // res.status(202).send('Created User')
+    // res.status(202).send('Created student')
   } catch (e) {
     res.status(404).json({
       status: 'failed',
@@ -71,6 +71,3 @@ export const postUser = async (req: Request, res: Response) => {
     })
   }
 }
-// user/email=angel&pwd=123
-
-//   export default getAllUsers;

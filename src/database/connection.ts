@@ -1,7 +1,8 @@
 import { Dialect } from 'sequelize'
-import { Sequelize, DataType } from 'sequelize-typescript'
+import { Sequelize } from 'sequelize-typescript'
 
-import { Student } from './models/users'
+import { Student } from './models/student'
+import { Teacher } from './models/teacher'
 import dotenv from 'dotenv'
 dotenv.config({ path: `${__dirname}/../../.env` })
 
@@ -33,7 +34,7 @@ export const createDb = async () => {
       logging: false
     })
 
-    sequelize.addModels([Student])
+    sequelize.addModels([Student, Teacher])
 
     return sequelize
   } catch (e) {
