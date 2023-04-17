@@ -27,7 +27,13 @@ export const getStudent = async (req: Request, res: Response) => {
     if (query.length > 0) {
       res.status(200).json({
         status: 'success',
-        data: query[0]
+        data: {
+          id: query[0].student_id,
+          role: 'student',
+          first_name: query[0].first_name,
+          last_name: query[0].last_name,
+          email: query[0].email
+        }
       })
     } else {
       const exists = await selectStudent(email)
@@ -39,7 +45,7 @@ export const getStudent = async (req: Request, res: Response) => {
       } else {
         res.status(404).json({
           status: 'failed',
-          data: 'Student not found'
+          data: 'Teacher not found'
         })
       }
     }

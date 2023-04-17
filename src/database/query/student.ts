@@ -21,7 +21,7 @@ export const selectStudent = async (email: string, password?: string) => {
   try {
     if (password) {
       const student = await Student.findAll({
-        // attributes: ['first_name', 'last_name', 'email'],
+        attributes: ['student_id', 'first_name', 'last_name', 'email'],
         raw: true,
         where: {
           email: email,

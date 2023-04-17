@@ -4,7 +4,7 @@ export const selectTeacher = async (email: string, password?: string) => {
   try {
     if (password) {
       const teacher = await Teacher.findAll({
-        // attributes: ['first_name', 'last_name', 'email'],
+        attributes: ['teacher_id', 'first_name', 'last_name', 'email'],
         raw: true,
         where: {
           email: email,
