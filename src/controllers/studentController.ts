@@ -60,19 +60,38 @@ export const getStudent = async (req: Request, res: Response) => {
 export const postStudent = async (req: Request, res: Response) => {
   try {
     const student: StudentType = req.body
+    const emailRegex = /^a\d{8}@tec\.mx$/
 
-    console.log(student)
+    if (!emailRegex.test(student.email)) {
+      res.status(400).json({
+        status: 'failed',
+        data: 'Invalid'
+      })
+    }
+
     const query = await createStudent(student)
     console.log(query)
-    // if (query)
-    res.status(200).json({
-      status: 'success',
-      data: query
-    })
+    if (typeof query == 'object') {
+      res.status(200).json({
+        status: 'success',
+        data: {
+          id: query.student_id,
+          role: 'student',
+          first_name: query.first_name,
+          last_name: query.last_name,
+          email: query.email
+        }
+      })
+    } else {
+      res.status(409).json({
+        status: 'failed',
+        data: 'Student already exists'
+      })
+    }
     // res.status(202).send('Created student')
-  } catch (e) {
+  } catch (e: any) {
     res.status(404).json({
-      status: 'failed',
+      status: 'error',
       data: e
     })
   }
