@@ -1,4 +1,5 @@
 import express, { Express } from 'express'
+import cors from 'cors'
 import morgan from 'morgan'
 
 const app: Express = express()
@@ -12,6 +13,12 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
 
+const allowedOrigins = ['*']
+const options: cors.CorsOptions = {
+  origin: allowedOrigins
+}
+
+app.use(cors(options))
 app.use(express.json())
 
 // app.use((req, res, next) => {

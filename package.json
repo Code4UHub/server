@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/Code4UHub/server#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "morgan": "^1.10.0",
@@ -31,6 +32,7 @@
     "sequelize-typescript": "^2.1.5"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.15.11",
