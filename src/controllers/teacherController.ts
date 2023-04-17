@@ -26,7 +26,13 @@ export const getTeacher = async (req: Request, res: Response) => {
     if (query.length > 0) {
       res.status(200).json({
         status: 'success',
-        data: query[0]
+        data: {
+          id: query[0].teacher_id,
+          role: 'teacher',
+          first_name: query[0].first_name,
+          last_name: query[0].last_name,
+          email: query[0].email
+        }
       })
     } else {
       const exists = await selectTeacher(email)
