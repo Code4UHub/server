@@ -37,7 +37,7 @@ export const createStudent = async (student: StudentType): Promise<SelectedStude
     const res = await selectStudent(student.email)
     const studentExists = res.length > 0 ? true : false
     if (!studentExists) {
-      const res = await Student.create(student, { raw: true })
+      const res = await Student.create(student)
       const user = res.get({ plain: true })
       console.log('Student succcesfully created')
       return user
@@ -47,6 +47,6 @@ export const createStudent = async (student: StudentType): Promise<SelectedStude
   } catch (e) {
     // throw e
     console.log(e)
-    return 'Couldnt create Student'
+    return 'Couldnt create student'
   }
 }
