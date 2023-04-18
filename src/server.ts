@@ -1,10 +1,10 @@
 import dotenv from 'dotenv'
 import { createDb } from './database/connection'
-import app from './app'
+import getApp from './app'
 
 dotenv.config()
 
-// const app = TemplateApp
+const app = getApp()
 
 // const sequelize = createDb()
 createDb()
