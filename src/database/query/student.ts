@@ -32,7 +32,7 @@ export const selectStudent = async (email: string, password?: string): Promise<S
   }
 }
 
-export const createStudent = async (student: StudentType): Promise<SelectedStudentType[] | string> => {
+export const createStudent = async (student: StudentType): Promise<SelectedStudentType | string> => {
   try {
     const res = await selectStudent(student.email)
     const studentExists = res.length > 0 ? true : false
