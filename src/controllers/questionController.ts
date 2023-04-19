@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { selectQuestions, selectQuestion, selectQuestionsByAssignment } from '../database/query/question'
+import { selectQuestions, selectQuestion } from '../database/query/question'
 
 export const getQuestions = async (req: Request, res: Response) => {
   // res.status(200).send('It works!')
@@ -14,22 +14,22 @@ export const getQuestions = async (req: Request, res: Response) => {
   }
 }
 
-export const getQuestionsByAssignment = async (req: Request, res: Response) => {
-  // res.status(200).send('It works!')
-  try {
-    console.log('----------')
-    const assignment_id: string = req.params.assignment.replace('assignment=', '')
-    console.log(assignment_id)
-    console.log('----------')
-    const query = await selectQuestionsByAssignment(assignment_id)
-    res.status(200).json({
-      status: 'success',
-      data: query
-    })
-  } catch (e) {
-    throw e
-  }
-}
+// export const getQuestionsByAssignment = async (req: Request, res: Response) => {
+//   // res.status(200).send('It works!')
+//   try {
+//     console.log('----------')
+//     const assignment_id: string = req.params.assignment.replace('assignment=', '')
+//     console.log(assignment_id)
+//     console.log('----------')
+//     const query = await selectQuestionsByAssignment(assignment_id)
+//     res.status(200).json({
+//       status: 'success',
+//       data: query
+//     })
+//   } catch (e) {
+//     throw e
+//   }
+// }
 
 export const getQuestion = async (req: Request, res: Response) => {
   try {

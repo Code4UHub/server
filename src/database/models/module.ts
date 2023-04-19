@@ -17,9 +17,9 @@ export class Module extends Model {
 
   @ForeignKey(() => Subject)
   @Column({
-    type: DataType.INTEGER
+    type: DataType.STRING
   })
-  subject_id: number
+  subject_id: string
 
   @BelongsTo(() => Subject)
   subject: Subject

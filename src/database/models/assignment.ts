@@ -1,7 +1,7 @@
 import { Table, Column, Model, DataType, BelongsTo, ForeignKey } from 'sequelize-typescript'
 import { Module } from './module'
 
-@Table({ tableName: 'open_question' })
+@Table({ tableName: 'assignment' })
 export class Assignment extends Model {
   @Column({
     type: DataType.INTEGER,

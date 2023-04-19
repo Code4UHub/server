@@ -12,24 +12,11 @@ export const selectQuestions = async () => {
       raw: true
     })
 
-    return [openQuestions, closeQuestions]
+    return {
+      open_questions: openQuestions,
+      close_questions: closeQuestions
+    }
   } catch (e) {
-    throw e
-  }
-}
-
-export const selectQuestionsByAssignment = async (assignment_id: string) => {
-  try {
-    const questions = await OpenQuestion.findAll({
-      attributes: ['open_question_id', 'open_question', 'assignment_id'],
-      raw: true,
-      where: {
-        assignment_id: assignment_id
-      }
-    })
-    return questions
-  } catch (e) {
-    // throw new Error("MY ERROR")
     throw e
   }
 }
