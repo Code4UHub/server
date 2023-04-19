@@ -5,8 +5,10 @@ import morgan from 'morgan'
 import { router as studentRouter } from './routes/studentRoute'
 import { router as teacherRouter } from './routes/teacherRoute'
 import { router as subjectRouter } from './routes/subjectRoute'
+import { createDb } from './database/connection'
 
 const getApp = () => {
+  createDb()
   const app: Application = express()
 
   // 1) MIDDLEWARE
