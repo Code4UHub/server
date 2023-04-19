@@ -1,23 +1,16 @@
 import { Student } from '../models/student'
-import { StudentType } from '../../types/student.type'
+import { SelectedStudentType, StudentType } from '../../types/student.type'
 
-export const selectStudents = async () => {
+export const selectStudents = async (): Promise<SelectedStudentType[]> => {
   try {
-    const students = await Student.findAll({
-      raw: true
-    })
-
-    // console.log(students)
-    // console.log(students.map(el => el.get({ plain: true})))
-
-    // console.log("All students:", JSON.stringify(students));
+    const students = await Student.findAll({})
     return students
-  } catch (e) {
+  } catch (e: any) {
     throw e
   }
 }
 
-export const selectStudent = async (email: string, password?: string) => {
+export const selectStudent = async (email: string, password?: string): Promise<SelectedStudentType[]> => {
   try {
     if (password) {
       const student = await Student.findAll({
@@ -33,26 +26,27 @@ export const selectStudent = async (email: string, password?: string) => {
       const student = await Student.findAll({ raw: true, attributes: ['email'], where: { email: email } })
       return student
     }
-  } catch (e) {
+  } catch (e: any) {
     // throw new Error("MY ERROR")
     throw e
   }
 }
 
-export const createStudent = async (student: StudentType) => {
+export const createStudent = async (student: StudentType): Promise<SelectedStudentType | string> => {
   try {
     const res = await selectStudent(student.email)
     const studentExists = res.length > 0 ? true : false
-    console.log(studentExists)
     if (!studentExists) {
       const res = await Student.create(student)
+      const user = res.get({ plain: true })
       console.log('Student succcesfully created')
-      return res
+      return user
     } else {
       return 'Student already exists'
     }
   } catch (e) {
     // throw e
-    return 'Couldnt create Student'
+    console.log(e)
+    return 'Couldnt create student'
   }
 }

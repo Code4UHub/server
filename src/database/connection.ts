@@ -38,7 +38,10 @@ export const createDb = async () => {
         timestamps: false,
         freezeTableName: true
       },
-      logging: false
+      logging: false,
+      query: {
+        raw: true
+      }
     })
 
     sequelize.addModels([Student, Teacher, Subject, Module, Assignment, OpenQuestion, CloseQuestion])

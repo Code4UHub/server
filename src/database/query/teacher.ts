@@ -1,4 +1,14 @@
+import { SelectedTeacherType, TeacherType } from '../../types/teacher.type'
 import { Teacher } from '../models/teacher'
+
+export const selectTeachers = async () => {
+  try {
+    const teachers = await Teacher.findAll({})
+    return teachers
+  } catch (e) {
+    throw e
+  }
+}
 
 export const selectTeacher = async (email: string, password?: string) => {
   try {
@@ -22,18 +32,21 @@ export const selectTeacher = async (email: string, password?: string) => {
   }
 }
 
-export const selectTeachers = async () => {
+export const createTeacher = async (teacher: TeacherType): Promise<SelectedTeacherType | string> => {
   try {
-    const teachers = await Teacher.findAll({
-      raw: true
-    })
-
-    // console.log(teachers)
-    // console.log(teachers.map(el => el.get({ plain: true})))
-
-    // console.log("All teachers:", JSON.stringify(teachers));
-    return teachers
+    const res = await selectTeacher(teacher.email)
+    const studentExists = res.length > 0 ? true : false
+    if (!studentExists) {
+      const res = await Teacher.create(teacher)
+      const user = res.get({ plain: true })
+      console.log('Teacher succcesfully created')
+      return user
+    } else {
+      return 'Teacher already exists'
+    }
   } catch (e) {
-    throw e
+    // throw e
+    console.log(e)
+    return 'Couldnt create teacher'
   }
 }
