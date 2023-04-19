@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { selectTeacher, selectTeachers } from '../database/query/teacher'
+import { createTeacher, selectTeacher, selectTeachers } from '../database/query/teacher'
 import { TeacherType } from '../types/teacher.type'
 
 export const getTeachers = async (req: Request, res: Response) => {
@@ -56,23 +56,42 @@ export const getTeacher = async (req: Request, res: Response) => {
   }
 }
 
-// export const postTeacher = async (req: Request, res: Response) => {
-//   try {
-//     const student: TeacherType = req.body
+export const postTeacher = async (req: Request, res: Response) => {
+  try {
+    const teacher: TeacherType = req.body
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@tec\.mx$/
 
-//     console.log(student)
-//     const query = await createTeacher(student)
-//     console.log(query)
-//     // if (query)
-//     res.status(200).json({
-//       status: 'success',
-//       data: query
-//     })
-//     // res.status(202).send('Created student')
-//   } catch (e) {
-//     res.status(404).json({
-//       status: 'failed',
-//       data: e
-//     })
-//   }
-// }
+    if (!emailRegex.test(teacher.email)) {
+      res.status(400).json({
+        status: 'failed',
+        data: 'Invalid email'
+      })
+    }
+
+    const query = await createTeacher(teacher)
+    console.log(query)
+    if (typeof query == 'object') {
+      res.status(200).json({
+        status: 'success',
+        data: {
+          id: query.teacher_id,
+          role: 'teacher',
+          first_name: query.first_name,
+          last_name: query.last_name,
+          email: query.email
+        }
+      })
+    } else {
+      res.status(409).json({
+        status: 'failed',
+        data: 'Teacher already exists'
+      })
+    }
+    // res.status(202).send('Created student')
+  } catch (e) {
+    res.status(404).json({
+      status: 'failed',
+      data: e
+    })
+  }
+}
