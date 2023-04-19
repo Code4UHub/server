@@ -4,8 +4,13 @@ import { Sequelize } from 'sequelize-typescript'
 import { Student } from './models/student'
 import { Teacher } from './models/teacher'
 import { Subject } from './models/subject'
+import { Assignment } from './models/assignment'
+import { Module } from './models/module'
+import { OpenQuestion } from './models/open.question'
+import { CloseQuestion } from './models/close.question'
 
 import dotenv from 'dotenv'
+
 dotenv.config({ path: `${__dirname}/../../.env` })
 
 export const createDb = async () => {
@@ -39,7 +44,7 @@ export const createDb = async () => {
       }
     })
 
-    sequelize.addModels([Student, Teacher, Subject])
+    sequelize.addModels([Student, Teacher, Subject, Module, Assignment, OpenQuestion, CloseQuestion])
 
     return sequelize
   } catch (e) {
