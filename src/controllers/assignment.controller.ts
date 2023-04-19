@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { selectAssignments, selectQuestionsByAssignment } from '../database/query/assignment'
+import { selectAssignments, selectQuestionsByAssignment } from '../database/query/assignment.query'
 
 export const getAssignments = async (req: Request, res: Response) => {
   // res.status(200).send('It works!')

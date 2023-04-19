@@ -1,5 +1,5 @@
 import { SelectedTeacherType, TeacherType } from '../../types/teacher.type'
-import { Teacher } from '../models/teacher'
+import { Teacher } from '../models/teacher.model'
 
 export const selectTeachers = async () => {
   try {

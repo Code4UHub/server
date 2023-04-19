@@ -1,13 +1,13 @@
 import { Dialect } from 'sequelize'
 import { Sequelize } from 'sequelize-typescript'
 
-import { Student } from './models/student'
-import { Teacher } from './models/teacher'
-import { Subject } from './models/subject'
-import { Assignment } from './models/assignment'
-import { Module } from './models/module'
-import { OpenQuestion } from './models/open.question'
-import { CloseQuestion } from './models/close.question'
+import { Student } from './models/student.model'
+import { Teacher } from './models/teacher.model'
+import { Subject } from './models/subject.model'
+import { Assignment } from './models/assignment.model'
+import { Module } from './models/module.model'
+import { OpenQuestion } from './models/openQuestion.model'
+import { CloseQuestion } from './models/closeQuestion.model'
 
 import dotenv from 'dotenv'
 

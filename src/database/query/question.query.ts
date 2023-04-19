@@ -1,6 +1,6 @@
-import { OpenQuestion } from '../models/open.question'
-import { CloseQuestion } from '../models/close.question'
-import { OpenQuestionType } from '../../types/open.question'
+import { OpenQuestion } from '../models/openQuestion.model'
+import { CloseQuestion } from '../models/closeQuestion.model'
+import { OpenQuestionType } from '../../types/openQuestion.type'
 
 export const selectQuestions = async () => {
   try {

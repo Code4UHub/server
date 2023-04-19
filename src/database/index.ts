@@ -1,10 +1,10 @@
 // const pg = require('./connection')
 
-import { getTeachers } from '../controllers/teacherController'
+import { getTeachers } from '../controllers/teacher.controller'
 import { StudentType } from '../types/student.type'
 import { createDb, authenticateDb } from './connection'
-import { createStudent, selectStudent, selectStudents } from './query/student'
-import { selectTeacher, selectTeachers } from './query/teacher'
+import { createStudent, selectStudent, selectStudents } from './query/student.query'
+import { selectTeacher, selectTeachers } from './query/teacher.query'
 
 const test = async () => {
   const sequelize = await createDb()
