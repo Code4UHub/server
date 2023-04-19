@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { createStudent, selectStudent, selectStudents } from '../database/query/student'
+import { createStudent, selectStudent, selectStudents } from '../database/query/student.query'
 import { StudentType } from '../types/student.type'
 
 export const getStudents = async (req: Request, res: Response) => {
@@ -65,7 +65,7 @@ export const postStudent = async (req: Request, res: Response) => {
     if (!emailRegex.test(student.email)) {
       res.status(400).json({
         status: 'failed',
-        data: 'Invalid'
+        data: 'Invalid email'
       })
     }
 

@@ -1,20 +1,25 @@
 import { Dialect } from 'sequelize'
 import { Sequelize } from 'sequelize-typescript'
 
-import { Student } from './models/student'
-import { Teacher } from './models/teacher'
-import { Subject } from './models/subject'
+import { Student } from './models/student.model'
+import { Teacher } from './models/teacher.model'
+import { Subject } from './models/subject.model'
+import { Assignment } from './models/assignment.model'
+import { Module } from './models/module.model'
+import { OpenQuestion } from './models/openQuestion.model'
+import { CloseQuestion } from './models/closeQuestion.model'
 
 import dotenv from 'dotenv'
+
 dotenv.config({ path: `${__dirname}/../../.env` })
 
 export const createDb = async () => {
   try {
-    const database: string = process.env.DB_NAME!
-    const userName: string = process.env.DB_USER!
-    const hostName: string = process.env.DB_HOST!
-    const password: string = process.env.DB_PASS!
-    const dialect: string = process.env.DB_LANG!
+    const database = process.env.DB_NAME as string
+    const userName = process.env.DB_USER as string
+    const hostName = process.env.DB_HOST as string
+    const password = process.env.DB_PASS as string
+    const dialect = process.env.DB_LANG as string
 
     const sequelize = new Sequelize(database, userName, password, {
       host: hostName,
@@ -39,7 +44,7 @@ export const createDb = async () => {
       }
     })
 
-    sequelize.addModels([Student, Teacher, Subject])
+    sequelize.addModels([Student, Teacher, Subject, Module, Assignment, OpenQuestion, CloseQuestion])
 
     return sequelize
   } catch (e) {

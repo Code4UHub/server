@@ -1,10 +1,8 @@
 import dotenv from 'dotenv'
 // import { createDb } from './database/connection'
-import getApp from './app'
+import app from './app'
 
 dotenv.config()
-
-const app = getApp()
 
 // const sequelize = createDb()
 const port = process.env.PORT
