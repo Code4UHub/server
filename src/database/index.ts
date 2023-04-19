@@ -1,9 +1,7 @@
 // const pg = require('./connection')
 
-import { getTeachers } from '../controllers/teacherController'
 import { createDb, authenticateDb } from './connection'
-import { selectStudent } from './query/student'
-import { selectTeacher, selectTeachers } from './query/teacher'
+import { selectModulesBySubject } from './query/module'
 
 const test = async () => {
   const sequelize = await createDb()
@@ -11,7 +9,7 @@ const test = async () => {
   if (validConnection) {
     // console.log("Connected");
 
-    // const res = await listStudents()
+    const res = await selectModulesBySubject('CS10101')
     // console.log(res)
     // const email = 'a00000001@tec.com'
     // const pwd = 'Abc123456'
@@ -34,8 +32,6 @@ const test = async () => {
     //     console.log('Luego lo arreglo')
     //   }
     // }
-
-    const res = await selectTeachers()
 
     console.log(res)
     sequelize.close()

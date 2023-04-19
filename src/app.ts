@@ -7,6 +7,9 @@ const app: Express = express()
 import { router as studentRouter } from './routes/studentRoute'
 import { router as teacherRouter } from './routes/teacherRoute'
 import { router as subjectRouter } from './routes/subjectRoute'
+import { router as questionRouter } from './routes/questionRoute'
+import { router as assignmentRouter } from './routes/assignmentRoute'
+import { router as moduleRouter } from './routes/moduleRoute'
 
 // 1) MIDDLEWARE
 if (process.env.NODE_ENV === 'development') {
@@ -41,5 +44,8 @@ const url = '/v1'
 app.use(`${url}`, studentRouter)
 app.use(`${url}`, teacherRouter)
 app.use(`${url}`, subjectRouter)
+app.use(`${url}`, questionRouter)
+app.use(`${url}`, assignmentRouter)
+app.use(`${url}`, moduleRouter)
 
 export default app
