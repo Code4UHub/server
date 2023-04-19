@@ -1,4 +1,4 @@
-import express, { Express, Router } from 'express'
+import { Router } from 'express'
 import * as teacherController from '../controllers/teacherController'
 
 export const router: Router = Router()

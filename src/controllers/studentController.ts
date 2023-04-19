@@ -65,7 +65,7 @@ export const postStudent = async (req: Request, res: Response) => {
     if (!emailRegex.test(student.email)) {
       res.status(400).json({
         status: 'failed',
-        data: 'Invalid'
+        data: 'Invalid email'
       })
     }
 
