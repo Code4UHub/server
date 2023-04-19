@@ -1,6 +1,6 @@
-import { Assignment } from '../models/assignment'
-import { OpenQuestion } from '../models/open.question'
-import { CloseQuestion } from '../models/close.question'
+import { Assignment } from '../models/assignment.model'
+import { OpenQuestion } from '../models/openQuestion.model'
+import { CloseQuestion } from '../models/closeQuestion.model'
 
 import { AssignmentType } from '../../types/assignment.type'
 

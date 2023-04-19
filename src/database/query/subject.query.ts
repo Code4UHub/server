@@ -1,4 +1,4 @@
-import { Subject } from '../models/subject'
+import { Subject } from '../models/subject.model'
 
 export const selectSubjects = async () => {
   try {

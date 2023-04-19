@@ -1,4 +1,4 @@
-import { Module } from '../models/module'
+import { Module } from '../models/module.model'
 
 export const selectModulesBySubject = async (subject_id: string) => {
   try {

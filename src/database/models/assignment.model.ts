@@ -1,5 +1,5 @@
 import { Table, Column, Model, DataType, BelongsTo, ForeignKey } from 'sequelize-typescript'
-import { Module } from './module'
+import { Module } from './module.model'
 
 @Table({ tableName: 'assignment' })
 export class Assignment extends Model {

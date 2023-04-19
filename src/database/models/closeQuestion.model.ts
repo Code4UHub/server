@@ -1,19 +1,19 @@
 import { Table, Column, Model, DataType, BelongsTo, ForeignKey } from 'sequelize-typescript'
-import { Assignment } from './assignment'
+import { Assignment } from './assignment.model'
 
-@Table({ tableName: 'open_question' })
-export class OpenQuestion extends Model {
+@Table({ tableName: 'close_question' })
+export class CloseQuestion extends Model {
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
     primaryKey: true,
     allowNull: false
   })
-  open_question_id: number
+  close_question_id: number
 
   @Column({
     type: DataType.JSONB
   })
-  open_question: object
+  close_question: object
 
   @ForeignKey(() => Assignment)
   @Column({

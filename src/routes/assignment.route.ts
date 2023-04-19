@@ -1,5 +1,5 @@
 import express, { Express, Router } from 'express'
-import * as assignmentController from '../controllers/assignmentController'
+import * as assignmentController from '../controllers/assignment.controller'
 
 export const router: Router = Router()
 

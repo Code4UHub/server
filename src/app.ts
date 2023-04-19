@@ -4,12 +4,12 @@ import morgan from 'morgan'
 
 const app: Express = express()
 
-import { router as studentRouter } from './routes/studentRoute'
-import { router as teacherRouter } from './routes/teacherRoute'
-import { router as subjectRouter } from './routes/subjectRoute'
-import { router as questionRouter } from './routes/questionRoute'
-import { router as assignmentRouter } from './routes/assignmentRoute'
-import { router as moduleRouter } from './routes/moduleRoute'
+import { router as studentRouter } from './routes/student.route'
+import { router as teacherRouter } from './routes/teacher.route'
+import { router as subjectRouter } from './routes/subject.route'
+import { router as questionRouter } from './routes/question.route'
+import { router as assignmentRouter } from './routes/assignment.route'
+import { router as moduleRouter } from './routes/module.route'
 
 // 1) MIDDLEWARE
 if (process.env.NODE_ENV === 'development') {

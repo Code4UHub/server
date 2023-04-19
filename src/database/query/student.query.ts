@@ -1,4 +1,4 @@
-import { Student } from '../models/student'
+import { Student } from '../models/student.model'
 import { SelectedStudentType, StudentType } from '../../types/student.type'
 
 export const selectStudents = async (): Promise<SelectedStudentType[]> => {

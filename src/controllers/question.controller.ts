@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { selectQuestions, selectQuestion } from '../database/query/question'
+import { selectQuestions, selectQuestion } from '../database/query/question.query'
 
 export const getQuestions = async (req: Request, res: Response) => {
   // res.status(200).send('It works!')

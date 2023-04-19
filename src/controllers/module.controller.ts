@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { selectModuleById, selectModulesBySubject } from '../database/query/module'
+import { selectModuleById, selectModulesBySubject } from '../database/query/module.query'
 
 export const getModulesBySubject = async (req: Request, res: Response) => {
   // res.status(200).send('It works!')
