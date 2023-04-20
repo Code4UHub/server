@@ -10,6 +10,7 @@ import { router as subjectRouter } from './routes/subject.route'
 import { router as questionRouter } from './routes/question.route'
 import { router as assignmentRouter } from './routes/assignment.route'
 import { router as moduleRouter } from './routes/module.route'
+import { router as classRouter } from './routes/class.route'
 
 // 1) MIDDLEWARE
 if (process.env.NODE_ENV === 'development') {
@@ -47,5 +48,6 @@ app.use(`${url}`, subjectRouter)
 app.use(`${url}`, questionRouter)
 app.use(`${url}`, assignmentRouter)
 app.use(`${url}`, moduleRouter)
+app.use(`${url}`, classRouter)
 
 export default app

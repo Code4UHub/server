@@ -8,6 +8,7 @@ import { Assignment } from './models/assignment.model'
 import { Module } from './models/module.model'
 import { OpenQuestion } from './models/openQuestion.model'
 import { CloseQuestion } from './models/closeQuestion.model'
+import { Class } from './models/class.model'
 
 import dotenv from 'dotenv'
 
@@ -44,7 +45,7 @@ export const createDb = async () => {
       }
     })
 
-    sequelize.addModels([Student, Teacher, Subject, Module, Assignment, OpenQuestion, CloseQuestion])
+    sequelize.addModels([Student, Teacher, Subject, Module, Assignment, OpenQuestion, CloseQuestion, Class])
 
     return sequelize
   } catch (e) {
