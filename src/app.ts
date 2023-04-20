@@ -2,6 +2,7 @@ import express, { Express } from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
 
+import { createDb } from './database/connection'
 import { router as studentRouter } from './routes/student.route'
 import { router as teacherRouter } from './routes/teacher.route'
 import { router as subjectRouter } from './routes/subject.route'
@@ -10,6 +11,7 @@ import { router as assignmentRouter } from './routes/assignment.route'
 import { router as moduleRouter } from './routes/module.route'
 import { router as classRouter } from './routes/class.route'
 
+export const db = createDb()
 const app: Express = express()
 
 // 1) MIDDLEWARE
