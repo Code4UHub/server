@@ -44,10 +44,11 @@ const url = '/v1'
 
 app.use(`${url}`, studentRouter)
 app.use(`${url}`, teacherRouter)
+
 app.use(`${url}`, subjectRouter)
-app.use(`${url}`, questionRouter)
 app.use(`${url}`, assignmentRouter)
 app.use(`${url}`, moduleRouter)
 app.use(`${url}`, classRouter)
+app.use(`${url}`, questionRouter)
 
 export default app
