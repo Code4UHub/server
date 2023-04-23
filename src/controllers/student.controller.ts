@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { createStudent, selectStudent, selectStudents } from '../database/query/student.query'
 import { StudentType } from '../types/student.type'
+import { generateToken } from '../utils/jwt-sign'
 
 export const getStudents = async (req: Request, res: Response) => {
   // res.status(200).send('It works!')
@@ -25,6 +26,8 @@ export const getStudent = async (req: Request, res: Response) => {
     console.log('query: ', query)
 
     if (query.length > 0) {
+      const token = generateToken(query[0].student_id)
+      res.set('Authorization', `Bearer ${token}`)
       res.status(200).json({
         status: 'success',
         data: {
@@ -45,14 +48,14 @@ export const getStudent = async (req: Request, res: Response) => {
       } else {
         res.status(404).json({
           status: 'failed',
-          data: 'Teacher not found'
+          data: 'Student not found'
         })
       }
     }
   } catch (e: any) {
     res.status(404).json({
       status: 'error',
-      data: e.message
+      data: e
     })
   }
 }
