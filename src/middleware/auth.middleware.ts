@@ -1,7 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
 import { verifyToken } from '../utils/jwt-verify'
 
-const excludedRoutes = ['GET /v1/student/login', 'GET /v1/teacher']
+const excludedRoutes = [
+  'GET /v1/student/login',
+  'GET /v1/teacher/login',
+  'POST /v1/student/register',
+  'POST /v1/teacher/register'
+]
 
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -14,8 +19,8 @@ const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
 
       if (!token || !verifyToken(token, user_id)) {
         return res.status(401).json({
-          status: 'error',
-          message: 'Unauthorized'
+          status: 'failed',
+          data: 'Unauthorized'
         })
       }
     }
