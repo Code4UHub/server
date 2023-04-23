@@ -18,18 +18,18 @@ export const getStudents = async (req: Request, res: Response) => {
 
 export const getStudent = async (req: Request, res: Response) => {
   try {
-    const email: string = req.params.email.replace('email=', '')
-    const password: string = req.params.pwd.replace('password=', '')
-    console.log(email)
-    console.log(password)
+    const email: string = req.query.email as string
+    const password: string = req.query.password as string
     const query = await selectStudent(email, password)
     console.log('query: ', query)
 
     if (query.length > 0) {
       const token = generateToken(query[0].student_id)
+      console.log(token)
       res.set('Authorization', `Bearer ${token}`)
       res.status(200).json({
         status: 'success',
+        token: token,
         data: {
           id: query[0].student_id,
           role: 'student',

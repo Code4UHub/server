@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { createTeacher, selectTeacher, selectTeachers } from '../database/query/teacher.query'
 import { TeacherType } from '../types/teacher.type'
+import { generateToken } from '../utils/jwt-sign'
 
 export const getTeachers = async (req: Request, res: Response) => {
   try {
@@ -16,16 +17,18 @@ export const getTeachers = async (req: Request, res: Response) => {
 
 export const getTeacher = async (req: Request, res: Response) => {
   try {
-    const email: string = req.params.email.replace('email=', '')
-    const password: string = req.params.pwd.replace('password=', '')
-    console.log(email)
-    console.log(password)
+    const email: string = req.query.email as string
+    const password: string = req.query.password as string
     const query = await selectTeacher(email, password)
     console.log('query: ', query)
 
     if (query.length > 0) {
+      const token = generateToken(query[0].teacher_id)
+      console.log(token)
+      res.set('Authorization', `Bearer ${token}`)
       res.status(200).json({
         status: 'success',
+        token: token,
         data: {
           id: query[0].teacher_id,
           role: 'teacher',
