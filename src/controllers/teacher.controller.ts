@@ -28,7 +28,6 @@ export const getTeacher = async (req: Request, res: Response) => {
       res.set('Authorization', `Bearer ${token}`)
       res.status(200).json({
         status: 'success',
-        token: token,
         data: {
           id: query[0].teacher_id,
           role: 'teacher',

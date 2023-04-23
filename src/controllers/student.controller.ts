@@ -29,7 +29,6 @@ export const getStudent = async (req: Request, res: Response) => {
       res.set('Authorization', `Bearer ${token}`)
       res.status(200).json({
         status: 'success',
-        token: token,
         data: {
           id: query[0].student_id,
           role: 'student',
