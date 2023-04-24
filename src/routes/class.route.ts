@@ -8,5 +8,4 @@ router.route('/class/:id').get(classController.getClass)
 router.route('/class/create').post(classController.postClass)
 
 router.route('/class/:class_id/register').post(classController.postRegisterStudent)
-
 router.route('/class/:class_id/students').get(classController.getStudentsByClass)

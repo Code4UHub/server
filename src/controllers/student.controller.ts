@@ -139,12 +139,7 @@ export const getClasses = async (req: Request, res: Response) => {
 export const getClasses = async (req: Request, res: Response) => {
   try {
     const student_id: string = req.query.id as string
-    console.log('HHEEEEEEERRREEEE')
-    console.log(req.query)
-    console.log('HHEEEEEEERRREEEE')
-
     const query = await selectClassesByStudent(student_id)
-    console.log('query: ', query)
 
     if (query.length > 0) {
       res.status(200).json({
