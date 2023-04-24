@@ -43,11 +43,13 @@ export const getStudent = async (req: Request, res: Response) => {
       if (exists.length > 0) {
         res.status(401).json({
           status: 'failed',
+          auth_token: '',
           data: 'Incorrect password'
         })
       } else {
         res.status(404).json({
           status: 'failed',
+          auth_token: '',
           data: 'Student not found'
         })
       }
@@ -55,6 +57,7 @@ export const getStudent = async (req: Request, res: Response) => {
   } catch (e: any) {
     res.status(404).json({
       status: 'error',
+      auth_token: '',
       data: e
     })
   }
@@ -69,6 +72,7 @@ export const postStudent = async (req: Request, res: Response) => {
     if (!emailRegex.test(student.email)) {
       res.status(400).json({
         status: 'failed',
+        auth_token: '',
         data: 'Invalid email'
       })
     }
@@ -93,6 +97,7 @@ export const postStudent = async (req: Request, res: Response) => {
     } else {
       res.status(409).json({
         status: 'failed',
+        auth_token: '',
         data: 'Student already exists'
       })
     }
@@ -100,6 +105,7 @@ export const postStudent = async (req: Request, res: Response) => {
   } catch (e: any) {
     res.status(404).json({
       status: 'error',
+      auth_token: '',
       data: e
     })
   }
