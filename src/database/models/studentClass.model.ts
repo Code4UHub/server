@@ -22,9 +22,7 @@ export class StudentClass extends Model {
 
   @Column({
     type: DataType.BOOLEAN,
-    allowNull: false,
-    defaultValue: true,
-    field: 'pending'
+    allowNull: false
   })
   pending: boolean
 
