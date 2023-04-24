@@ -26,9 +26,10 @@ export const getStudent = async (req: Request, res: Response) => {
     if (query.length > 0) {
       const token = generateToken(query[0].student_id)
       console.log(token)
-      res.set('Authorization', `Bearer ${token}`)
+      // res.set('Authorization', `Bearer ${token}`)
       res.status(200).json({
         status: 'success',
+        auth_token: token,
         data: {
           id: query[0].student_id,
           role: 'student',
@@ -76,10 +77,11 @@ export const postStudent = async (req: Request, res: Response) => {
     console.log(query)
     if (typeof query == 'object') {
       const token = generateToken(student_id)
-      res.set('Authorization', `Bearer ${token}`)
+      // res.set('Authorization', `Bearer ${token}`)
       console.log(token)
       res.status(200).json({
         status: 'success',
+        auth_token: token,
         data: {
           id: query.student_id,
           role: 'student',

@@ -25,9 +25,10 @@ export const getTeacher = async (req: Request, res: Response) => {
     if (query.length > 0) {
       const token = generateToken(query[0].teacher_id)
       console.log(token)
-      res.set('Authorization', `Bearer ${token}`)
+      // res.set('Authorization', `Bearer ${token}`)
       res.status(200).json({
         status: 'success',
+        auth_token: token,
         data: {
           id: query[0].teacher_id,
           role: 'teacher',
@@ -62,6 +63,7 @@ export const postTeacher = async (req: Request, res: Response) => {
   try {
     const teacher: TeacherType = req.body
     const emailRegex = /^[a-zA-Z0-9._%+-]+@tec\.mx$/
+    const teacher_id = teacher.teacher_id
 
     if (!emailRegex.test(teacher.email)) {
       res.status(400).json({
@@ -73,8 +75,11 @@ export const postTeacher = async (req: Request, res: Response) => {
     const query = await createTeacher(teacher)
     console.log(query)
     if (typeof query == 'object') {
+      const token = generateToken(teacher_id)
+      console.log(token)
       res.status(200).json({
         status: 'success',
+        auth_token: token,
         data: {
           id: query.teacher_id,
           role: 'teacher',
