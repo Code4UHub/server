@@ -63,6 +63,7 @@ export const postStudent = async (req: Request, res: Response) => {
   try {
     const student: StudentType = req.body
     const emailRegex = /^a\d{8}@tec\.mx$/
+    const student_id = student.student_id
 
     if (!emailRegex.test(student.email)) {
       res.status(400).json({
@@ -74,6 +75,9 @@ export const postStudent = async (req: Request, res: Response) => {
     const query = await createStudent(student)
     console.log(query)
     if (typeof query == 'object') {
+      const token = generateToken(student_id)
+      res.set('Authorization', `Bearer ${token}`)
+      console.log(token)
       res.status(200).json({
         status: 'success',
         data: {
