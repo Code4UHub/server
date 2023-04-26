@@ -135,27 +135,3 @@ export const getClasses = async (req: Request, res: Response) => {
     })
   }
 }
-
-export const getClasses = async (req: Request, res: Response) => {
-  try {
-    const student_id: string = req.query.id as string
-    const query = await selectClassesByStudent(student_id)
-
-    if (query.length > 0) {
-      res.status(200).json({
-        status: 'success',
-        data: query
-      })
-    } else {
-      res.status(404).json({
-        status: 'failed',
-        data: 'Classes not found for that user'
-      })
-    }
-  } catch (e: any) {
-    res.status(404).json({
-      status: 'error',
-      data: e
-    })
-  }
-}
