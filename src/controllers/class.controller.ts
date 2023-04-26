@@ -1,5 +1,12 @@
 import { Request, Response } from 'express'
-import { selectClasses, selectClass, createClass, registerStudentToClass } from '../database/query/class.query'
+import {
+  selectClasses,
+  selectClass,
+  createClass,
+  registerStudentToClass,
+  selectStudentsByClass
+} from '../database/query/class.query'
+import { selectSubject } from '../database/query/subject.query'
 import { ClassType } from '../types/class.type'
 import { Class } from '../database/models/class.model'
 import { StudentClass } from '../database/models/studentClass.model'
@@ -8,6 +15,7 @@ export const getClasses = async (req: Request, res: Response) => {
   // res.status(200).send('It works!')
   try {
     const query = await selectClasses()
+
     res.status(200).json({
       status: 'success',
       data: query
@@ -89,27 +97,26 @@ export const postRegisterStudent = async (req: Request, res: Response) => {
   }
 }
 
-// export const getClassesByStudent = async (req: Request, res: Response) => {
-//   try {
-//     const class_id: string = req.params.id as string
-//     const student_id:
-//     const query = await selectStudentsByClass(class_id)
+export const getStudentsByClass = async (req: Request, res: Response) => {
+  try {
+    const class_id: string = req.params.id as string
+    const query = await selectStudentsByClass(class_id)
 
-//     if (query.length > 0) {
-//       res.status(200).json({
-//         status: 'success',
-//         data: query
-//       })
-//     } else {
-//       res.status(404).json({
-//         status: 'failed',
-//         data: []
-//       })
-//     }
-//   } catch (e: any) {
-//     res.status(404).json({
-//       status: 'error',
-//       data: e.message
-//     })
-//   }
-// }
+    if (query.length > 0) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+    } else {
+      res.status(404).json({
+        status: 'failed',
+        data: []
+      })
+    }
+  } catch (e: any) {
+    res.status(404).json({
+      status: 'error',
+      data: e.message
+    })
+  }
+}

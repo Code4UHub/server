@@ -2,10 +2,17 @@ import { ClassType } from '../../types/class.type'
 import { StudentClassType } from '../../types/studentClass.type'
 import { Class } from '../models/class.model'
 import { StudentClass } from '../models/studentClass.model'
+import { Subject } from '../models/subject.model'
 
 export const selectClasses = async () => {
   try {
     const classes = await Class.findAll({
+      attributes: ['class_id'],
+      include: [
+        {
+          model: Subject
+        }
+      ],
       raw: true
     })
 
@@ -50,7 +57,7 @@ export const createClass = async (classDb: ClassType): Promise<Class[] | string>
   }
 }
 
-export const selectStudentsClass = async (studentClass: StudentClassType): Promise<StudentClass[]> => {
+export const selectStudentClass = async (studentClass: StudentClassType): Promise<StudentClass[]> => {
   try {
     const studentsByClass = await StudentClass.findAll({
       raw: true,
@@ -68,7 +75,7 @@ export const selectStudentsClass = async (studentClass: StudentClassType): Promi
 
 export const registerStudentToClass = async (newStudentClass: StudentClassType) => {
   try {
-    const res = await selectStudentsClass(newStudentClass)
+    const res = await selectStudentClass(newStudentClass)
     const classExists = res.length > 0 ? true : false
 
     if (!classExists) {
@@ -84,5 +91,20 @@ export const registerStudentToClass = async (newStudentClass: StudentClassType) 
     // throw e
     console.log(e)
     return 'Error at registering student'
+  }
+}
+
+export const selectStudentsByClass = async (class_id: string): Promise<StudentClass[]> => {
+  try {
+    const studentsByClass = await StudentClass.findAll({
+      raw: true,
+      where: {
+        class_id: class_id
+      }
+    })
+    return studentsByClass
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
   }
 }
