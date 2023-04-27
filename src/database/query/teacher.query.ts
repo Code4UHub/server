@@ -35,8 +35,8 @@ export const selectTeacher = async (email: string, password?: string) => {
 export const createTeacher = async (teacher: TeacherType): Promise<SelectedTeacherType | string> => {
   try {
     const res = await selectTeacher(teacher.email)
-    const studentExists = res.length > 0 ? true : false
-    if (!studentExists) {
+    const teacherExists = res.length > 0 ? true : false
+    if (!teacherExists) {
       const res = await Teacher.create(teacher)
       const user = res.get({ plain: true })
       console.log('Teacher succcesfully created')

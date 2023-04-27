@@ -173,7 +173,9 @@ Data: "Internal server error"
 
 ### POST /class/create
 
-Returns a class by its id
+
+
+Create a class
 
 #### Request body example
 
@@ -198,6 +200,45 @@ Returns a class by its id
 {
   "status": "success",
   "data": "Class succesfully created"
+}
+```
+
+- 400
+
+```json
+Status: "sucess"
+Data: "Invalid request"
+```
+
+- 500
+
+```json
+Status: "sucess"
+Data: "Internal server error"
+```
+
+
+### POST /class/register
+
+Register student to class
+
+#### Request body example
+
+```json
+{
+  "class_id": "XCode",
+  "student_id": "A01735707"
+}
+```
+
+#### Responses
+
+- 200
+
+```json
+{
+  "status": "success",
+  "data": "Student succcessfully registered"
 }
 ```
 

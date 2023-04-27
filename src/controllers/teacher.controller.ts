@@ -25,9 +25,10 @@ export const getTeacher = async (req: Request, res: Response) => {
     if (query.length > 0) {
       const token = generateToken(query[0].teacher_id)
       console.log(token)
-      res.set('Authorization', `Bearer ${token}`)
+      // res.set('Authorization', `Bearer ${token}`)
       res.status(200).json({
         status: 'success',
+        auth_token: token,
         data: {
           id: query[0].teacher_id,
           role: 'teacher',
@@ -41,11 +42,13 @@ export const getTeacher = async (req: Request, res: Response) => {
       if (exists.length > 0) {
         res.status(401).json({
           status: 'failed',
+          auth_token: '',
           data: 'Incorrect password'
         })
       } else {
         res.status(404).json({
           status: 'failed',
+          auth_token: '',
           data: 'Student not found'
         })
       }
@@ -53,6 +56,7 @@ export const getTeacher = async (req: Request, res: Response) => {
   } catch (e: any) {
     res.status(404).json({
       status: 'error',
+      auth_token: '',
       data: e.message
     })
   }
@@ -62,10 +66,12 @@ export const postTeacher = async (req: Request, res: Response) => {
   try {
     const teacher: TeacherType = req.body
     const emailRegex = /^[a-zA-Z0-9._%+-]+@tec\.mx$/
+    const teacher_id = teacher.teacher_id
 
     if (!emailRegex.test(teacher.email)) {
       res.status(400).json({
         status: 'failed',
+        auth_token: '',
         data: 'Invalid email'
       })
     }
@@ -73,8 +79,11 @@ export const postTeacher = async (req: Request, res: Response) => {
     const query = await createTeacher(teacher)
     console.log(query)
     if (typeof query == 'object') {
+      const token = generateToken(teacher_id)
+      console.log(token)
       res.status(200).json({
         status: 'success',
+        auth_token: token,
         data: {
           id: query.teacher_id,
           role: 'teacher',
@@ -86,6 +95,7 @@ export const postTeacher = async (req: Request, res: Response) => {
     } else {
       res.status(409).json({
         status: 'failed',
+        auth_token: '',
         data: 'Teacher already exists'
       })
     }
@@ -93,6 +103,7 @@ export const postTeacher = async (req: Request, res: Response) => {
   } catch (e) {
     res.status(404).json({
       status: 'failed',
+      auth_token: '',
       data: e
     })
   }
