@@ -15,9 +15,6 @@ import authMiddleware from './middleware/auth.middleware'
 export const db = createDb()
 const app: Express = express()
 
-export const db = createDb()
-const app: Express = express()
-
 // 1) MIDDLEWARE
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
