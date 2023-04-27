@@ -1,5 +1,0 @@
-
-###
-GET {{hostname}}:{{port}}/{{version}}/user/student
-
-###

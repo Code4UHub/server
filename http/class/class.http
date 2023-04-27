@@ -1,0 +1,37 @@
+### Get all classes
+GET {{host}}/{{version}}/class
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQTAwMDAwMDAxIiwiaWF0IjoxNjgyMjIzMzMxLCJleHAiOjE2ODI4MjgxMzF9.2ZIWxx3il8lcLtAb9Q1ntoZ0d0XttR8TnkMNoW6-_Z0
+
+### Get attributes of a class
+GET {{host}}/{{version}}/class/CodeCl1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQTAwMDAwMDAxIiwiaWF0IjoxNjgyMjIzMzMxLCJleHAiOjE2ODI4MjgxMzF9.2ZIWxx3il8lcLtAb9Q1ntoZ0d0XttR8TnkMNoW6-_Z0
+
+### Get a class
+POST {{host}}/{{version}}/class/create
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQTAwMDAwMDAxIiwiaWF0IjoxNjgyMjIzMzMxLCJleHAiOjE2ODI4MjgxMzF9.2ZIWxx3il8lcLtAb9Q1ntoZ0d0XttR8TnkMNoW6-_Z0
+Content-Type: application/json
+
+{
+    "class_id": "thisIsCl",
+    "is_finished": false,
+    "finished_date": null,
+    "days": ["LU", "MA"],
+    "start_time": "08:00:00",
+    "end_time": "10:00:00",
+    "subject_id": "CS10101",
+    "teacher_id": "L00000001"
+}
+
+### Register a student to a class
+POST {{host}}/{{version}}/class/thisIsCl/register
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQTAwMDAwMDAxIiwiaWF0IjoxNjgyMjIzMzMxLCJleHAiOjE2ODI4MjgxMzF9.2ZIWxx3il8lcLtAb9Q1ntoZ0d0XttR8TnkMNoW6-_Z0
+Content-Type: application/json
+
+{
+    "class_id": "thisIsCl",
+    "student_id": "a00000001"
+}
+
+### Register a student to a class
+GET {{host}}/{{version}}/class/thisIsCl/students
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQTAwMDAwMDAxIiwiaWF0IjoxNjgyMjIzMzMxLCJleHAiOjE2ODI4MjgxMzF9.2ZIWxx3il8lcLtAb9Q1ntoZ0d0XttR8TnkMNoW6-_Z0
