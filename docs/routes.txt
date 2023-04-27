@@ -23,19 +23,3 @@ question
 subject 
     GET /subject -> return all subjects
 
-
-
-
-
-
-
-
-    {
-      "student_id": "A01551111",
-      "first_name": "Ricardo",
-      "last_name": "Garcia",
-      "email": "a01551111@tec.com",
-      "password": "12345"
-}
-
-

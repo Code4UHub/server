@@ -99,7 +99,7 @@ export const postRegisterStudent = async (req: Request, res: Response) => {
 
 export const getStudentsByClass = async (req: Request, res: Response) => {
   try {
-    const class_id: string = req.params.id as string
+    const class_id: string = req.params.class_id as string
     const query = await selectStudentsByClass(class_id)
 
     if (query.length > 0) {
