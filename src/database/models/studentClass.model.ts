@@ -6,7 +6,7 @@ import { Class } from './class.model'
 export class StudentClass extends Model {
   @ForeignKey(() => Student)
   @Column({
-    type: DataType.STRING(9),
+    type: DataType.STRING,
     primaryKey: true,
     allowNull: false
   })
@@ -14,7 +14,7 @@ export class StudentClass extends Model {
 
   @ForeignKey(() => Class)
   @Column({
-    type: DataType.STRING(10),
+    type: DataType.STRING,
     primaryKey: true,
     allowNull: false
   })
@@ -23,8 +23,7 @@ export class StudentClass extends Model {
   @Column({
     type: DataType.BOOLEAN,
     allowNull: false,
-    defaultValue: true,
-    field: 'pending'
+    defaultValue: false
   })
   pending: boolean
 

@@ -173,6 +173,8 @@ Data: "Internal server error"
 
 ### POST /class/create
 
+
+
 Create a class
 
 #### Request body example
@@ -214,6 +216,7 @@ Data: "Invalid request"
 Status: "sucess"
 Data: "Internal server error"
 ```
+
 
 ### POST /class/register
 

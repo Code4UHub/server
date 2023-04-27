@@ -1,5 +1,6 @@
 import { Student } from '../models/student.model'
 import { SelectedStudentType, StudentType } from '../../types/student.type'
+import { StudentClass } from '../models/studentClass.model'
 
 export const selectStudents = async (): Promise<SelectedStudentType[]> => {
   try {
@@ -48,5 +49,20 @@ export const createStudent = async (student: StudentType): Promise<SelectedStude
     // throw e
     console.log(e)
     return 'Couldnt create student'
+  }
+}
+
+export const selectClassesByStudent = async (student_id: string) => {
+  try {
+    const classesByStudent = await StudentClass.findAll({
+      raw: true,
+      where: {
+        student_id: student_id
+      }
+    })
+    return classesByStudent
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
   }
 }
