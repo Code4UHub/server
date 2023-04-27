@@ -7,10 +7,12 @@ import { Subject } from '../models/subject.model'
 export const selectClasses = async () => {
   try {
     const classes = await Class.findAll({
-      attributes: ['class_id'],
+      attributes: ['class_id', 'subject_id', 'subject.subject_name'],
       include: [
         {
-          model: Subject
+          model: Subject,
+          attributes: [],
+          required: true
         }
       ],
       raw: true
@@ -25,10 +27,27 @@ export const selectClasses = async () => {
 export const selectClass = async (id: string): Promise<Class[]> => {
   try {
     const classDb = await Class.findAll({
+      attributes: [
+        'class_id',
+        'finished_date',
+        'days',
+        'start_time',
+        'end_time',
+        'teacher_id',
+        'subject_id',
+        'subject.subject_name'
+      ],
       raw: true,
       where: {
         class_id: id
-      }
+      },
+      include: [
+        {
+          model: Subject,
+          attributes: [],
+          required: true
+        }
+      ]
     })
     return classDb
   } catch (e: any) {
