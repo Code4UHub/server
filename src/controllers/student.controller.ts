@@ -112,7 +112,7 @@ export const postStudent = async (req: Request, res: Response) => {
   }
 }
 
-export const getClasses = async (req: Request, res: Response) => {
+export const getStudentClasses = async (req: Request, res: Response) => {
   try {
     const student_id: string = req.query.id as string
     const query = await selectClassesByStudent(student_id)

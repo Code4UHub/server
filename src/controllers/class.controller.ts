@@ -9,10 +9,9 @@ import {
 import { selectSubject } from '../database/query/subject.query'
 import { ClassType } from '../types/class.type'
 import { Class } from '../database/models/class.model'
-import { StudentClass } from '../database/models/studentClass.model'
+import { StudentClassType } from '../types/studentClass.type'
 
 export const getClasses = async (req: Request, res: Response) => {
-  // res.status(200).send('It works!')
   try {
     const query = await selectClasses()
 
@@ -27,7 +26,7 @@ export const getClasses = async (req: Request, res: Response) => {
 
 export const getClass = async (req: Request, res: Response) => {
   try {
-    const class_id: string = req.params.id as string
+    const class_id: string = req.params.class_id as string
     const query = await selectClass(class_id)
 
     if (query.length > 0) {
@@ -75,7 +74,8 @@ export const postClass = async (req: Request, res: Response) => {
 
 export const postRegisterStudent = async (req: Request, res: Response) => {
   try {
-    const newStudentClass: StudentClass = req.body
+    const newStudentClass: StudentClassType = req.body
+    newStudentClass.class_id = req.params.class_id
     const query = await registerStudentToClass(newStudentClass)
 
     if (typeof query == 'object') {
