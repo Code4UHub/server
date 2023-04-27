@@ -14,12 +14,19 @@ describe('GET /v1/students', () => {
     await sequelize.close()
   })
 
-  it('should return a welcome message on GET /', async () => {
+  it('Unauthorized -> Token not provided', async () => {
     const res = await request(app).get('/v1/student')
+
+    expect(res.status).toBe(401)
+    expect(res.body).toHaveProperty('status', 'failed')
+    expect(res.body).toMatchObject({ data: 'Unauthorized' })
+  })
+
+  it('Sucess -> Student login', async () => {
+    const res = await request(app).get('/v1/student/login?email=a00000001@tec.mx&password=Abc123456')
 
     expect(res.status).toBe(200)
     expect(res.body).toHaveProperty('status', 'success')
     expect(res.body).toHaveProperty('data')
-    expect(Array.isArray(res.body.data)).toBe(true)
   })
 })

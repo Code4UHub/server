@@ -1,5 +1,4 @@
 import dotenv from 'dotenv'
-// import { createDb } from './database/connection'
 import app from './app'
 
 dotenv.config()
