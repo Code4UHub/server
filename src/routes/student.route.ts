@@ -1,7 +1,10 @@
-import express, { Express, Router } from 'express'
+import { Router } from 'express'
 import * as studentController from '../controllers/student.controller'
 
 export const router: Router = Router()
 
-router.route('/student').get(studentController.getStudents).post(studentController.postStudent)
-router.route('/student/:email&:pwd').get(studentController.getStudent)
+
+router.route('/student').get(studentController.getStudents)
+router.route('/student/register').post(studentController.postStudent)
+router.route('/student/login').get(studentController.getStudent)
+router.route('/student/class').get(studentController.getStudentClasses)

@@ -1,0 +1,25 @@
+
+assignment
+    GET /assignment -> return all assignments
+    GET /assignment/:id/questions -> return all questions from an assignment
+
+class
+    GET /class/all -> return all classes
+    GET /class/:id -> return class by id
+    POST /class/register -> register a class
+
+teacher
+    GET /teacher -> return all teachers
+    POST /teacher -> create a teacher
+    GET /teacher/login?email&password -> returns a teacher
+
+module
+    GET /subject/:subject_id/modules -> returns all modules of a subject
+    GET 
+
+question
+    GET /question -> return all questions open and close
+
+subject 
+    GET /subject -> return all subjects
+

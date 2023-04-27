@@ -3,5 +3,9 @@ import * as classController from '../controllers/class.controller'
 
 export const router: Router = Router()
 
-router.route('/class').get(classController.getClasses)
-// router.route('/student/:email&:pwd').get(moduleController.getModuleById)
+router.route('/class').get(classController.getClasses) //.post(classController.postController)
+router.route('/class/:class_id').get(classController.getClass)
+router.route('/class/create').post(classController.postClass)
+
+router.route('/class/:class_id/register').post(classController.postRegisterStudent)
+router.route('/class/:class_id/students').get(classController.getStudentsByClass)
