@@ -18,7 +18,7 @@ export const getClasses = async (req: Request, res: Response) => {
 
 export const getClass = async (req: Request, res: Response) => {
   try {
-    const class_id: string = req.query.id as string
+    const class_id: string = req.params.id as string
     const query = await selectClass(class_id)
 
     if (query.length > 0) {
