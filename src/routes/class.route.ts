@@ -7,4 +7,6 @@ router.route('/class/all').get(classController.getClasses) //.post(classControll
 router.route('/class/:id').get(classController.getClass)
 router.route('/class/register').post(classController.postClass)
 
-// router.route('/student/:email&:pwd').get(moduleController.getModuleById)
+
+router.route('/class/register').post(classController.postRegisterStudent)
+router.route('/class/:id/students').get(classController.getStudentsByClass)

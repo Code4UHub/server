@@ -1,0 +1,72 @@
+Assignment
+GET /assignment/:id/questions
+    Description:
+        Returns all the questions for an assignment
+
+	Parameters:
+        id: Assignment id
+
+    Responses:
+        200: 
+            Status: success
+            Data example: {
+                "open_question_id": 1,
+                "open_question": {
+                    "id": "TC1028_#tema_tipo_#",
+                    "tests": [
+                        {
+                            "input": {
+                                "base": 5,
+                                "height": 10
+                            },
+                            "output": 25
+                        },
+                        {
+                            "input": {
+                                "base": 8,
+                                "height": 2
+                            },
+                            "output": 8
+                        },
+                        {
+                            "input": {
+                                "base": 12,
+                                "height": 6
+                            },
+                            "output": 36
+                        }
+                    ],
+                    "title": "Calculating the area of a triangle",
+                    "topic": "Geometry",
+                    "author": "John Smith",
+                    "driver": "calculate_area",
+                    "difficulty": "Easy",
+                    "description": "Write a function that calculates the area of a triangle given its base and height."
+                },
+                "assignment_id": 1
+            },
+            }
+        400:
+            status: Failed
+            Data: Invalid Request
+        500:
+            status: Failed
+            Data: Internal server error
+	
+
+
+Class
+
+Module
+
+Question
+
+Student
+
+Subject
+
+Teacher
+
+
+
+
