@@ -20,9 +20,11 @@ if (process.env.NODE_ENV === 'development') {
 
 const allowedOrigins = ['*']
 const options: cors.CorsOptions = {
-  origin: allowedOrigins
+  origin: allowedOrigins,
+  optionsSuccessStatus: 200
 }
 
+app.options('*', cors())
 app.use(cors(options))
 app.use(express.json())
 
