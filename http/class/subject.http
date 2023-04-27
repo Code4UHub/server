@@ -1,0 +1,4 @@
+### Get all subjects
+GET {{host}}/{{version}}/subject
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQTAwMDAwMDAxIiwiaWF0IjoxNjgyMjIzMzMxLCJleHAiOjE2ODI4MjgxMzF9.2ZIWxx3il8lcLtAb9Q1ntoZ0d0XttR8TnkMNoW6-_Z0
+
