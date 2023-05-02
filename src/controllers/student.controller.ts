@@ -114,7 +114,7 @@ export const postStudent = async (req: Request, res: Response) => {
 
 export const getStudentClasses = async (req: Request, res: Response) => {
   try {
-    const student_id: string = req.query.id as string
+    const student_id: string = req.params.student_id as string
     const query = await selectClassesByStudent(student_id)
 
     if (query.length > 0) {

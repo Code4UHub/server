@@ -56,6 +56,7 @@ export const selectClassesByStudent = async (student_id: string) => {
   try {
     const classesByStudent = await StudentClass.findAll({
       raw: true,
+      attributes: ['class_id', 'pending'],
       where: {
         student_id: student_id
       }
