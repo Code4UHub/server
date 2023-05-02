@@ -1,23 +1,25 @@
 ### Get all students
 GET {{host}}/{{version}}/student
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQTAwMDAwMDAxIiwiaWF0IjoxNjgyMjIzMzMxLCJleHAiOjE2ODI4MjgxMzF9.2ZIWxx3il8lcLtAb9Q1ntoZ0d0XttR8TnkMNoW6-_Z0
+Authorization: Bearer {{token}}
 
 
 ### Get a student
 GET {{host}}/{{version}}/student/login?email=a00000001@tec.mx&password=Abc123456 HTTP/1.1
+
 
 ### Create a student
 POST {{host}}/{{version}}/student/register
 Content-Type: application/json
 
 {
-    "student_id": "a00000001",
+    "student_id": "a00000005",
     "first_name": "John",
     "last_name": "Wayne",
-    "email": "a00000001@tec.mx",
+    "email": "a00000005@tec.mx",
     "password": "Abc123456"
 }
 
-### Get a student
-GET {{host}}/{{version}}/student/class?id=a00000001
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQTAwMDAwMDAxIiwiaWF0IjoxNjgyMjIzMzMxLCJleHAiOjE2ODI4MjgxMzF9.2ZIWxx3il8lcLtAb9Q1ntoZ0d0XttR8TnkMNoW6-_Z0
+
+### Get classes a student is registered to
+GET {{host}}/{{version}}/student/a00000001/class
+Authorization: Bearer {{token}}

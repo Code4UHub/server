@@ -1,89 +1,47 @@
 import { Request, Response } from 'express'
 import { createStudent, selectStudent, selectStudents } from '../database/query/student.query'
 import { selectClassesByStudent } from '../database/query/student.query'
-import { StudentType } from '../types/student.type'
+import { SelectedStudentType, StudentType } from '../types/student.type'
 import { generateToken } from '../utils/jwt-sign'
+import { StudentClass } from '../database/models/studentClass.model'
 
-export const getStudents = async (req: Request, res: Response) => {
-  // res.status(200).send('It works!')
+export const getStudents = async (req: Request, res: Response): Promise<void> => {
   try {
-    const query = await selectStudents()
+    const query: SelectedStudentType[] = await selectStudents()
     res.status(200).json({
       status: 'success',
       data: query
     })
-  } catch (e) {
-    throw e
-  }
-}
-
-export const getStudent = async (req: Request, res: Response) => {
-  try {
-    const email: string = req.query.email as string
-    const password: string = req.query.password as string
-    const query = await selectStudent(email, password)
-    console.log('query: ', query)
-
-    if (query.length > 0) {
-      const token = generateToken(query[0].student_id)
-      console.log(token)
-      // res.set('Authorization', `Bearer ${token}`)
-      res.status(200).json({
-        status: 'success',
-        auth_token: token,
-        data: {
-          id: query[0].student_id,
-          role: 'student',
-          first_name: query[0].first_name,
-          last_name: query[0].last_name,
-          email: query[0].email
-        }
-      })
-    } else {
-      const exists = await selectStudent(email)
-      if (exists.length > 0) {
-        res.status(401).json({
-          status: 'failed',
-          auth_token: '',
-          data: 'Incorrect password'
-        })
-      } else {
-        res.status(404).json({
-          status: 'failed',
-          auth_token: '',
-          data: 'Student not found'
-        })
-      }
-    }
   } catch (e: any) {
-    res.status(404).json({
+    res.status(500).json({
       status: 'error',
-      auth_token: '',
-      data: e
+      data: 'Couldnt get students'
     })
   }
 }
 
-export const postStudent = async (req: Request, res: Response) => {
+export const getStudent = async (req: Request, res: Response): Promise<void> => {
   try {
-    const student: StudentType = req.body
+    const email: string = req.query.email as string
+    const password: string = req.query.password as string
     const emailRegex = /^a\d{8}@tec\.mx$/
-    const student_id = student.student_id
 
-    if (!emailRegex.test(student.email)) {
+    // If email not correct the return
+    if (!emailRegex.test(email)) {
       res.status(400).json({
         status: 'failed',
         auth_token: '',
         data: 'Invalid email'
       })
+      return
     }
 
-    const query = await createStudent(student)
-    console.log(query)
-    if (typeof query == 'object') {
-      const token = generateToken(student_id)
+    // If login successfull
+    const query: SelectedStudentType | null = await selectStudent(email, password)
+    if (query !== null && typeof query === 'object') {
+      const token: string = generateToken(query.student_id)
+      // console.log(token)
       // res.set('Authorization', `Bearer ${token}`)
-      console.log(token)
       res.status(200).json({
         status: 'success',
         auth_token: token,
@@ -95,41 +53,107 @@ export const postStudent = async (req: Request, res: Response) => {
           email: query.email
         }
       })
-    } else {
-      res.status(409).json({
+      return
+    }
+
+    // If email correct but password incorrect
+    const exists: SelectedStudentType | null = await selectStudent(email)
+    if (exists !== null && typeof exists === 'object') {
+      res.status(401).json({
         status: 'failed',
         auth_token: '',
-        data: 'Student already exists'
+        data: 'Incorrect password'
       })
+      return
     }
-    // res.status(202).send('Created student')
-  } catch (e: any) {
+
+    // If valid email but account doesnt exists
     res.status(404).json({
+      status: 'failed',
+      auth_token: '',
+      data: 'Student not found'
+    })
+    return
+  } catch (e: any) {
+    res.status(500).json({
       status: 'error',
       auth_token: '',
-      data: e
+      data: 'Couldnt log in'
     })
   }
 }
 
-export const getStudentClasses = async (req: Request, res: Response) => {
+export const postStudent = async (req: Request, res: Response): Promise<void> => {
   try {
-    const student_id: string = req.params.student_id as string
-    const query = await selectClassesByStudent(student_id)
+    const student: StudentType = req.body
+    const emailRegex = /^a\d{8}@tec\.mx$/
 
+    // If email is invalid
+    if (!emailRegex.test(student.email)) {
+      res.status(400).json({
+        status: 'failed',
+        auth_token: '',
+        data: 'Invalid email'
+      })
+    }
+
+    // If email valid and not in use
+    const query: SelectedStudentType | null = await createStudent(student)
+    if (query !== null && typeof query == 'object') {
+      const token: string = generateToken(student.student_id)
+      // res.set('Authorization', `Bearer ${token}`)
+      res.status(200).json({
+        status: 'success',
+        auth_token: token,
+        data: {
+          id: query.student_id,
+          role: 'student',
+          first_name: query.first_name,
+          last_name: query.last_name,
+          email: query.email
+        }
+      })
+      return
+    }
+
+    // If email is valid but already in use
+    res.status(409).json({
+      status: 'failed',
+      auth_token: '',
+      data: 'Student already exists'
+    })
+    return
+  } catch (e: any) {
+    res.status(500).json({
+      status: 'error',
+      auth_token: '',
+      data: 'Couldnt register student'
+    })
+  }
+}
+
+export const getStudentClasses = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const student_id: string = req.params.student_id
+    const query: StudentClass[] = await selectClassesByStudent(student_id)
+
+    // If student registered to one or more classes
     if (query.length > 0) {
       res.status(200).json({
         status: 'success',
         data: query
       })
-    } else {
-      res.status(404).json({
-        status: 'failed',
-        data: 'Classes not found for that user'
-      })
+      return
     }
+
+    // If student not registered to any classes
+    res.status(204).json({
+      status: 'success',
+      data: 'Classes not found for that user'
+    })
+    return
   } catch (e: any) {
-    res.status(404).json({
+    res.status(500).json({
       status: 'error',
       data: e
     })
