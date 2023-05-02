@@ -4,19 +4,20 @@ import { StudentClass } from '../models/studentClass.model'
 
 export const selectStudents = async (): Promise<SelectedStudentType[]> => {
   try {
-    const students = await Student.findAll({})
+    const students: SelectedStudentType[] = await Student.findAll({
+      attributes: ['student_id', 'first_name', 'last_name', 'email']
+    })
     return students
   } catch (e: any) {
     throw e
   }
 }
 
-export const selectStudent = async (email: string, password?: string): Promise<SelectedStudentType[]> => {
+export const selectStudent = async (email: string, password?: string): Promise<SelectedStudentType | null> => {
   try {
     if (password) {
-      const student = await Student.findAll({
+      const student = await Student.findOne({
         attributes: ['student_id', 'first_name', 'last_name', 'email'],
-        raw: true,
         where: {
           email: email,
           password: password
@@ -24,7 +25,7 @@ export const selectStudent = async (email: string, password?: string): Promise<S
       })
       return student
     } else {
-      const student = await Student.findAll({ raw: true, attributes: ['email'], where: { email: email } })
+      const student = await Student.findOne({ raw: true, attributes: ['email'], where: { email: email } })
       return student
     }
   } catch (e: any) {
@@ -33,37 +34,32 @@ export const selectStudent = async (email: string, password?: string): Promise<S
   }
 }
 
-export const createStudent = async (student: StudentType): Promise<SelectedStudentType | string> => {
+export const createStudent = async (student: StudentType): Promise<SelectedStudentType | null> => {
   try {
-    const res = await selectStudent(student.email)
-    const studentExists = res.length > 0 ? true : false
-    if (!studentExists) {
+    const res: SelectedStudentType | null = await selectStudent(student.email)
+    const exists: boolean = res !== null && typeof res === 'object' ? true : false
+    if (!exists) {
       const res = await Student.create(student)
-      const user = res.get({ plain: true })
-      console.log('Student succcesfully created')
-      return user
+      // const user = res.get({ plain: true })
+      // console.log('Student succcesfully created')
+      return res
     } else {
-      return 'Student already exists'
+      return null
     }
   } catch (e) {
-    // throw e
-    console.log(e)
-    return 'Couldnt create student'
+    throw e
   }
 }
 
-export const selectClassesByStudent = async (student_id: string) => {
+export const selectClassesByStudent = async (student_id: string): Promise<StudentClass[]> => {
   try {
     const classesByStudent = await StudentClass.findAll({
-      raw: true,
-      attributes: ['class_id', 'pending'],
       where: {
         student_id: student_id
       }
     })
     return classesByStudent
   } catch (e: any) {
-    // throw new Error("MY ERROR")
     throw e
   }
 }
