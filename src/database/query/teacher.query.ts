@@ -1,5 +1,7 @@
 import { SelectedTeacherType, TeacherType } from '../../types/teacher.type'
 import { Teacher } from '../models/teacher.model'
+import { Class } from '../models/class.model'
+import { Subject } from '../models/subject.model'
 
 export const selectTeachers = async () => {
   try {
@@ -48,5 +50,28 @@ export const createTeacher = async (teacher: TeacherType): Promise<SelectedTeach
     // throw e
     console.log(e)
     return 'Couldnt create teacher'
+  }
+}
+
+export const selectClassesByTeacher = async (teacher_id: string) => {
+  try {
+    const classesByTeacher = await Class.findAll({
+      raw: true,
+      attributes: ['class_id', 'subject_id', 'subject.subject_name', 'days', 'start_time', 'end_time'],
+      where: {
+        teacher_id: teacher_id
+      },
+      include: [
+        {
+          model: Subject,
+          attributes: [],
+          required: true
+        }
+      ]
+    })
+    return classesByTeacher
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
   }
 }

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { createTeacher, selectTeacher, selectTeachers } from '../database/query/teacher.query'
+import { createTeacher, selectTeacher, selectTeachers, selectClassesByTeacher } from '../database/query/teacher.query'
 import { TeacherType } from '../types/teacher.type'
 import { generateToken } from '../utils/jwt-sign'
 
@@ -104,6 +104,30 @@ export const postTeacher = async (req: Request, res: Response) => {
     res.status(404).json({
       status: 'failed',
       auth_token: '',
+      data: e
+    })
+  }
+}
+
+export const getTeacherClasses = async (req: Request, res: Response) => {
+  try {
+    const teacher_id: string = req.params.teacher_id as string
+    const query = await selectClassesByTeacher(teacher_id)
+
+    if (query.length > 0) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+    } else {
+      res.status(404).json({
+        status: 'failed',
+        data: 'Classes not found for that user'
+      })
+    }
+  } catch (e: any) {
+    res.status(404).json({
+      status: 'error',
       data: e
     })
   }
