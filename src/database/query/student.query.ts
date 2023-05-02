@@ -1,4 +1,7 @@
 import { Student } from '../models/student.model'
+import { Class } from '../models/class.model'
+import { Teacher } from '../models/teacher.model'
+import { Subject } from '../models/subject.model'
 import { SelectedStudentType, StudentType } from '../../types/student.type'
 import { StudentClass } from '../models/studentClass.model'
 
@@ -54,9 +57,39 @@ export const createStudent = async (student: StudentType): Promise<SelectedStude
 export const selectClassesByStudent = async (student_id: string): Promise<StudentClass[]> => {
   try {
     const classesByStudent = await StudentClass.findAll({
+      raw: true,
+      attributes: [
+        'class_id',
+        'pending',
+        'class.days',
+        'class.start_time',
+        'class.end_time',
+        'class.teacher.first_name',
+        'class.teacher.last_name',
+        'class.subject.subject_name'
+      ],
       where: {
         student_id: student_id
-      }
+      },
+      include: [
+        {
+          model: Class,
+          attributes: [],
+          required: true,
+          include: [
+            {
+              model: Teacher,
+              attributes: [],
+              required: true
+            },
+            {
+              model: Subject,
+              attributes: [],
+              required: true
+            }
+          ]
+        }
+      ]
     })
     return classesByStudent
   } catch (e: any) {
