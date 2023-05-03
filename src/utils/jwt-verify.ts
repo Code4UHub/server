@@ -14,6 +14,7 @@ export const verifyToken = (token: string, user_id: string): boolean => {
     const decoded = jwt.verify(token, secret, options) as JwtPayload
     console.log('MY USER IS: ', user_id)
     console.log('DECODED IS: ', decoded)
+
     if (decoded.exp && decoded.exp < currentTimestamp) {
       return false
     }
