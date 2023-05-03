@@ -2,12 +2,12 @@ import { Student } from '../models/student.model'
 import { Class } from '../models/class.model'
 import { Teacher } from '../models/teacher.model'
 import { Subject } from '../models/subject.model'
-import { SelectedStudentType, StudentType } from '../../types/student.type'
+import { StudentType } from '../../types/student.type'
 import { StudentClass } from '../models/studentClass.model'
 
-export const selectStudents = async (): Promise<SelectedStudentType[]> => {
+export const selectStudents = async (): Promise<StudentType[]> => {
   try {
-    const students: SelectedStudentType[] = await Student.findAll({
+    const students: StudentType[] = await Student.findAll({
       attributes: ['student_id', 'first_name', 'last_name', 'email']
     })
     return students
@@ -16,7 +16,7 @@ export const selectStudents = async (): Promise<SelectedStudentType[]> => {
   }
 }
 
-export const selectStudent = async (email: string, password?: string): Promise<SelectedStudentType | null> => {
+export const selectStudent = async (email: string, password?: string): Promise<StudentType | null> => {
   try {
     if (password) {
       const student = await Student.findOne({
@@ -37,9 +37,9 @@ export const selectStudent = async (email: string, password?: string): Promise<S
   }
 }
 
-export const createStudent = async (student: StudentType): Promise<SelectedStudentType | null> => {
+export const createStudent = async (student: StudentType): Promise<StudentType | null> => {
   try {
-    const res: SelectedStudentType | null = await selectStudent(student.email)
+    const res: StudentType | null = await selectStudent(student.email)
     const exists: boolean = res !== null && typeof res === 'object' ? true : false
     if (!exists) {
       const res = await Student.create(student)
