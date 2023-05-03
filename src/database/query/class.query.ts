@@ -127,3 +127,29 @@ export const selectStudentsByClass = async (class_id: string): Promise<StudentCl
     throw e
   }
 }
+
+export const acceptStudentToClass = async (studentClass: StudentClassType) => {
+  try {
+    const res = await selectStudentClass(studentClass)
+    const studentClassExists = res.length > 0 ? true : false
+
+    if (studentClassExists) {
+      const acceptedStudent = await StudentClass.update(
+        { pending: true },
+        {
+          where: {
+            class_id: studentClass.class_id,
+            student_id: studentClass.student_id
+          }
+        }
+      )
+
+      return acceptedStudent
+    } else {
+      return 'Student is not registered to that class'
+    }
+  } catch (e: any) {
+    console.log(e)
+    return 'Error at acepting student'
+  }
+}
