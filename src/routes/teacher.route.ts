@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import * as teacherController from '../controllers/teacher.controller'
+import protectMiddleware from '../middleware/protect.middleware'
 
 export const router: Router = Router()
 

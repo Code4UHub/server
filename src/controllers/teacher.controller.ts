@@ -23,7 +23,7 @@ export const getTeacher = async (req: Request, res: Response) => {
     console.log('query: ', query)
 
     if (query.length > 0) {
-      const token = generateToken(query[0].teacher_id)
+      const token = generateToken(query[0].teacher_id, 'teacher')
       console.log(token)
       // res.set('Authorization', `Bearer ${token}`)
       res.status(200).json({
@@ -79,7 +79,7 @@ export const postTeacher = async (req: Request, res: Response) => {
     const query = await createTeacher(teacher)
     console.log(query)
     if (typeof query == 'object') {
-      const token = generateToken(teacher_id)
+      const token = generateToken(teacher_id, 'teacher')
       console.log(token)
       res.status(200).json({
         status: 'success',
