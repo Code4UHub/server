@@ -4,7 +4,8 @@ import {
   selectClass,
   createClass,
   registerStudentToClass,
-  selectStudentsByClass
+  selectStudentsByClass,
+  acceptStudentToClass
 } from '../database/query/class.query'
 import { selectSubject } from '../database/query/subject.query'
 import { ClassType } from '../types/class.type'
@@ -111,6 +112,36 @@ export const getStudentsByClass = async (req: Request, res: Response) => {
       res.status(404).json({
         status: 'failed',
         data: []
+      })
+    }
+  } catch (e: any) {
+    res.status(404).json({
+      status: 'error',
+      data: e.message
+    })
+  }
+}
+
+export const putStudentClass = async (req: Request, res: Response) => {
+  try {
+    const newStudentClass: StudentClassType = req.body
+    const query = await acceptStudentToClass(newStudentClass)
+
+    if (Array.isArray(query)) {
+      console.log('---------------------------------')
+      console.log('Student succcesfully registered')
+      console.log(query)
+
+      console.log('---------------------------------')
+
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+    } else {
+      res.status(400).json({
+        status: 'failed',
+        data: query
       })
     }
   } catch (e: any) {

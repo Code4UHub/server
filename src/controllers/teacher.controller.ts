@@ -25,7 +25,6 @@ export const getTeacher = async (req: Request, res: Response): Promise<void> => 
     const password: string = req.query.password as string
     const emailRegex = /^[a-zA-Z0-9._%+-]+@tec\.mx$/
 
-
     // If email incorrect then return
     if (!emailRegex.test(email)) {
       res.status(400).json({
@@ -39,7 +38,7 @@ export const getTeacher = async (req: Request, res: Response): Promise<void> => 
     // If login successfull
     const query: TeacherType | null = await selectTeacher(email, password)
     if (query !== null && typeof query === 'object') {
-      const token = generateToken(query.teacher_id)
+      const token = generateToken(query.teacher_id, 'teacher')
       // console.log(token)
       // res.set('Authorization', `Bearer ${token}`)
       res.status(200).json({
@@ -99,7 +98,7 @@ export const postTeacher = async (req: Request, res: Response): Promise<void> =>
     const query = await createTeacher(teacher)
 
     if (query !== null && typeof query == 'object') {
-      const token = generateToken(teacher.teacher_id)
+      const token = generateToken(teacher.teacher_id, 'teacher')
       // res.set('Authorization', `Bearer ${token}`)
 
       res.status(200).json({
