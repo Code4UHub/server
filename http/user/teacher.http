@@ -1,9 +1,11 @@
 ### Get all teachers
 GET {{host}}/{{version}}/teacher
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQTAwMDAwMDAxIiwiaWF0IjoxNjgyMjIzMzMxLCJleHAiOjE2ODI4MjgxMzF9.2ZIWxx3il8lcLtAb9Q1ntoZ0d0XttR8TnkMNoW6-_Z0
+Authorization: Bearer {{token}}
+
 
 ### Get a teacher
-GET {{host}}/{{version}}/teacher/login?email=l00000001@tec.com&password=Abc123456 HTTP/1.1
+GET {{host}}/{{version}}/teacher/login?email=l00000006@tec.mx&password=test_pass HTTP/1.1
+
 
 ### Create a teacher
 POST {{hostname}}:{{port}}/{{version}}/teacher/register
@@ -16,3 +18,8 @@ Content-Type: application/json
     "email": "dan.perez@tec.mx",
     "password": "test_pass"
 }
+
+
+### Get classes of a teacher
+GET {{host}}/{{version}}/teacher/L00000001/class
+Authorization: Bearer {{token}}

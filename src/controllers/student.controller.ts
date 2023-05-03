@@ -1,13 +1,13 @@
 import { Request, Response } from 'express'
 import { createStudent, selectStudent, selectStudents } from '../database/query/student.query'
 import { selectClassesByStudent } from '../database/query/student.query'
-import { SelectedStudentType, StudentType } from '../types/student.type'
+import { StudentType } from '../types/student.type'
 import { generateToken } from '../utils/jwt-sign'
 import { StudentClass } from '../database/models/studentClass.model'
 
 export const getStudents = async (req: Request, res: Response): Promise<void> => {
   try {
-    const query: SelectedStudentType[] = await selectStudents()
+    const query: StudentType[] = await selectStudents()
     res.status(200).json({
       status: 'success',
       data: query
@@ -26,7 +26,7 @@ export const getStudent = async (req: Request, res: Response): Promise<void> => 
     const password: string = req.query.password as string
     const emailRegex = /^a\d{8}@tec\.mx$/
 
-    // If email not correct the return
+    // If email incorrect then return
     if (!emailRegex.test(email)) {
       res.status(400).json({
         status: 'failed',
@@ -37,7 +37,7 @@ export const getStudent = async (req: Request, res: Response): Promise<void> => 
     }
 
     // If login successfull
-    const query: SelectedStudentType | null = await selectStudent(email, password)
+    const query: StudentType | null = await selectStudent(email, password)
     if (query !== null && typeof query === 'object') {
       const token: string = generateToken(query.student_id, 'student')
       // console.log(token)
@@ -57,7 +57,7 @@ export const getStudent = async (req: Request, res: Response): Promise<void> => 
     }
 
     // If email correct but password incorrect
-    const exists: SelectedStudentType | null = await selectStudent(email)
+    const exists: StudentType | null = await selectStudent(email)
     if (exists !== null && typeof exists === 'object') {
       res.status(401).json({
         status: 'failed',
@@ -98,7 +98,7 @@ export const postStudent = async (req: Request, res: Response): Promise<void> =>
     }
 
     // If email valid and not in use
-    const query: SelectedStudentType | null = await createStudent(student)
+    const query: StudentType | null = await createStudent(student)
     if (query !== null && typeof query == 'object') {
       const token: string = generateToken(student.student_id, 'student')
       // res.set('Authorization', `Bearer ${token}`)
