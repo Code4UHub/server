@@ -1,6 +1,9 @@
 import { Table, Column, Model, DataType, BelongsTo, ForeignKey } from 'sequelize-typescript'
 import { Student } from './student.model'
 import { Class } from './class.model'
+import getCurrentDate from '../../utils/getCurrentDate.function'
+
+import moment from 'moment'
 
 @Table({ tableName: 'student_class' })
 export class StudentClass extends Model {
@@ -26,6 +29,13 @@ export class StudentClass extends Model {
     defaultValue: true
   })
   pending: boolean
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+    defaultValue: moment(getCurrentDate(), 'YYYY-MM-DD')
+  })
+  permission_date: Date
 
   @BelongsTo(() => Student)
   student: Student
