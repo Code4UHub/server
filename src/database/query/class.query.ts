@@ -135,7 +135,7 @@ export const acceptStudentToClass = async (studentClass: StudentClassType) => {
 
     if (studentClassExists) {
       const acceptedStudent = await StudentClass.update(
-        { pending: true },
+        { pending: false },
         {
           where: {
             class_id: studentClass.class_id,

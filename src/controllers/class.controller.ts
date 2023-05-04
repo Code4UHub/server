@@ -127,16 +127,11 @@ export const putStudentClass = async (req: Request, res: Response) => {
     const newStudentClass: StudentClassType = req.body
     const query = await acceptStudentToClass(newStudentClass)
 
+    // If the query is successfull
     if (Array.isArray(query)) {
-      console.log('---------------------------------')
-      console.log('Student succcesfully registered')
-      console.log(query)
-
-      console.log('---------------------------------')
-
       res.status(200).json({
         status: 'success',
-        data: query
+        data: 'Ok'
       })
     } else {
       res.status(400).json({
