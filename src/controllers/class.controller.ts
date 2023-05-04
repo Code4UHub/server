@@ -57,7 +57,7 @@ export const postClass = async (req: Request, res: Response) => {
     if (typeof query == 'object') {
       res.status(200).json({
         status: 'success',
-        data: query
+        data: 'Ok'
       })
     } else {
       res.status(409).json({
@@ -82,7 +82,7 @@ export const postRegisterStudent = async (req: Request, res: Response) => {
     if (typeof query == 'object') {
       res.status(200).json({
         status: 'success',
-        data: query
+        data: 'Ok'
       })
     } else {
       res.status(409).json({
@@ -132,7 +132,6 @@ export const putStudentClass = async (req: Request, res: Response) => {
       res.status(200).json({
         status: 'success',
         data: 'Ok'
-
       })
     } else {
       res.status(400).json({

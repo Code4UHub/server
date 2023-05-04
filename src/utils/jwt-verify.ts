@@ -12,8 +12,8 @@ const options = { clockTimestamp: currentTimestamp, clockTolerance: leewayInSeco
 export const verifyToken = (token: string, user_id: string): boolean => {
   try {
     const decoded = jwt.verify(token, secret, options) as JwtPayload
-    console.log('MY USER IS: ', user_id)
-    console.log('DECODED IS: ', decoded)
+    // console.log('MY USER IS: ', user_id)
+    // console.log('DECODED IS: ', decoded)
 
     if (decoded.exp && decoded.exp < currentTimestamp) {
       return false

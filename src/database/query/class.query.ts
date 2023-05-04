@@ -135,18 +135,22 @@ export const acceptStudentToClass = async (studentClass: StudentClassType) => {
 
     if (studentClassExists) {
       const acceptedStudent = await StudentClass.update(
-
         { pending: false },
-
         {
           where: {
             class_id: studentClass.class_id,
-            student_id: studentClass.student_id
+            student_id: studentClass.student_id,
+            pending: true
           }
         }
       )
 
-      return acceptedStudent
+      // check if a row was updated or not
+      if (acceptedStudent[0] == 0) {
+        return 'Student already registered to that class'
+      } else {
+        return acceptedStudent
+      }
     } else {
       return 'Student is not registered to that class'
     }
