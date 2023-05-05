@@ -1,20 +1,20 @@
 ### Get all classes
 GET {{host}}/{{version}}/class
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQTAwMDAwMDAxIiwiaWF0IjoxNjgyMjIzMzMxLCJleHAiOjE2ODI4MjgxMzF9.2ZIWxx3il8lcLtAb9Q1ntoZ0d0XttR8TnkMNoW6-_Z0
+Authorization: Bearer {{token}}
 
 ### Get attributes of a class
-GET {{host}}/{{version}}/class/CodeCl1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQTAwMDAwMDAxIiwiaWF0IjoxNjgyMjIzMzMxLCJleHAiOjE2ODI4MjgxMzF9.2ZIWxx3il8lcLtAb9Q1ntoZ0d0XttR8TnkMNoW6-_Z0
+GET {{host}}/{{version}}/class/thisIsCl3
+Authorization: Bearer {{token}}
 
-### Get a class
+### Create a class
 POST {{host}}/{{version}}/class/create
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQTAwMDAwMDAxIiwiaWF0IjoxNjgyMjIzMzMxLCJleHAiOjE2ODI4MjgxMzF9.2ZIWxx3il8lcLtAb9Q1ntoZ0d0XttR8TnkMNoW6-_Z0
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "class_id": "thisIsCl",
+    "class_id": "thisIsCl4",
     "is_finished": false,
-    "finished_date": null,
+    "finished_date": "2022-03-17",
     "days": ["LU", "MA"],
     "start_time": "08:00:00",
     "end_time": "10:00:00",
@@ -22,16 +22,17 @@ Content-Type: application/json
     "teacher_id": "L00000001"
 }
 
+
 ### Register a student to a class
 POST {{host}}/{{version}}/class/thisIsCl/register
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQTAwMDAwMDAxIiwiaWF0IjoxNjgyMjIzMzMxLCJleHAiOjE2ODI4MjgxMzF9.2ZIWxx3il8lcLtAb9Q1ntoZ0d0XttR8TnkMNoW6-_Z0
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "class_id": "thisIsCl",
-    "student_id": "a00000001"
+    "student_id": "a00000005"
 }
 
-### Register a student to a class
+
+### Get students of a class
 GET {{host}}/{{version}}/class/thisIsCl/students
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQTAwMDAwMDAxIiwiaWF0IjoxNjgyMjIzMzMxLCJleHAiOjE2ODI4MjgxMzF9.2ZIWxx3il8lcLtAb9Q1ntoZ0d0XttR8TnkMNoW6-_Z0
+Authorization: Bearer {{token}}

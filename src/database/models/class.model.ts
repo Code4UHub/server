@@ -13,12 +13,14 @@ export class Class extends Model {
 
   @Column({
     type: DataType.BOOLEAN,
-    defaultValue: false
+    defaultValue: false,
+    allowNull: false
   })
   is_finished: boolean
 
   @Column({
-    type: DataType.DATE
+    type: DataType.DATE,
+    allowNull: false
   })
   finished_date: Date
 
@@ -29,12 +31,14 @@ export class Class extends Model {
   days: string[]
 
   @Column({
-    type: DataType.STRING
+    type: DataType.STRING,
+    allowNull: false
   })
   start_time: string
 
   @Column({
-    type: DataType.STRING
+    type: DataType.STRING,
+    allowNull: false
   })
   end_time: string
 

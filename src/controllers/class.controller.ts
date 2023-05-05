@@ -7,30 +7,34 @@ import {
   selectStudentsByClass,
   acceptStudentToClass
 } from '../database/query/class.query'
-import { selectSubject } from '../database/query/subject.query'
 import { ClassType } from '../types/class.type'
 import { Class } from '../database/models/class.model'
 import { StudentClassType } from '../types/studentClass.type'
+import { StudentClass } from '../database/models/studentClass.model'
+import { StudentNotFoundError } from '../errors/studentNotFoundError'
+import { ClassNotFoundError } from '../errors/classNotFoundError'
 
-export const getClasses = async (req: Request, res: Response) => {
+export const getClasses = async (req: Request, res: Response): Promise<void> => {
   try {
-    const query = await selectClasses()
-
+    const query: Class[] = await selectClasses()
     res.status(200).json({
       status: 'success',
       data: query
     })
-  } catch (e) {
-    throw e
+  } catch (e: any) {
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get classes'
+    })
   }
 }
 
-export const getClass = async (req: Request, res: Response) => {
+export const getClass = async (req: Request, res: Response): Promise<void> => {
   try {
     const class_id: string = req.params.class_id as string
-    const query = await selectClass(class_id)
+    const query: Class | null = await selectClass(class_id)
 
-    if (query.length > 0) {
+    if (query) {
       res.status(200).json({
         status: 'success',
         data: query
@@ -49,75 +53,99 @@ export const getClass = async (req: Request, res: Response) => {
   }
 }
 
-export const postClass = async (req: Request, res: Response) => {
+export const postClass = async (req: Request, res: Response): Promise<void> => {
   try {
     const newClass: ClassType = req.body
     const query = await createClass(newClass)
 
-    if (typeof query == 'object') {
-      res.status(200).json({
+    // If class valid and code available
+    if (query !== null && typeof query === 'object') {
+      res.status(201).json({
         status: 'success',
         data: 'Ok'
       })
-    } else {
-      res.status(409).json({
-        status: 'failed',
-        data: 'Class already exists'
-      })
+      return
     }
+
+    // If class already exists
+    res.status(409).json({
+      status: 'failed',
+      data: 'Class already exists'
+    })
+    return
   } catch (e: any) {
-    res.status(404).json({
+    res.status(500).json({
       status: 'error',
-      data: e
+      data: 'Couldnt create class'
     })
   }
 }
 
-export const postRegisterStudent = async (req: Request, res: Response) => {
+export const postRegisterStudent = async (req: Request, res: Response): Promise<void> => {
   try {
     const newStudentClass: StudentClassType = req.body
     newStudentClass.class_id = req.params.class_id
     const query = await registerStudentToClass(newStudentClass)
 
-    if (typeof query == 'object') {
+    // If student not in class then register him
+    if (query !== null && typeof query === 'object') {
       res.status(200).json({
         status: 'success',
-        data: 'Ok'
-      })
-    } else {
-      res.status(409).json({
-        status: 'failed',
-        data: query
+        data: 'Student registered'
       })
     }
+
+    // If student already in class
+    res.status(409).json({
+      status: 'failed',
+      data: 'Student already in class'
+    })
+    return
   } catch (e: any) {
-    res.status(404).json({
+    if (e instanceof StudentNotFoundError) {
+      res.status(409).json({
+        status: 'failed',
+        data: 'Student doesnt exist'
+      })
+      return
+    }
+    if (e instanceof ClassNotFoundError) {
+      res.status(409).json({
+        status: 'failed',
+        data: 'Class doesnt exist'
+      })
+      return
+    }
+    res.status(500).json({
       status: 'error',
-      data: e
+      data: 'Couldnt register student'
     })
   }
 }
 
-export const getStudentsByClass = async (req: Request, res: Response) => {
+export const getStudentsByClass = async (req: Request, res: Response): Promise<void> => {
   try {
     const class_id: string = req.params.class_id as string
-    const query = await selectStudentsByClass(class_id)
+    const query: StudentClass[] = await selectStudentsByClass(class_id)
 
+    // If class has more than one student
     if (query.length > 0) {
       res.status(200).json({
         status: 'success',
         data: query
       })
-    } else {
-      res.status(404).json({
-        status: 'failed',
-        data: []
-      })
+      return
     }
+
+    // If class doesnt have any students
+    res.status(204).json({
+      status: 'success',
+      data: []
+    })
   } catch (e: any) {
-    res.status(404).json({
+    res.status(500).json({
       status: 'error',
-      data: e.message
+      data: 'Couldnt get students of class'
     })
   }
 }

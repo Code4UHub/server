@@ -5,10 +5,13 @@ import { StudentClass } from '../models/studentClass.model'
 import { Subject } from '../models/subject.model'
 import { Teacher } from '../models/teacher.model'
 import { Student } from '../models/student.model'
+import { StudentNotFoundError } from '../../errors/studentNotFoundError'
+import { ClassNotFoundError } from '../../errors/classNotFoundError'
 
-export const selectClasses = async () => {
+export const selectClasses = async (): Promise<Class[]> => {
   try {
-    const classes = await Class.findAll({
+    const classes: Class[] = await Class.findAll({
+      raw: true,
       attributes: [
         'class_id',
         'subject_id',
@@ -28,19 +31,18 @@ export const selectClasses = async () => {
           attributes: [],
           required: true
         }
-      ],
-      raw: true
+      ]
     })
-
     return classes
-  } catch (e) {
+  } catch (e: any) {
     throw e
   }
 }
 
-export const selectClass = async (id: string): Promise<Class[]> => {
+export const selectClass = async (id: string): Promise<Class | null> => {
   try {
-    const classDb = await Class.findAll({
+    const classDb: Class | null = await Class.findOne({
+      raw: true,
       attributes: [
         'class_id',
         'finished_date',
@@ -51,7 +53,6 @@ export const selectClass = async (id: string): Promise<Class[]> => {
         'subject_id',
         'subject.subject_name'
       ],
-      raw: true,
       where: {
         class_id: id
       },
@@ -75,30 +76,37 @@ export const selectClass = async (id: string): Promise<Class[]> => {
   }
 }
 
-export const createClass = async (classDb: ClassType): Promise<Class[] | string> => {
+export const createClass = async (classDb: ClassType): Promise<Class | null> => {
   try {
     const res = await selectClass(classDb['class_id'])
-    const classExists = res.length > 0 ? true : false
+    const exists: boolean = res !== null && typeof res === 'object' ? true : false
 
-    if (!classExists) {
+    if (!exists) {
       const res = await Class.create(classDb)
-      const user = res.get({ plain: true })
-      console.log('Class succcesfully created')
-      return user
+      // const user = res.get({ plain: true })
+      // console.log('Class succcesfully created')
+      return res
     } else {
-      return 'Class already exists'
+      return null
     }
-  } catch (e) {
-    // throw e
-    console.log(e)
-    return 'Error at creating class'
+  } catch (e: any) {
+    throw e
   }
 }
 
-export const selectStudentClass = async (studentClass: StudentClassType): Promise<StudentClass[]> => {
+export const selectStudentClass = async (studentClass: StudentClassType): Promise<StudentClass | null> => {
   try {
-    const studentsByClass = await StudentClass.findAll({
-      raw: true,
+    const student = await Student.findByPk(studentClass.student_id)
+    if (!student) {
+      throw new StudentNotFoundError(`Cannot find student with ID ${studentClass.student_id}`)
+    }
+
+    const class_ = await Class.findByPk(studentClass.class_id)
+    if (!class_) {
+      throw new ClassNotFoundError(`Cannot find class with ID ${studentClass.student_id}`)
+    }
+
+    const studentsByClass = await StudentClass.findOne({
       where: {
         class_id: studentClass.class_id,
         student_id: studentClass.student_id
@@ -106,36 +114,32 @@ export const selectStudentClass = async (studentClass: StudentClassType): Promis
     })
     return studentsByClass
   } catch (e: any) {
-    // throw new Error("MY ERROR")
     throw e
   }
 }
 
-export const registerStudentToClass = async (newStudentClass: StudentClassType) => {
+export const registerStudentToClass = async (newStudentClass: StudentClassType): Promise<StudentClass | null> => {
   try {
-    const res = await selectStudentClass(newStudentClass)
-    const classExists = res.length > 0 ? true : false
+    const res: StudentClass | null = await selectStudentClass(newStudentClass)
+    const studentRegistered: boolean = res !== null && typeof res === 'object' ? true : false
 
-    if (!classExists) {
+    if (!studentRegistered) {
       const res = await StudentClass.create(newStudentClass)
-
-      const user = res.get({ plain: true })
-      console.log('Student succcesfully registered')
-      return user
-    } else {
-      return 'Student already registered'
+      console.log(res)
+      // const user = res.get({ plain: true })
+      // console.log('Student succcesfully registered')
+      return res
     }
-  } catch (e) {
-    // throw e
-    console.log(e)
-    return 'Error at registering student'
+    return null
+  } catch (e: any) {
+    throw e
   }
 }
 
 export const selectStudentsByClass = async (class_id: string): Promise<StudentClass[]> => {
   try {
     const studentsByClass = await StudentClass.findAll({
-      raw: true,
+      // raw: true,
       attributes: ['student_id', 'pending', 'permission_date', 'student.first_name', 'student.last_name'],
       where: {
         class_id: class_id
