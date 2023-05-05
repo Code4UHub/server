@@ -92,6 +92,7 @@ export const postRegisterStudent = async (req: Request, res: Response): Promise<
       res.status(200).json({
         status: 'success',
         data: 'Student registered'
+
       })
     }
 

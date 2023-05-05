@@ -8,6 +8,7 @@ import { Student } from '../models/student.model'
 import { StudentNotFoundError } from '../../errors/studentNotFoundError'
 import { ClassNotFoundError } from '../../errors/classNotFoundError'
 
+
 export const selectClasses = async (): Promise<Class[]> => {
   try {
     const classes: Class[] = await Class.findAll({
@@ -139,8 +140,8 @@ export const registerStudentToClass = async (newStudentClass: StudentClassType):
 export const selectStudentsByClass = async (class_id: string): Promise<StudentClass[]> => {
   try {
     const studentsByClass = await StudentClass.findAll({
-      // raw: true,
-      attributes: ['student_id', 'pending', 'permission_date', 'student.first_name', 'student.last_name'],
+      raw: true,
+      attributes: ['student_id', 'pending', 'request_date', 'student.first_name', 'student.last_name'],
       where: {
         class_id: class_id
       },

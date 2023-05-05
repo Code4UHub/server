@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType, BelongsTo, ForeignKey } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, BelongsTo, ForeignKey, HasMany } from 'sequelize-typescript'
+import { StudentClass } from './studentClass.model'
 import { Subject } from './subject.model'
 import { Teacher } from './teacher.model'
 
@@ -59,4 +60,7 @@ export class Class extends Model {
 
   @BelongsTo(() => Teacher)
   teacher: Teacher
+
+  @HasMany(() => StudentClass)
+  studentclass: StudentClass[]
 }

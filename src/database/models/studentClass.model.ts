@@ -35,7 +35,8 @@ export class StudentClass extends Model {
     allowNull: false,
     defaultValue: moment(getCurrentDate(), 'YYYY-MM-DD')
   })
-  permission_date: Date
+  request_date: Date
+
 
   @BelongsTo(() => Student)
   student: Student

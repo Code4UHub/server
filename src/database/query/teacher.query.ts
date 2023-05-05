@@ -2,6 +2,8 @@ import { TeacherType } from '../../types/teacher.type'
 import { Teacher } from '../models/teacher.model'
 import { Class } from '../models/class.model'
 import { Subject } from '../models/subject.model'
+import { StudentClass } from '../models/studentClass.model'
+import { Student } from '../models/student.model'
 
 export const selectTeachers = async (): Promise<TeacherType[]> => {
   try {
@@ -69,6 +71,48 @@ export const selectClassesByTeacher = async (teacher_id: string): Promise<Class[
       ]
     })
     return classesByTeacher
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+export const selectTeacherRequests = async (teacher_id: string) => {
+  try {
+    const teacherRequest = await Class.findAll({
+      raw: true,
+      attributes: [
+        'class_id',
+        'subject.subject_id',
+        'subject.subject_name',
+        'studentclass.student_id',
+        'studentclass.student.first_name',
+        'studentclass.student.last_name',
+        'studentclass.request_date'
+      ],
+      where: {
+        teacher_id: teacher_id
+      },
+      include: [
+        {
+          model: Subject,
+          attributes: []
+        },
+        {
+          model: StudentClass,
+          attributes: [],
+          required: true,
+          include: [
+            {
+              model: Student,
+              attributes: []
+            }
+          ]
+        }
+      ]
+    })
+
+    return teacherRequest
   } catch (e: any) {
     // throw new Error("MY ERROR")
     throw e
