@@ -8,7 +8,6 @@ import { Student } from '../models/student.model'
 import { StudentNotFoundError } from '../../errors/studentNotFoundError'
 import { ClassNotFoundError } from '../../errors/classNotFoundError'
 
-
 export const selectClasses = async (): Promise<Class[]> => {
   try {
     const classes: Class[] = await Class.findAll({
@@ -163,7 +162,7 @@ export const selectStudentsByClass = async (class_id: string): Promise<StudentCl
 export const acceptStudentToClass = async (studentClass: StudentClassType) => {
   try {
     const res = await selectStudentClass(studentClass)
-    const studentClassExists = res.length > 0 ? true : false
+    const studentClassExists = res ? true : false
 
     if (studentClassExists) {
       const acceptedStudent = await StudentClass.update(
