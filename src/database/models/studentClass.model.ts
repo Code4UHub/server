@@ -37,6 +37,7 @@ export class StudentClass extends Model {
   })
   request_date: Date
 
+
   @BelongsTo(() => Student)
   student: Student
 
