@@ -12,7 +12,8 @@ export class Class extends Model {
   class_id: string
 
   @Column({
-    type: DataType.BOOLEAN
+    type: DataType.BOOLEAN,
+    defaultValue: false
   })
   is_finished: boolean
 

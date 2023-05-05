@@ -3,14 +3,28 @@ import { StudentClassType } from '../../types/studentClass.type'
 import { Class } from '../models/class.model'
 import { StudentClass } from '../models/studentClass.model'
 import { Subject } from '../models/subject.model'
+import { Teacher } from '../models/teacher.model'
+import { Student } from '../models/student.model'
 
 export const selectClasses = async () => {
   try {
     const classes = await Class.findAll({
-      attributes: ['class_id', 'subject_id', 'subject.subject_name', 'teacher_id'],
+      attributes: [
+        'class_id',
+        'subject_id',
+        'subject.subject_name',
+        'teacher_id',
+        'teacher.first_name',
+        'teacher.last_name'
+      ],
       include: [
         {
           model: Subject,
+          attributes: [],
+          required: true
+        },
+        {
+          model: Teacher,
           attributes: [],
           required: true
         }
@@ -45,6 +59,11 @@ export const selectClass = async (id: string): Promise<Class[]> => {
         {
           model: Subject,
           attributes: [],
+          required: true
+        },
+        {
+          model: Teacher,
+          attributes: ['first_name', 'last_name'],
           required: true
         }
       ]
@@ -117,9 +136,17 @@ export const selectStudentsByClass = async (class_id: string): Promise<StudentCl
   try {
     const studentsByClass = await StudentClass.findAll({
       raw: true,
+      attributes: ['student_id', 'pending', 'permission_date', 'student.first_name', 'student.last_name'],
       where: {
         class_id: class_id
-      }
+      },
+      include: [
+        {
+          model: Student,
+          attributes: [],
+          required: true
+        }
+      ]
     })
     return studentsByClass
   } catch (e: any) {
