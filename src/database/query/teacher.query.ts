@@ -88,7 +88,8 @@ export const selectTeacherRequests = async (teacher_id: string) => {
         'studentclass.student_id',
         'studentclass.student.first_name',
         'studentclass.student.last_name',
-        'studentclass.request_date'
+        'studentclass.request_date',
+        'studentclass.pending'
       ],
       where: {
         teacher_id: teacher_id
