@@ -74,6 +74,7 @@ export const postClass = async (req: Request, res: Response): Promise<void> => {
     })
     return
   } catch (e: any) {
+    console.log(e)
     res.status(500).json({
       status: 'error',
       data: 'Couldnt create class'

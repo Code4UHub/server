@@ -1,4 +1,4 @@
-import { Table, Column, Model, DataType, Default, BelongsTo } from 'sequelize-typescript'
+import { Table, Column, Model, DataType } from 'sequelize-typescript'
 
 @Table({ tableName: 'teacher' })
 export class Teacher extends Model {
