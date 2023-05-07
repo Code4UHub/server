@@ -5,7 +5,10 @@ import {
   createClass,
   registerStudentToClass,
   selectStudentsByClass,
-  acceptStudentToClass
+  acceptStudentToClass,
+  rejectStudentToClass,
+  acceptManyStudentToClass,
+  rejectManyStudentToClass
 } from '../database/query/class.query'
 import { ClassType } from '../types/class.type'
 import { Class } from '../database/models/class.model'
@@ -151,10 +154,10 @@ export const getStudentsByClass = async (req: Request, res: Response): Promise<v
   }
 }
 
-export const putStudentClass = async (req: Request, res: Response) => {
+export const putStudentClass = async (req: Request, res: Response): Promise<void> => {
   try {
-    const newStudentClass: StudentClassType = req.body
-    const query = await acceptStudentToClass(newStudentClass)
+    const curStudentClass: StudentClassType = req.body
+    const query = await acceptStudentToClass(curStudentClass)
 
     // If the query is successfull
     if (Array.isArray(query)) {
@@ -167,6 +170,112 @@ export const putStudentClass = async (req: Request, res: Response) => {
         status: 'failed',
         data: query
       })
+    }
+  } catch (e: any) {
+    res.status(404).json({
+      status: 'error',
+      data: e.message
+    })
+  }
+}
+
+export const deleteStudentClass = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const curStudentClass: StudentClassType = req.body
+    const query = await rejectStudentToClass(curStudentClass)
+
+    // If the query is successfull
+    if (typeof query == 'number' && query > 0) {
+      res.status(200).json({
+        status: 'success',
+        data: 'Student successfully rejected'
+      })
+    } else {
+      res.status(400).json({
+        status: 'failed',
+        data: query
+      })
+    }
+  } catch (e: any) {
+    res.status(404).json({
+      status: 'error',
+      data: e.message
+    })
+  }
+}
+
+export const putManyStudentClass = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const arrStudentClass: StudentClassType[] = req.body
+    const query = await acceptManyStudentToClass(arrStudentClass)
+
+    // If the query was successful
+    if (typeof query != 'string') {
+      // Check the list if there was an error at accepting one student
+      const listOfStudents = await Promise.all(query)
+      let allValidStudentAccepted = true
+      for (const student of listOfStudents) {
+        if (student.status != 'Accepted') {
+          allValidStudentAccepted = false
+          break
+        }
+      }
+
+      // No errors at acepting all students
+      if (allValidStudentAccepted == true) {
+        res.status(200).json({
+          status: 'success',
+          data: listOfStudents
+        })
+      } else {
+        res.status(401).json({
+          status: 'failed',
+          data: listOfStudents
+        })
+      }
+    } else {
+      throw new Error()
+    }
+  } catch (e: any) {
+    res.status(404).json({
+      status: 'error',
+      data: e.message
+    })
+  }
+}
+
+export const deleteManyStudentClass = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const arrStudentClass: StudentClassType[] = req.body
+    const query = await rejectManyStudentToClass(arrStudentClass)
+
+    // If the query is successfull
+    // If the query was successful
+    if (typeof query != 'string') {
+      // Check the list if there was an error at rejecting one student
+      const listOfStudents = await Promise.all(query)
+      let allValidStudentRejected = true
+      for (const student of listOfStudents) {
+        if (student.status != 'Rejected') {
+          allValidStudentRejected = false
+          break
+        }
+      }
+
+      // No errors at rejecting all students
+      if (allValidStudentRejected == true) {
+        res.status(200).json({
+          status: 'success',
+          data: listOfStudents
+        })
+      } else {
+        res.status(401).json({
+          status: 'failed',
+          data: listOfStudents
+        })
+      }
+    } else {
+      throw new Error()
     }
   } catch (e: any) {
     res.status(404).json({
