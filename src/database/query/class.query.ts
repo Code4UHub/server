@@ -7,6 +7,7 @@ import { Teacher } from '../models/teacher.model'
 import { Student } from '../models/student.model'
 import { StudentNotFoundError } from '../../errors/studentNotFoundError'
 import { ClassNotFoundError } from '../../errors/classNotFoundError'
+import { Sequelize } from 'sequelize'
 
 export const selectClasses = async (): Promise<Class[]> => {
   try {
@@ -17,8 +18,7 @@ export const selectClasses = async (): Promise<Class[]> => {
         'subject_id',
         'subject.subject_name',
         'teacher_id',
-        'teacher.first_name',
-        'teacher.last_name'
+        [Sequelize.literal('"teacher"."first_name" || \' \' || "teacher"."last_name"'), 'teacher_name']
       ],
       include: [
         {
@@ -51,7 +51,8 @@ export const selectClass = async (id: string): Promise<Class | null> => {
         'end_time',
         'teacher_id',
         'subject_id',
-        'subject.subject_name'
+        'subject.subject_name',
+        [Sequelize.literal('"teacher"."first_name" || \' \' || "teacher"."last_name"'), 'teacher_name']
       ],
       where: {
         class_id: id
@@ -64,7 +65,7 @@ export const selectClass = async (id: string): Promise<Class | null> => {
         },
         {
           model: Teacher,
-          attributes: ['first_name', 'last_name'],
+          attributes: [],
           required: true
         }
       ]
@@ -159,7 +160,7 @@ export const selectStudentsByClass = async (class_id: string): Promise<StudentCl
   }
 }
 
-export const acceptStudentToClass = async (studentClass: StudentClassType) => {
+export const acceptStudentToClass = async (studentClass: StudentClassType): Promise<number[] | string> => {
   try {
     const res = await selectStudentClass(studentClass)
     const studentClassExists = res ? true : false
@@ -188,5 +189,87 @@ export const acceptStudentToClass = async (studentClass: StudentClassType) => {
   } catch (e: any) {
     console.log(e)
     return 'Error at acepting student'
+  }
+}
+
+export const rejectStudentToClass = async (studentClass: StudentClassType): Promise<number | string> => {
+  try {
+    const res = await selectStudentClass(studentClass)
+    const studentClassExists = res ? true : false
+
+    if (studentClassExists) {
+      const deletedStudent = await StudentClass.destroy({
+        where: {
+          class_id: studentClass.class_id,
+          student_id: studentClass.student_id,
+          pending: true
+        }
+      })
+
+      if (deletedStudent == 0) {
+        return 'Student is already accepted into that class'
+      } else {
+        return deletedStudent
+      }
+    } else {
+      return 'Student is not registered to that class'
+    }
+  } catch (e: any) {
+    return 'Error at rejecting student'
+  }
+}
+
+export const acceptManyStudentToClass = async (arrStudentClass: StudentClassType[]) => {
+  try {
+    const arrStudentClassStatus = arrStudentClass.map(async (stuCla) => {
+      const query = await acceptStudentToClass(stuCla)
+
+      // If the student is successfully accepted
+      if (Array.isArray(query)) {
+        return {
+          student_id: stuCla.student_id,
+          class_id: stuCla.class_id,
+          status: 'Accepted'
+        }
+      } else {
+        // If there was an error at accepting the student
+        return {
+          student_id: stuCla.student_id,
+          class_id: stuCla.class_id,
+          status: query
+        }
+      }
+    })
+
+    return arrStudentClassStatus
+  } catch (e: any) {
+    return 'Error at acepting students'
+  }
+}
+
+export const rejectManyStudentToClass = async (arrStudentClass: StudentClassType[]) => {
+  try {
+    const arrStudentClassStatus = arrStudentClass.map(async (stuCla) => {
+      const query = await rejectStudentToClass(stuCla)
+
+      // if the student is successfully rejected
+      if (typeof query == 'number' && query > 0) {
+        return {
+          student_id: stuCla.student_id,
+          class_id: stuCla.class_id,
+          status: 'Rejected'
+        }
+      } else {
+        // If there was an error at rejecting the student
+        return {
+          student_id: stuCla.student_id,
+          class_id: stuCla.class_id,
+          status: query
+        }
+      }
+    })
+    return arrStudentClassStatus
+  } catch (e: any) {
+    return 'Error at rejecting student'
   }
 }
