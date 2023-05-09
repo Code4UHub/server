@@ -65,8 +65,6 @@ export const selectClassesByStudent = async (student_id: string): Promise<Studen
         'class.days',
         'class.start_time',
         'class.end_time',
-        'class.teacher.first_name',
-        'class.teacher.last_name',
         'class.subject.subject_name',
         [
           Sequelize.fn(
