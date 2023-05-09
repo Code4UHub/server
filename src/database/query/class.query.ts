@@ -15,6 +15,7 @@ export const selectClasses = async (): Promise<Class[]> => {
       raw: true,
       attributes: [
         'class_id',
+        'is_finished',
         'subject_id',
         'subject.subject_name',
         'teacher_id',
@@ -45,6 +46,7 @@ export const selectClass = async (id: string): Promise<Class | null> => {
       raw: true,
       attributes: [
         'class_id',
+        'is_finished',
         'finished_date',
         'days',
         'start_time',

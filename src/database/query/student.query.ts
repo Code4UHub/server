@@ -61,7 +61,7 @@ export const selectClassesByStudent = async (student_id: string): Promise<Studen
       raw: true,
       attributes: [
         'class_id',
-        'pending',
+        'class.is_finished',
         'class.days',
         'class.start_time',
         'class.end_time',

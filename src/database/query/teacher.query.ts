@@ -58,7 +58,7 @@ export const selectClassesByTeacher = async (teacher_id: string): Promise<Class[
   try {
     const classesByTeacher = await Class.findAll({
       raw: true,
-      attributes: ['class_id', 'subject_id', 'subject.subject_name', 'days', 'start_time', 'end_time'],
+      attributes: ['class_id', 'is_finished', 'subject_id', 'subject.subject_name', 'days', 'start_time', 'end_time'],
       where: {
         teacher_id: teacher_id
       },
