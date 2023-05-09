@@ -4,6 +4,7 @@ import { Teacher } from '../models/teacher.model'
 import { Subject } from '../models/subject.model'
 import { StudentType } from '../../types/student.type'
 import { StudentClass } from '../models/studentClass.model'
+import { Sequelize } from 'sequelize'
 
 export const selectStudents = async (): Promise<StudentType[]> => {
   try {
@@ -66,7 +67,16 @@ export const selectClassesByStudent = async (student_id: string): Promise<Studen
         'class.end_time',
         'class.teacher.first_name',
         'class.teacher.last_name',
-        'class.subject.subject_name'
+        'class.subject.subject_name',
+        [
+          Sequelize.fn(
+            'concat',
+            Sequelize.col('class.teacher.first_name'),
+            ' ',
+            Sequelize.col('class.teacher.last_name')
+          ),
+          'teacher_name'
+        ]
       ],
       where: {
         student_id: student_id
