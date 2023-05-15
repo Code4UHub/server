@@ -128,7 +128,7 @@ export const registerStudentToClass = async (newStudentClass: StudentClassType):
 
     if (!studentRegistered) {
       const res = await StudentClass.create(newStudentClass)
-      console.log(res)
+
       // const user = res.get({ plain: true })
       // console.log('Student succcesfully registered')
       return res

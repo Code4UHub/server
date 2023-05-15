@@ -164,8 +164,6 @@ export const getTeacherClasses = async (req: Request, res: Response) => {
 export const getTeacherRequest = async (req: Request, res: Response) => {
   try {
     const teacher_id: string = req.params.teacher_id as string
-    console.log('NEW ROUTE')
-
     const query = await selectTeacherRequests(teacher_id)
 
     if (query.length > 0) {
@@ -176,7 +174,7 @@ export const getTeacherRequest = async (req: Request, res: Response) => {
     } else {
       res.status(404).json({
         status: 'failed',
-        data: 'Classes not found for that user'
+        data: 'Requests not found for that teacher'
       })
     }
   } catch (e: any) {

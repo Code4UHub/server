@@ -97,13 +97,14 @@ export const postRegisterStudent = async (req: Request, res: Response): Promise<
         status: 'success',
         data: 'Student registered'
       })
+    } else {
+      // If student already in class
+      res.status(409).json({
+        status: 'failed',
+        data: 'Student already in class'
+      })
     }
 
-    // If student already in class
-    res.status(409).json({
-      status: 'failed',
-      data: 'Student already in class'
-    })
     return
   } catch (e: any) {
     if (e instanceof StudentNotFoundError) {
