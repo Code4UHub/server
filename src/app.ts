@@ -10,6 +10,7 @@ import { router as questionRouter } from './routes/question.route'
 import { router as assignmentRouter } from './routes/assignment.route'
 import { router as moduleRouter } from './routes/module.route'
 import { router as classRouter } from './routes/class.route'
+import { router as configurationRouter } from './routes/configuration.route'
 import authMiddleware from './middleware/auth.middleware'
 
 export const db = createDb()
@@ -86,5 +87,6 @@ app.use(`${url}`, assignmentRouter)
 app.use(`${url}`, moduleRouter)
 app.use(`${url}`, classRouter)
 app.use(`${url}`, questionRouter)
+app.use(`${url}`, configurationRouter)
 
 export default app
