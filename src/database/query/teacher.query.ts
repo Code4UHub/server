@@ -108,7 +108,10 @@ export const selectTeacherRequests = async (teacher_id: string) => {
               model: Student,
               attributes: []
             }
-          ]
+          ],
+          where: {
+            pending: true
+          }
         }
       ]
     })

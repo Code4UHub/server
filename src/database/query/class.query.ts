@@ -145,7 +145,8 @@ export const selectStudentsByClass = async (class_id: string): Promise<StudentCl
       raw: true,
       attributes: ['student_id', 'pending', 'request_date', 'student.first_name', 'student.last_name'],
       where: {
-        class_id: class_id
+        class_id: class_id,
+        pending: false
       },
       include: [
         {
