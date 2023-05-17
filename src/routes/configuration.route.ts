@@ -3,4 +3,4 @@ import * as configurationController from '../controllers/configuration.controlle
 
 export const router: Router = Router()
 
-router.route('/time').get(configurationController.getCurrentTime)
+router.route('/configuration/time').get(configurationController.getCurrentTime)
