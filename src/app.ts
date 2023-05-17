@@ -21,14 +21,15 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
 
-const allowedOrigins = ['*']
-const options: cors.CorsOptions = {
-  origin: allowedOrigins,
-  optionsSuccessStatus: 200
-}
+// const allowedOrigins = ['*']
+// const options: cors.CorsOptions = {
+//   origin: allowedOrigins,
+//   optionsSuccessStatus: 200
+// }
 
-app.options('*', cors())
-app.use(cors(options))
+// app.options('*', cors())
+// app.use(cors(options))
+app.use(cors())
 app.use(express.json())
 
 app.use((req, res, next) => {

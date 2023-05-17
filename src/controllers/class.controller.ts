@@ -65,7 +65,7 @@ export const postClass = async (req: Request, res: Response): Promise<void> => {
     if (query !== null && typeof query === 'object') {
       res.status(201).json({
         status: 'success',
-        data: 'Ok'
+        data: 'Class created successfully'
       })
       return
     }
@@ -164,7 +164,7 @@ export const putStudentClass = async (req: Request, res: Response): Promise<void
     if (Array.isArray(query)) {
       res.status(200).json({
         status: 'success',
-        data: 'Ok'
+        data: 'Student accepted'
       })
     } else {
       res.status(400).json({
