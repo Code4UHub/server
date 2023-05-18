@@ -214,24 +214,29 @@ export const putManyStudentClass = async (req: Request, res: Response): Promise<
     if (typeof query != 'string') {
       // Check the list if there was an error at accepting one student
       const listOfStudents = await Promise.all(query)
-      let allValidStudentAccepted = true
+
+      const numberOfStudents = listOfStudents.length
+      let validStudents = 0
+      let invalidStudents = 0
+
       for (const student of listOfStudents) {
         if (student.status != 'Accepted') {
-          allValidStudentAccepted = false
-          break
+          invalidStudents += 1
+        } else {
+          validStudents += 1
         }
       }
 
       // No errors at acepting all students
-      if (allValidStudentAccepted == true) {
+      if (numberOfStudents == validStudents) {
         res.status(200).json({
           status: 'success',
-          data: listOfStudents
+          data: `${validStudents} students accepted`
         })
       } else {
         res.status(401).json({
           status: 'failed',
-          data: listOfStudents
+          data: `${validStudents} students accepted and there were errors at accepting ${invalidStudents} students`
         })
       }
     } else {
@@ -255,24 +260,28 @@ export const deleteManyStudentClass = async (req: Request, res: Response): Promi
     if (typeof query != 'string') {
       // Check the list if there was an error at rejecting one student
       const listOfStudents = await Promise.all(query)
-      let allValidStudentRejected = true
+      const numberOfStudents = listOfStudents.length
+      let validStudents = 0
+      let invalidStudents = 0
+
       for (const student of listOfStudents) {
         if (student.status != 'Rejected') {
-          allValidStudentRejected = false
-          break
+          invalidStudents += 1
+        } else {
+          validStudents += 1
         }
       }
 
       // No errors at rejecting all students
-      if (allValidStudentRejected == true) {
+      if (numberOfStudents == validStudents) {
         res.status(200).json({
           status: 'success',
-          data: listOfStudents
+          data: `${validStudents} students rejected`
         })
       } else {
         res.status(401).json({
           status: 'failed',
-          data: listOfStudents
+          data: `${validStudents} students rejected and there were errors at rejecting ${invalidStudents} students`
         })
       }
     } else {
