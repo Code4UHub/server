@@ -1,0 +1,69 @@
+### Run code
+POST {{host}}/{{version}}/run
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "source_code": "def add(a,b):\n\treturn int(a) + int(b)\n\nimport sys\ntry:\n\ttest = sys.argv[1]\n\tinput = test.split()\n\tprint(add(input[0], input[1]))\nexcept:\n\tprint('Error has ocurred')\n",
+  "shown_tests": [
+    {
+      "input": "1 2",
+      "output": "3"
+    },
+    {
+      "input": "10 20",
+      "output": "30"
+    },
+    {
+      "input": "1 2",
+      "output": "3"
+    }
+  ],
+  "hidden_tests": [
+    {
+      "input": "1 2",
+      "output": "3"
+    },
+    {
+      "input": "10 20",
+      "output": "30"
+    }
+  ]
+}
+
+
+### Submit an assignment
+POST {{host}}/{{version}}/submit
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "student_id": "A0000001",
+  "open_question_id": 2,
+  "source_code": "def add(a,b):\n\treturn int(a) + int(b)\n\nimport sys\ntry:\n\ttest = sys.argv[1]\n\tinput = test.split()\n\tprint(add(input[0], input[1]))\nexcept:\n\tprint('Error has ocurred')\n",
+  "shown_tests": [
+    {
+      "input": "1 2",
+      "output": "3"
+    },
+    {
+      "input": "10 20",
+      "output": "30"
+    },
+    {
+      "input": "1 2",
+      "output": "3"
+    }
+  ],
+  "hidden_tests": [
+    {
+      "input": "1 2",
+      "output": "3"
+    },
+    {
+      "input": "10 20",
+      "output": "30"
+    }
+  ]
+}
+
