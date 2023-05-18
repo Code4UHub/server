@@ -38,7 +38,7 @@ export const postSubject = async (req: Request, res: Response): Promise<void> =>
     console.log(e)
     res.status(500).json({
       status: 'error',
-      data: 'Couldnt create class'
+      data: 'Couldnt create module'
     })
   }
 }

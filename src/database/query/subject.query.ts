@@ -29,13 +29,13 @@ export const selectSubject = async (subject_id: string) => {
   }
 }
 
-export const createClass = async (classDb: SubjectType): Promise<Subject | null> => {
+export const createClass = async (subjectDb: SubjectType): Promise<Subject | null> => {
   try {
-    const res = await selectSubject(classDb['subject_id'])
+    const res = await selectSubject(subjectDb['subject_id'])
     const exists: boolean = res !== null && typeof res === 'object' ? true : false
 
     if (!exists) {
-      const res = await Subject.create(classDb)
+      const res = await Subject.create(subjectDb)
 
       return res
     } else {
