@@ -166,17 +166,11 @@ export const getTeacherRequest = async (req: Request, res: Response) => {
     const teacher_id: string = req.params.teacher_id as string
     const query = await selectTeacherRequests(teacher_id)
 
-    if (query.length > 0) {
-      res.status(200).json({
-        status: 'success',
-        data: query
-      })
-    } else {
-      res.status(404).json({
-        status: 'failed',
-        data: 'Requests not found for that teacher'
-      })
-    }
+    res.status(200).json({
+      status: 'success',
+      data: query
+    })
+    return
   } catch (e: any) {
     res.status(404).json({
       status: 'error',

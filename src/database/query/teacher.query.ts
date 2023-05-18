@@ -77,7 +77,7 @@ export const selectClassesByTeacher = async (teacher_id: string): Promise<Class[
   }
 }
 
-export const selectTeacherRequests = async (teacher_id: string) => {
+export const selectTeacherRequests = async (teacher_id: string): Promise<Class[]> => {
   try {
     const teacherRequest = await Class.findAll({
       raw: true,
