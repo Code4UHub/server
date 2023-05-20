@@ -6,7 +6,8 @@ export class Module extends Model {
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,
-    allowNull: false
+    allowNull: false,
+    autoIncrement: true
   })
   module_id: number
 
