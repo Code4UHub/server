@@ -5,9 +5,6 @@ import { ChallengeType } from '../types/challenge.type'
 export const postChallenge = async (req: Request, res: Response): Promise<void> => {
   try {
     const newChallenge: ChallengeType = req.body
-    console.log('--------------------------')
-    console.log(newChallenge)
-    console.log('--------------------------')
     const query = await createChallenge(newChallenge)
 
     res.status(201).json({
