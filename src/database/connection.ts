@@ -10,6 +10,7 @@ import { OpenQuestion } from './models/openQuestion.model'
 import { CloseQuestion } from './models/closeQuestion.model'
 import { Class } from './models/class.model'
 import { StudentClass } from './models/studentClass.model'
+import { Challenge } from './models/challenge.model'
 
 import dotenv from 'dotenv'
 
@@ -55,7 +56,8 @@ export const createDb = async () => {
       OpenQuestion,
       CloseQuestion,
       Class,
-      StudentClass
+      StudentClass,
+      Challenge
     ])
 
     return sequelize

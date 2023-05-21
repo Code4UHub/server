@@ -6,7 +6,8 @@ export class Challenge extends Model {
   @Column({
     type: DataType.INTEGER,
     primaryKey: true,
-    allowNull: false
+    allowNull: false,
+    autoIncrement: true
   })
   challenge_id: number
 
