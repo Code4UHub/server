@@ -168,30 +168,33 @@ export const acceptStudentToClass = async (studentClass: StudentClassType): Prom
     const res = await selectStudentClass(studentClass)
     const studentClassExists = res ? true : false
 
-    if (studentClassExists) {
-      const acceptedStudent = await StudentClass.update(
-        { pending: false },
-        {
-          where: {
-            class_id: studentClass.class_id,
-            student_id: studentClass.student_id,
-            pending: true
-          }
-        }
-      )
-
-      // check if a row was updated or not
-      if (acceptedStudent[0] == 0) {
-        return 'Student already registered to that class'
-      } else {
-        return acceptedStudent
-      }
-    } else {
+    // If student hasnt registered to class
+    if (!studentClassExists) {
       return 'Student is not registered to that class'
     }
+
+    // If student registered then update his status
+    const acceptedStudent = await StudentClass.update(
+      { pending: false },
+      {
+        where: {
+          class_id: studentClass.class_id,
+          student_id: studentClass.student_id,
+          pending: true
+        }
+      }
+    )
+
+    // Check if a row was updated or not
+    if (acceptedStudent[0] == 0) {
+      return 'Student already registered to that class'
+    } else {
+      return acceptedStudent
+    }
   } catch (e: any) {
+    console.log('ERROR')
     console.log(e)
-    return 'Error at acepting student'
+    throw e
   }
 }
 
@@ -200,25 +203,28 @@ export const rejectStudentToClass = async (studentClass: StudentClassType): Prom
     const res = await selectStudentClass(studentClass)
     const studentClassExists = res ? true : false
 
-    if (studentClassExists) {
-      const deletedStudent = await StudentClass.destroy({
-        where: {
-          class_id: studentClass.class_id,
-          student_id: studentClass.student_id,
-          pending: true
-        }
-      })
-
-      if (deletedStudent == 0) {
-        return 'Student is already accepted into that class'
-      } else {
-        return deletedStudent
-      }
-    } else {
+    // If student hasnt registered to class
+    if (!studentClassExists) {
       return 'Student is not registered to that class'
     }
+
+    // If student registered then update his status
+    const deletedStudent = await StudentClass.destroy({
+      where: {
+        class_id: studentClass.class_id,
+        student_id: studentClass.student_id,
+        pending: true
+      }
+    })
+
+    // Check if a row was updated or not
+    if (deletedStudent == 0) {
+      return 'Student is already accepted into that class'
+    } else {
+      return deletedStudent
+    }
   } catch (e: any) {
-    return 'Error at rejecting student'
+    throw e
   }
 }
 
@@ -234,8 +240,9 @@ export const acceptManyStudentToClass = async (arrStudentClass: StudentClassType
           class_id: stuCla.class_id,
           status: 'Accepted'
         }
-      } else {
-        // If there was an error at accepting the student
+      }
+      // If there was an error at accepting the student
+      else {
         return {
           student_id: stuCla.student_id,
           class_id: stuCla.class_id,
@@ -246,7 +253,7 @@ export const acceptManyStudentToClass = async (arrStudentClass: StudentClassType
 
     return arrStudentClassStatus
   } catch (e: any) {
-    return 'Error at acepting students'
+    throw e
   }
 }
 
@@ -262,8 +269,9 @@ export const rejectManyStudentToClass = async (arrStudentClass: StudentClassType
           class_id: stuCla.class_id,
           status: 'Rejected'
         }
-      } else {
-        // If there was an error at rejecting the student
+      }
+      // If there was an error at rejecting the student
+      else {
         return {
           student_id: stuCla.student_id,
           class_id: stuCla.class_id,
@@ -273,6 +281,6 @@ export const rejectManyStudentToClass = async (arrStudentClass: StudentClassType
     })
     return arrStudentClassStatus
   } catch (e: any) {
-    return 'Error at rejecting student'
+    throw e
   }
 }

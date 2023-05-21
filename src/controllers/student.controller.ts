@@ -4,7 +4,15 @@ import { selectClassesByStudent } from '../database/query/student.query'
 import { StudentType } from '../types/student.type'
 import { generateToken } from '../utils/jwt-sign'
 import { StudentClass } from '../database/models/studentClass.model'
+import { StudentNotFoundError } from '../errors/studentNotFoundError'
 
+/**
+ * Retrieves all existing students.
+ *
+ * @returns 200: If students could be retrieved
+ *
+ * @throws 500: If there is an error retrieving the students.
+ */
 export const getStudents = async (req: Request, res: Response): Promise<void> => {
   try {
     const query: StudentType[] = await selectStudents()
@@ -20,6 +28,17 @@ export const getStudents = async (req: Request, res: Response): Promise<void> =>
   }
 }
 
+/**
+ * Retrieves a student based on the provided email and password.
+ *
+ * @returns
+ * - 200: If the login is successful and the student information is found.
+ * - 400: If the provided email is invalid.
+ * - 401: If the provided password is incorrect.
+ * - 404: If the student is not found.
+ *
+ * @throws 500: If there is a server-side error.
+ */
 export const getStudent = async (req: Request, res: Response): Promise<void> => {
   try {
     const email: string = req.query.email as string
@@ -83,6 +102,17 @@ export const getStudent = async (req: Request, res: Response): Promise<void> => 
   }
 }
 
+/**
+ * Creates a student based on the provided credentials
+ *
+ * @returns
+ * - 200: If the login is successful and the student information is found.
+ * - 400: If the provided email is invalid.
+ * - 404: If the student is not found.
+ * - 409: If the email is already in use.
+ *
+ * @throws 500: If there is a server-side error.
+ */
 export const postStudent = async (req: Request, res: Response): Promise<void> => {
   try {
     const student: StudentType = req.body
@@ -132,30 +162,37 @@ export const postStudent = async (req: Request, res: Response): Promise<void> =>
   }
 }
 
+/**
+ * Retrieves all the classes a student is registered to.
+ *
+ * @returns
+ * - 200: If the student is registered to one or more classes.
+ * - 409: If the student doesnt exist
+ *
+ * @throws 500: If there is a server-side error.
+ */
 export const getStudentClasses = async (req: Request, res: Response): Promise<void> => {
   try {
     const student_id: string = req.params.student_id
     const query: StudentClass[] = await selectClassesByStudent(student_id)
 
-    // If student registered to one or more classes
-    if (query.length > 0) {
-      res.status(200).json({
-        status: 'success',
-        data: query
+    res.status(200).json({
+      status: 'success',
+      data: query
+    })
+    return
+  } catch (e: any) {
+    if (e instanceof StudentNotFoundError) {
+      res.status(409).json({
+        status: 'failed',
+        data: e.message
       })
       return
     }
 
-    // If student not registered to any classes
-    res.status(204).json({
-      status: 'success',
-      data: 'Classes not found for that user'
-    })
-    return
-  } catch (e: any) {
     res.status(500).json({
       status: 'error',
-      data: e
+      data: 'Couldnt get student classes'
     })
   }
 }

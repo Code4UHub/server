@@ -137,31 +137,24 @@ export const postTeacher = async (req: Request, res: Response): Promise<void> =>
   }
 }
 
-export const getTeacherClasses = async (req: Request, res: Response) => {
+export const getTeacherClasses = async (req: Request, res: Response): Promise<void> => {
   try {
     const teacher_id: string = req.params.teacher_id as string
     const query: Class[] = await selectClassesByTeacher(teacher_id)
 
-    if (query.length > 0) {
-      res.status(200).json({
-        status: 'success',
-        data: query
-      })
-    } else {
-      res.status(404).json({
-        status: 'failed',
-        data: 'Classes not found for that user'
-      })
-    }
+    res.status(200).json({
+      status: 'success',
+      data: query
+    })
   } catch (e: any) {
-    res.status(404).json({
+    res.status(500).json({
       status: 'error',
-      data: e
+      data: 'Couldnt get classes of teacher'
     })
   }
 }
 
-export const getTeacherRequest = async (req: Request, res: Response) => {
+export const getTeacherRequest = async (req: Request, res: Response): Promise<void> => {
   try {
     const teacher_id: string = req.params.teacher_id as string
     const query = await selectTeacherRequests(teacher_id)

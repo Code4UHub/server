@@ -1,10 +1,9 @@
 import { Assignment } from '../models/assignment.model'
 import { OpenQuestion } from '../models/openQuestion.model'
 import { CloseQuestion } from '../models/closeQuestion.model'
-
 import { AssignmentType } from '../../types/assignment.type'
 
-export const selectAssignments = async () => {
+export const selectAssignments = async (): Promise<Assignment[]> => {
   try {
     const assignments = await Assignment.findAll({
       raw: true
@@ -16,7 +15,7 @@ export const selectAssignments = async () => {
   }
 }
 
-export const selectQuestionsByAssignment = async (assignment_id: string) => {
+export const selectQuestionsByAssignment = async (assignment_id: string): Promise<OpenQuestion[]> => {
   try {
     const questions = await OpenQuestion.findAll({
       attributes: ['open_question_id', 'open_question', 'assignment_id'],
