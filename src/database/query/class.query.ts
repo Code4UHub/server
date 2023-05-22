@@ -5,9 +5,14 @@ import { StudentClass } from '../models/studentClass.model'
 import { Subject } from '../models/subject.model'
 import { Teacher } from '../models/teacher.model'
 import { Student } from '../models/student.model'
+import { Challenge } from '../models/challenge.model'
+import { ChallengeType } from '../../types/challenge.type'
+
+import { Module } from '../models/module.model'
 import { StudentNotFoundError } from '../../errors/studentNotFoundError'
 import { ClassNotFoundError } from '../../errors/classNotFoundError'
 import { Sequelize } from 'sequelize'
+import { EnabledModule } from '../models/enabledModule'
 
 export const selectClasses = async (): Promise<Class[]> => {
   try {
@@ -274,5 +279,37 @@ export const rejectManyStudentToClass = async (arrStudentClass: StudentClassType
     return arrStudentClassStatus
   } catch (e: any) {
     return 'Error at rejecting student'
+  }
+}
+
+export const selectChallengesByClass = async (class_id: string): Promise<EnabledModule[]> => {
+  try {
+    const challengesByClass = await EnabledModule.findAll({
+      raw: true,
+      attributes: ['module_id'],
+      where: {
+        class_id: class_id
+      },
+      // group: ['module.module_id'],
+      include: [
+        {
+          model: Module,
+          attributes: [],
+          required: true,
+          nested: true,
+          include: [
+            {
+              model: Challenge,
+              attributes: ['title'],
+              required: true
+            }
+          ]
+        }
+      ]
+    })
+    return challengesByClass
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
   }
 }

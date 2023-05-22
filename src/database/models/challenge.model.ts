@@ -1,4 +1,6 @@
-import { Table, Column, Model, DataType, BelongsTo, ForeignKey } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, BelongsTo, ForeignKey, HasMany } from 'sequelize-typescript'
+import { Difficulty } from './difficulty.model'
+import { EnabledModule } from './enabledModule'
 import { Module } from './module.model'
 
 @Table({ tableName: 'challenge' })
@@ -23,15 +25,15 @@ export class Challenge extends Model {
   })
   module_id: number
 
-  @BelongsTo(() => Module)
-  module: Module
-
-  @ForeignKey(() => Module)
+  @ForeignKey(() => Difficulty)
   @Column({
     type: DataType.INTEGER
   })
   difficulty_id: number
 
-  @BelongsTo(() => Module)
-  difficulty: Module
+  @BelongsTo(() => Difficulty)
+  difficulty: Difficulty
+
+  // @HasMany(() => EnabledModule)
+  // enabled_module: EnabledModule
 }
