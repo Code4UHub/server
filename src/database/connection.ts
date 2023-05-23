@@ -6,8 +6,7 @@ import { Teacher } from './models/teacher.model'
 import { Subject } from './models/subject.model'
 import { Assignment } from './models/assignment.model'
 import { Module } from './models/module.model'
-import { OpenQuestion } from './models/openQuestion.model'
-import { CloseQuestion } from './models/closeQuestion.model'
+import { Question } from './models/question.model'
 import { Class } from './models/class.model'
 import { StudentClass } from './models/studentClass.model'
 import { Challenge } from './models/challenge.model'
@@ -55,8 +54,7 @@ export const createDb = async () => {
       Subject,
       Module,
       Assignment,
-      OpenQuestion,
-      CloseQuestion,
+      Question,
       Class,
       StudentClass,
       Challenge,

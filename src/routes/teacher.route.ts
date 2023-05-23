@@ -9,5 +9,3 @@ router.route('/teacher/register').post(teacherController.postTeacher)
 router.route('/teacher/login').get(teacherController.getTeacher)
 router.route('/teacher/:teacher_id/class').get(teacherController.getTeacherClasses)
 router.route('/teacher/:teacher_id/student_class').get(teacherController.getTeacherRequest)
-
-router.route('/teacher/class/:class_id/challenges').get(teacherController.getChallengesByClass)

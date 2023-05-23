@@ -4,6 +4,9 @@ import { Class } from '../models/class.model'
 import { Subject } from '../models/subject.model'
 import { StudentClass } from '../models/studentClass.model'
 import { Student } from '../models/student.model'
+import { Module } from '../models/module.model'
+import { EnabledModule } from '../models/enabledModule'
+import { Challenge } from '../models/challenge.model'
 
 export const selectTeachers = async (): Promise<TeacherType[]> => {
   try {

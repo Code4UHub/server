@@ -9,9 +9,6 @@ import {
 import { TeacherType } from '../types/teacher.type'
 import { generateToken } from '../utils/jwt-sign'
 import { Class } from '../database/models/class.model'
-import { Challenge } from '../database/models/challenge.model'
-import { Module } from '../database/models/module.model'
-import { EnabledModule } from '../database/models/enabledModule'
 
 export const getTeachers = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -179,65 +176,5 @@ export const getTeacherRequest = async (req: Request, res: Response) => {
       status: 'error',
       data: e
     })
-  }
-}
-
-export const getChallengesByClass = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const class_id: string = req.params.class_id as string
-    const query: EnabledModule[] = await selectChallengesByClass(class_id)
-
-    // If class has more than one student
-    if (query.length > 0) {
-      res.status(200).json({
-        status: 'success',
-        data: query
-      })
-      return
-    }
-
-    // If class doesnt have any students
-    res.status(204).json({
-      status: 'success',
-      data: []
-    })
-  } catch (e: any) {
-    console.log(e)
-    res.status(500).json({
-      status: 'error',
-      data: 'Couldnt get challenges of class'
-    })
-  }
-}
-
-export const selectChallengesByClass = async (class_id: string): Promise<EnabledModule[]> => {
-  try {
-    const challengesByClass = await EnabledModule.findAll({
-      raw: false,
-      attributes: ['module_id'],
-      where: {
-        class_id: class_id
-      },
-      // group: ['module.module_id'],
-      include: [
-        {
-          model: Module,
-          attributes: ['module_id', 'title'],
-          required: true,
-          // nested: true,
-          include: [
-            {
-              model: Challenge,
-              attributes: ['title'],
-              required: true
-            }
-          ]
-        }
-      ]
-    })
-    return challengesByClass
-  } catch (e: any) {
-    // throw new Error("MY ERROR")
-    throw e
   }
 }
