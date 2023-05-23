@@ -1,5 +1,6 @@
 import { ClassType } from '../../types/class.type'
 import { StudentClassType } from '../../types/studentClass.type'
+import { EnabledModuleType } from '../../types/enabledModule.type'
 import { Class } from '../models/class.model'
 import { StudentClass } from '../models/studentClass.model'
 import { Subject } from '../models/subject.model'
@@ -8,6 +9,9 @@ import { Student } from '../models/student.model'
 import { StudentNotFoundError } from '../../errors/studentNotFoundError'
 import { ClassNotFoundError } from '../../errors/classNotFoundError'
 import { Sequelize } from 'sequelize'
+import { EnabledModule } from '../models/enabledModule'
+import { Module } from '../models/module.model'
+import { Challenge } from '../models/challenge.model'
 
 export const selectClasses = async (): Promise<Class[]> => {
   try {
@@ -246,7 +250,8 @@ export const acceptManyStudentToClass = async (arrStudentClass: StudentClassType
 
     return arrStudentClassStatus
   } catch (e: any) {
-    return 'Error at acepting students'
+    // return 'Error at acepting students'
+    throw e
   }
 }
 
@@ -273,6 +278,102 @@ export const rejectManyStudentToClass = async (arrStudentClass: StudentClassType
     })
     return arrStudentClassStatus
   } catch (e: any) {
-    return 'Error at rejecting student'
+    // return 'Error at rejecting student'
+    throw e
+  }
+}
+
+export const selectChallengesByClass = async (class_id: string): Promise<EnabledModule[]> => {
+  try {
+    const challengesByClass = await EnabledModule.findAll({
+      raw: false,
+      attributes: ['module_id'],
+      where: {
+        class_id: class_id
+      },
+      // group: ['module.module_id'],
+      include: [
+        {
+          model: Module,
+          attributes: ['module_id', 'title'],
+          required: true,
+          // nested: true,
+          include: [
+            {
+              model: Challenge,
+              attributes: ['title'],
+              required: true
+            }
+          ]
+        }
+      ]
+    })
+    return challengesByClass
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+export const selectEnabledModulesByClass = async (class_id: string): Promise<EnabledModule[]> => {
+  try {
+    const challengesByClass = await EnabledModule.findAll({
+      raw: true,
+      attributes: ['module_id', 'module.title', 'is_active'],
+      where: {
+        class_id: class_id
+      },
+      include: [
+        {
+          model: Module,
+          attributes: [],
+          required: true
+        }
+      ]
+    })
+    return challengesByClass
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+export const updateEnabledModulesByClass = async (class_id: string, modulesClass: EnabledModuleType[]) => {
+  try {
+    // const challengesByClass = await EnabledModule.update(
+    //   { pending: true },
+    //   where: {
+    //     class_id: 'class_id'
+    //   }
+    //   )
+    const enabledModuleClassStatus = modulesClass.map(async (module) => {
+      const query = await EnabledModule.update(
+        { is_active: module.is_active },
+        {
+          where: {
+            class_id: class_id,
+            module_id: module.module_id
+          }
+        }
+      )
+
+      if (Array.isArray(query)) {
+        return {
+          status: 'success',
+          module_id: module.module_id,
+          is_active: module.is_active
+        }
+      } else {
+        return {
+          status: 'failed',
+          module_id: module.module_id,
+          is_active: module.is_active
+        }
+      }
+    })
+
+    return enabledModuleClassStatus
+  } catch (e: any) {
+    throw e
   }
 }
