@@ -16,5 +16,3 @@ router.route('/class/reject_student').delete(classController.deleteStudentClass)
 
 router.route('/class/accept_students').put(classController.putManyStudentClass)
 router.route('/class/reject_students').delete(classController.deleteManyStudentClass)
-
-router.route('/class/:class_id/challenges').get(classController.getChallengesByClass)

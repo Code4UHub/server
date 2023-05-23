@@ -281,35 +281,3 @@ export const rejectManyStudentToClass = async (arrStudentClass: StudentClassType
     return 'Error at rejecting student'
   }
 }
-
-export const selectChallengesByClass = async (class_id: string): Promise<EnabledModule[]> => {
-  try {
-    const challengesByClass = await EnabledModule.findAll({
-      raw: false,
-      attributes: ['module_id'],
-      where: {
-        class_id: class_id
-      },
-      // group: ['module.module_id'],
-      include: [
-        {
-          model: Module,
-          attributes: ['module_id', 'title'],
-          required: true,
-          // nested: true,
-          include: [
-            {
-              model: Challenge,
-              attributes: ['title'],
-              required: true
-            }
-          ]
-        }
-      ]
-    })
-    return challengesByClass
-  } catch (e: any) {
-    // throw new Error("MY ERROR")
-    throw e
-  }
-}

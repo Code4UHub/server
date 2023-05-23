@@ -8,8 +8,7 @@ import {
   acceptStudentToClass,
   rejectStudentToClass,
   acceptManyStudentToClass,
-  rejectManyStudentToClass,
-  selectChallengesByClass
+  rejectManyStudentToClass
 } from '../database/query/class.query'
 import { ClassType } from '../types/class.type'
 import { Class } from '../database/models/class.model'
@@ -17,9 +16,6 @@ import { StudentClassType } from '../types/studentClass.type'
 import { StudentClass } from '../database/models/studentClass.model'
 import { StudentNotFoundError } from '../errors/studentNotFoundError'
 import { ClassNotFoundError } from '../errors/classNotFoundError'
-import { Challenge } from '../database/models/challenge.model'
-import { Module } from '../database/models/module.model'
-import { EnabledModule } from '../database/models/enabledModule'
 
 export const getClasses = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -295,34 +291,6 @@ export const deleteManyStudentClass = async (req: Request, res: Response): Promi
     res.status(404).json({
       status: 'error',
       data: e.message
-    })
-  }
-}
-
-export const getChallengesByClass = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const class_id: string = req.params.class_id as string
-    const query: EnabledModule[] = await selectChallengesByClass(class_id)
-
-    // If class has more than one student
-    if (query.length > 0) {
-      res.status(200).json({
-        status: 'success',
-        data: query
-      })
-      return
-    }
-
-    // If class doesnt have any students
-    res.status(204).json({
-      status: 'success',
-      data: []
-    })
-  } catch (e: any) {
-    console.log(e)
-    res.status(500).json({
-      status: 'error',
-      data: 'Couldnt get challenges of class'
     })
   }
 }
