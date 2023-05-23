@@ -285,7 +285,7 @@ export const rejectManyStudentToClass = async (arrStudentClass: StudentClassType
 export const selectChallengesByClass = async (class_id: string): Promise<EnabledModule[]> => {
   try {
     const challengesByClass = await EnabledModule.findAll({
-      raw: true,
+      raw: false,
       attributes: ['module_id'],
       where: {
         class_id: class_id
@@ -294,9 +294,9 @@ export const selectChallengesByClass = async (class_id: string): Promise<Enabled
       include: [
         {
           model: Module,
-          attributes: [],
+          attributes: ['module_id', 'title'],
           required: true,
-          nested: true,
+          // nested: true,
           include: [
             {
               model: Challenge,
