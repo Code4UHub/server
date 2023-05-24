@@ -4,7 +4,6 @@ import { Sequelize } from 'sequelize-typescript'
 import { Student } from './models/student.model'
 import { Teacher } from './models/teacher.model'
 import { Subject } from './models/subject.model'
-import { Assignment } from './models/assignment.model'
 import { Module } from './models/module.model'
 import { Question } from './models/question.model'
 import { Class } from './models/class.model'
@@ -53,7 +52,6 @@ export const createDb = async () => {
       Teacher,
       Subject,
       Module,
-      Assignment,
       Question,
       Class,
       StudentClass,

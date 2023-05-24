@@ -13,12 +13,9 @@ export class Difficulty extends Model {
     type: DataType.STRING
   })
   difficulty: string
-<<<<<<< HEAD
 
   @Column({
     type: DataType.NUMBER
   })
   points_per_question: number
-=======
->>>>>>> origin/dev
 }
