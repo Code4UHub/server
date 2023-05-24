@@ -2,6 +2,7 @@ import { Table, Column, Model, DataType, BelongsTo, ForeignKey, HasMany } from '
 import { Difficulty } from './difficulty.model'
 import { EnabledModule } from './enabledModule'
 import { Module } from './module.model'
+import { Question } from './question.model'
 
 @Table({ tableName: 'challenge' })
 export class Challenge extends Model {
@@ -19,6 +20,24 @@ export class Challenge extends Model {
   })
   title: string
 
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false
+  })
+  open_questions: number
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false
+  })
+  closed_questions: number
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false
+  })
+  total_points: number
+
   @ForeignKey(() => Module)
   @Column({
     type: DataType.INTEGER
@@ -34,6 +53,6 @@ export class Challenge extends Model {
   @BelongsTo(() => Difficulty)
   difficulty: Difficulty
 
-  // @HasMany(() => EnabledModule)
-  // enabled_module: EnabledModule
+  @HasMany(() => Question)
+  questions: Question
 }
