@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
-import { selectQuestions, selectQuestion } from '../database/query/question.query'
+import { selectQuestions, createQuestion } from '../database/query/question.query'
+import { QuestionType } from '../types/question.type'
 
 export const getQuestions = async (req: Request, res: Response) => {
   // res.status(200).send('It works!')
@@ -14,49 +15,31 @@ export const getQuestions = async (req: Request, res: Response) => {
   }
 }
 
-// export const getQuestionsByAssignment = async (req: Request, res: Response) => {
-//   // res.status(200).send('It works!')
-//   try {
-//     console.log('----------')
-//     const assignment_id: string = req.params.assignment.replace('assignment=', '')
-//     console.log(assignment_id)
-//     console.log('----------')
-//     const query = await selectQuestionsByAssignment(assignment_id)
-//     res.status(200).json({
-//       status: 'success',
-//       data: query
-//     })
-//   } catch (e) {
-//     throw e
-//   }
-// }
-
-export const getQuestion = async (req: Request, res: Response) => {
+export const postQuestion = async (req: Request, res: Response): Promise<void> => {
   try {
-    const question_id: string = req.params.id.replace('id=', '')
-    console.log(question_id)
+    const newQuestion: QuestionType = req.body
 
-    const query = await selectQuestion(question_id)
-    console.log('query: ', query)
-    console.log('HEEEERREE')
-
-    if (query.length > 0) {
-      res.status(200).json({
-        status: 'success',
-        data: {
-          query
-        }
-      })
-    } else {
+    if (newQuestion.type != 'open' && newQuestion.type != 'closed') {
       res.status(404).json({
-        status: 'failed',
-        data: 'Question not found'
+        status: 'error',
+        data: 'Type questions not valid'
       })
+      return
     }
+
+    const query = await createQuestion(newQuestion)
+
+    res.status(201).json({
+      status: 'success',
+      data: { message: 'Question created successfully', question: query }
+    })
+
+    return
   } catch (e: any) {
-    res.status(404).json({
+    console.log(e)
+    res.status(500).json({
       status: 'error',
-      data: e.message
+      data: 'Couldnt create question'
     })
   }
 }

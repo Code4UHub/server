@@ -8,7 +8,10 @@ import {
   acceptStudentToClass,
   rejectStudentToClass,
   acceptManyStudentToClass,
-  rejectManyStudentToClass
+  rejectManyStudentToClass,
+  selectChallengesByClass,
+  selectEnabledModulesByClass,
+  updateEnabledModulesByClass
 } from '../database/query/class.query'
 import { ClassType } from '../types/class.type'
 import { Class } from '../database/models/class.model'
@@ -16,6 +19,7 @@ import { StudentClassType } from '../types/studentClass.type'
 import { StudentClass } from '../database/models/studentClass.model'
 import { StudentNotFoundError } from '../errors/studentNotFoundError'
 import { ClassNotFoundError } from '../errors/classNotFoundError'
+import { EnabledModule } from '../database/models/enabledModule'
 
 /**
  * Retrieves all existing classes.
@@ -369,6 +373,103 @@ export const deleteManyStudentClass = async (req: Request, res: Response): Promi
     res.status(500).json({
       status: 'error',
       data: 'Couldnt perform action'
+    })
+  }
+}
+
+export const getChallengesByClass = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const class_id: string = req.params.class_id as string
+    const query: EnabledModule[] = await selectChallengesByClass(class_id)
+
+    // If class has more than one student
+    if (query.length > 0) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+      return
+    }
+
+    // If class doesnt have any students
+    res.status(204).json({
+      status: 'success',
+      data: []
+    })
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get challenges of class'
+    })
+  }
+}
+
+export const getEnabledModulesByClass = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const class_id: string = req.params.class_id as string
+    const query: EnabledModule[] = await selectEnabledModulesByClass(class_id)
+
+    // If class has more than one student
+    if (query.length > 0) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+      return
+    }
+
+    // If class doesnt have any students
+    res.status(204).json({
+      status: 'success',
+      data: []
+    })
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get enabled of class'
+    })
+  }
+}
+
+export const putEnabledModulesByClass = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const class_id: string = req.params.class_id as string
+    const modules = req.body
+    const query = await updateEnabledModulesByClass(class_id, modules)
+
+    const listOfModules = await Promise.all(query)
+
+    const numberOfModules = listOfModules.length
+    let validModules = 0
+    let invalidModules = 0
+
+    for (const module of listOfModules) {
+      if (module.status == 'success') {
+        validModules += 1
+      } else {
+        invalidModules += 1
+      }
+    }
+
+    if (numberOfModules == validModules) {
+      res.status(200).json({
+        status: 'success',
+        data: `${validModules} modules correctly updated`
+      })
+      return
+    }
+
+    res.status(401).json({
+      status: 'failed',
+      data: `${validModules} modules correctly updated and there were errors at updating ${invalidModules} modules`
+    })
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get enabled of class'
     })
   }
 }

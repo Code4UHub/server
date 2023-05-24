@@ -1,38 +1,23 @@
-import { OpenQuestion } from '../models/openQuestion.model'
-import { CloseQuestion } from '../models/closeQuestion.model'
-import { OpenQuestionType } from '../../types/openQuestion.type'
+import { QuestionType } from '../../types/question.type'
+import { Question } from '../models/question.model'
 
 export const selectQuestions = async () => {
   try {
-    const openQuestions = await OpenQuestion.findAll({
+    const questions = await Question.findAll({
       raw: true
     })
 
-    const closeQuestions = await CloseQuestion.findAll({
-      raw: true
-    })
-
-    return {
-      open_questions: openQuestions,
-      close_questions: closeQuestions
-    }
+    return questions
   } catch (e) {
     throw e
   }
 }
 
-export const selectQuestion = async (open_question_id: string) => {
+export const createQuestion = async (newQuestion: QuestionType): Promise<Question | null> => {
   try {
-    const question = await OpenQuestion.findAll({
-      attributes: ['open_question_id', 'open_question', 'assignment_id'],
-      raw: true,
-      where: {
-        open_question_id: open_question_id
-      }
-    })
-    return question
-  } catch (e) {
-    // throw new Error("MY ERROR")
+    const res = await Question.create(newQuestion)
+    return res
+  } catch (e: any) {
     throw e
   }
 }
