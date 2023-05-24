@@ -3,10 +3,7 @@ export type ChallengeType = {
   module_id: number
   difficulty_id: number
   title: string
-<<<<<<< HEAD
   open_questions: number
   closed_questions: number
   total_points: number
-=======
->>>>>>> origin/dev
 }
