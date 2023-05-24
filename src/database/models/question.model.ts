@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript'
 import { Challenge } from './challenge.model'
+=======
+import { Table, Column, Model, DataType } from 'sequelize-typescript'
+>>>>>>> origin/dev
 
 @Table({ tableName: 'question' })
 export class Question extends Model {
@@ -22,6 +26,7 @@ export class Question extends Model {
     allowNull: false
   })
   type: string
+<<<<<<< HEAD
 
   @ForeignKey(() => Challenge)
   @Column({
@@ -31,4 +36,6 @@ export class Question extends Model {
 
   @BelongsTo(() => Challenge)
   challenge: Challenge
+=======
+>>>>>>> origin/dev
 }

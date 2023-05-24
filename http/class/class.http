@@ -24,15 +24,26 @@ Content-Type: application/json
 
 
 ### Register a student to a class
-POST {{host}}/{{version}}/class/thisIsCl/register
+POST {{host}}/{{version}}/class/CodeCl1/register
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "student_id": "a00000005"
+    "student_id": "a00000001"
 }
 
 
-### Get students of a class
-GET {{host}}/{{version}}/class/thisIsCl/students
+### Get students accepted in a class
+GET {{host}}/{{version}}/class/CodeCl1/students
 Authorization: Bearer {{token}}
+
+
+### Accept student
+PUT {{host}}/{{version}}/class/accept_student
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "class_id": "CodeCl1",
+    "student_id": "a00000009"
+}

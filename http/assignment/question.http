@@ -1,0 +1,14 @@
+### Get all questions
+GET {{host}}/{{version}}/question
+Authorization: Bearer {{token}}
+
+
+### Get open question by id
+GET {{host}}/{{version}}/question/open/1
+Authorization: Bearer {{token}}
+
+
+### Get closed question by id
+GET {{host}}/{{version}}/question/closed/1
+Authorization: Bearer {{token}}
+
