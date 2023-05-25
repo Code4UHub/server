@@ -1,9 +1,7 @@
-import { Table, Column, Model, DataType, BelongsTo, ForeignKey } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, BelongsTo, ForeignKey, HasMany, BelongsToMany } from 'sequelize-typescript'
 import { Student } from './student.model'
-import { Class } from './class.model'
-import getCurrentDate from '../../utils/getCurrentDate.function'
+import { Question } from './question.model'
 
-import moment from 'moment'
 
 @Table({ tableName: 'student_question' })
 export class StudentQuestion extends Model {
@@ -15,31 +13,34 @@ export class StudentQuestion extends Model {
   })
   student_id: string
 
-  @ForeignKey(() => Class)
+  @ForeignKey(() => Question)
+
   @Column({
     type: DataType.STRING,
     primaryKey: true,
     allowNull: false
   })
-  class_id: string
+  question_id: number
+
+  @Column({
+    type: DataType.JSONB,
+    allowNull: false,
+    defaultValue: {}
+  })
+  solution: object
 
   @Column({
     type: DataType.BOOLEAN,
     allowNull: false,
-    defaultValue: true
+    defaultValue: false
   })
-  pending: boolean
+  passed: boolean
 
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-    defaultValue: moment(getCurrentDate(), 'YYYY-MM-DD')
-  })
-  request_date: Date
 
   @BelongsTo(() => Student)
   student: Student
 
-  @BelongsTo(() => Class)
-  class: Class
+  @BelongsTo(() => Question)
+  question: Question
+
 }
