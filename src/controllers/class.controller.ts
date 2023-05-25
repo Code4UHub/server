@@ -21,6 +21,14 @@ import { StudentNotFoundError } from '../errors/studentNotFoundError'
 import { ClassNotFoundError } from '../errors/classNotFoundError'
 import { EnabledModule } from '../database/models/enabledModule'
 
+/**
+ * Retrieves all existing classes.
+ *
+ * @returns
+ * - 200: If classes could be retrived.
+ *
+ * @throws 500: If there is a server-side error.
+ */
 export const getClasses = async (req: Request, res: Response): Promise<void> => {
   try {
     const query: Class[] = await selectClasses()
@@ -36,6 +44,15 @@ export const getClasses = async (req: Request, res: Response): Promise<void> => 
   }
 }
 
+/**
+ * Retrieves a class given its id.
+ *
+ * @returns
+ * - 200: If the class exists.
+ * - 404: If a class with that id doesn't exist.
+ *
+ * @throws 500: If there is a server-side error.
+ */
 export const getClass = async (req: Request, res: Response): Promise<void> => {
   try {
     const class_id: string = req.params.class_id as string
@@ -53,19 +70,30 @@ export const getClass = async (req: Request, res: Response): Promise<void> => {
       })
     }
   } catch (e: any) {
-    res.status(404).json({
+    res.status(500).json({
       status: 'error',
-      data: e.message
+      data: 'Couldnt get class'
     })
   }
 }
 
+/**
+ * Creates a class given some expected parameters
+ *
+ * @returns
+ * - 201: If the class is created.
+ * - 409: If the class already exists.
+ *
+ * @throws 500: If there is a server-side error.
+ *
+ * @remarks Not checking if any of the other values are valid
+ */
 export const postClass = async (req: Request, res: Response): Promise<void> => {
   try {
     const newClass: ClassType = req.body
     const query = await createClass(newClass)
 
-    // If class valid and code available
+    // Class valid and code available
     if (query !== null && typeof query === 'object') {
       res.status(201).json({
         status: 'success',
@@ -74,7 +102,7 @@ export const postClass = async (req: Request, res: Response): Promise<void> => {
       return
     }
 
-    // If class already exists
+    // Class already exists
     res.status(409).json({
       status: 'failed',
       data: 'Class already exists'
@@ -89,6 +117,18 @@ export const postClass = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
+/**
+ * Register a student to a class.
+ *
+ * @returns
+ * - 200: If student register.
+ * - 409: If student already in class.
+ *
+ * @throws
+ * - 409: Student doesnt exist.
+ * - 409: Class doesnt exist.
+ * - 500: If there is a server-side error.
+ */
 export const postRegisterStudent = async (req: Request, res: Response): Promise<void> => {
   try {
     const newStudentClass: StudentClassType = req.body
@@ -132,25 +172,23 @@ export const postRegisterStudent = async (req: Request, res: Response): Promise<
   }
 }
 
+/**
+ * Retrieve students registered to a class given a class_id.
+ *
+ * @returns 200: If students retrieved.
+ *
+ * @throws 500: If there is a server-side error.
+ */
 export const getStudentsByClass = async (req: Request, res: Response): Promise<void> => {
   try {
     const class_id: string = req.params.class_id as string
     const query: StudentClass[] = await selectStudentsByClass(class_id)
 
-    // If class has more than one student
-    if (query.length > 0) {
-      res.status(200).json({
-        status: 'success',
-        data: query
-      })
-      return
-    }
-
-    // If class doesnt have any students
-    res.status(204).json({
+    res.status(200).json({
       status: 'success',
-      data: []
+      data: query
     })
+    return
   } catch (e: any) {
     res.status(500).json({
       status: 'error',
@@ -159,65 +197,103 @@ export const getStudentsByClass = async (req: Request, res: Response): Promise<v
   }
 }
 
+/**
+ * Accept a student in a class.
+ *
+ * @returns
+ * - 200: If student accepted.
+ * - 400: If student not registered or already accepted class.
+ *
+ * @throws 500: If there is a server-side error.
+ *
+ * @remarks Check if error handling is been performed properly
+ */
 export const putStudentClass = async (req: Request, res: Response): Promise<void> => {
   try {
     const curStudentClass: StudentClassType = req.body
     const query = await acceptStudentToClass(curStudentClass)
 
-    // If the query is successfull
+    // If the student was accepted
     if (Array.isArray(query)) {
       res.status(200).json({
         status: 'success',
         data: 'Student accepted'
       })
-    } else {
-      res.status(400).json({
-        status: 'failed',
-        data: query
-      })
+      return
     }
+
+    // If student couldnt be accepted
+    res.status(400).json({
+      status: 'failed',
+      data: query
+    })
   } catch (e: any) {
-    res.status(404).json({
+    res.status(500).json({
       status: 'error',
-      data: e.message
+      data: 'Couldnt accept student to class'
     })
   }
 }
 
+/**
+ * Reject a student in a class.
+ *
+ * @returns
+ * - 200: If student rejected.
+ * - 400: If student not registered or already accepted class.
+ *
+ * @throws 500: If there is a server-side error.
+ *
+ * @remarks Check if error handling is been performed properly
+ */
 export const deleteStudentClass = async (req: Request, res: Response): Promise<void> => {
   try {
     const curStudentClass: StudentClassType = req.body
     const query = await rejectStudentToClass(curStudentClass)
 
-    // If the query is successfull
+    // If the student was rejected
     if (typeof query == 'number' && query > 0) {
       res.status(200).json({
         status: 'success',
-        data: 'Student successfully rejected'
+        data: 'Student rejected'
       })
-    } else {
-      res.status(400).json({
-        status: 'failed',
-        data: query
-      })
+      return
     }
+
+    // If student couldnt be rejected
+    res.status(400).json({
+      status: 'failed',
+      data: query
+    })
   } catch (e: any) {
-    res.status(404).json({
+    res.status(500).json({
       status: 'error',
-      data: e.message
+      data: 'Couldnt reject student from class'
     })
   }
 }
 
+/**
+ * Accept many students to their corresponding classes.
+ *
+ * @returns
+ * - 200: If all students accepted.
+ * - 401: If some students were accepted but not all of them.
+ *
+ * @throws 500: If there is a server-side error.
+ *
+ * @remarks Check if error handling is been performed properly
+ * Check if Promise.all cant be fullfilled so raise an error there
+ */
 export const putManyStudentClass = async (req: Request, res: Response): Promise<void> => {
   try {
     const arrStudentClass: StudentClassType[] = req.body
     const query = await acceptManyStudentToClass(arrStudentClass)
 
-    // If the query was successful
     // Check the list if there was an error at accepting one student
     const listOfStudents = await Promise.all(query)
 
+    // Check how many students where accepted
     const numberOfStudents = listOfStudents.length
     let validStudents = 0
     let invalidStudents = 0
@@ -243,54 +319,60 @@ export const putManyStudentClass = async (req: Request, res: Response): Promise<
       })
     }
   } catch (e: any) {
-    res.status(404).json({
+    res.status(500).json({
       status: 'error',
-      data: e.message
+      data: 'Couldnt perform action'
     })
   }
 }
 
+/**
+ * Reject many students to their corresponding classes.
+ *
+ * @returns
+ * - 200: If all students accepted.
+ * - 401: If some students were accepted but not all of them.
+ * - ***: If
+ *
+ * @throws 500: If there is a server-side error.
+ */
 export const deleteManyStudentClass = async (req: Request, res: Response): Promise<void> => {
   try {
     const arrStudentClass: StudentClassType[] = req.body
     const query = await rejectManyStudentToClass(arrStudentClass)
 
-    // If the query is successfull
-    // If the query was successful
-    if (typeof query != 'string') {
-      // Check the list if there was an error at rejecting one student
-      const listOfStudents = await Promise.all(query)
-      const numberOfStudents = listOfStudents.length
-      let validStudents = 0
-      let invalidStudents = 0
+    // Check the list if there was an error at rejecting one student
+    const listOfStudents = await Promise.all(query)
 
-      for (const student of listOfStudents) {
-        if (student.status != 'Rejected') {
-          invalidStudents += 1
-        } else {
-          validStudents += 1
-        }
-      }
+    // Check how many students where rejected
+    const numberOfStudents = listOfStudents.length
+    let validStudents = 0
+    let invalidStudents = 0
 
-      // No errors at rejecting all students
-      if (numberOfStudents == validStudents) {
-        res.status(200).json({
-          status: 'success',
-          data: `${validStudents} students rejected`
-        })
+    for (const student of listOfStudents) {
+      if (student.status != 'Rejected') {
+        invalidStudents += 1
       } else {
-        res.status(401).json({
-          status: 'failed',
-          data: `${validStudents} students rejected and there were errors at rejecting ${invalidStudents} students`
-        })
+        validStudents += 1
       }
+    }
+
+    // No errors at rejecting all students
+    if (numberOfStudents == validStudents) {
+      res.status(200).json({
+        status: 'success',
+        data: `${validStudents} students rejected`
+      })
     } else {
-      throw new Error()
+      res.status(401).json({
+        status: 'failed',
+        data: `${validStudents} students rejected and there were errors at rejecting ${invalidStudents} students`
+      })
     }
   } catch (e: any) {
-    res.status(404).json({
+    res.status(500).json({
       status: 'error',
-      data: e.message
+      data: 'Couldnt perform action'
     })
   }
 }
@@ -387,7 +469,7 @@ export const putEnabledModulesByClass = async (req: Request, res: Response): Pro
     console.log(e)
     res.status(500).json({
       status: 'error',
-      data: 'Couldnt get enabled of class'
+      data: e.message
     })
   }
 }

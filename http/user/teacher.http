@@ -8,7 +8,7 @@ GET {{host}}/{{version}}/teacher/login?email=l00000006@tec.mx&password=test_pass
 
 
 ### Create a teacher
-POST {{hostname}}:{{port}}/{{version}}/teacher/register
+POST {{host}}/{{version}}/teacher/register
 Content-Type: application/json
 
 {
@@ -22,4 +22,9 @@ Content-Type: application/json
 
 ### Get classes of a teacher
 GET {{host}}/{{version}}/teacher/L00000001/class
+Authorization: Bearer {{token}}
+
+
+### Get all join request to a class for a teacher
+GET {{host}}/{{version}}/teacher/L00000001/student_class
 Authorization: Bearer {{token}}

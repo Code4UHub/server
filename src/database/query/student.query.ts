@@ -5,6 +5,7 @@ import { Subject } from '../models/subject.model'
 import { StudentType } from '../../types/student.type'
 import { StudentClass } from '../models/studentClass.model'
 import { Sequelize } from 'sequelize'
+import { StudentNotFoundError } from '../../errors/studentNotFoundError'
 
 export const selectStudents = async (): Promise<StudentType[]> => {
   try {
@@ -28,10 +29,9 @@ export const selectStudent = async (email: string, password?: string): Promise<S
         }
       })
       return student
-    } else {
-      const student = await Student.findOne({ raw: true, attributes: ['email'], where: { email: email } })
-      return student
     }
+    const student = await Student.findOne({ raw: true, attributes: ['email'], where: { email: email } })
+    return student
   } catch (e: any) {
     // throw new Error("MY ERROR")
     throw e
@@ -57,6 +57,11 @@ export const createStudent = async (student: StudentType): Promise<StudentType |
 
 export const selectClassesByStudent = async (student_id: string): Promise<StudentClass[]> => {
   try {
+    const student = await Student.findByPk(student_id)
+    if (!student) {
+      throw new StudentNotFoundError(`Cannot find student with ID ${student_id}`)
+    }
+
     const classesByStudent = await StudentClass.findAll({
       raw: true,
       attributes: [
