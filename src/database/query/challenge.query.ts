@@ -258,12 +258,6 @@ export const selectChallengesByStudent = async (class_id: string, student_id: st
             'difficulty_id',
             'total_points'
             // [Sequelize.literal('"student_challenge"."score"'), 'student_score']
-            // [
-            //   Sequelize.literal(
-            //     '(SELECT "score" FROM "student_challenge" WHERE "student_challenge"."challenge_id" = "challenge"."challenge_id" AND "student_challenge"."student_id" = :student_id)'
-            //   ),
-            //   'student_challenge_score'
-            // ]
           ],
           required: false,
           include: [
