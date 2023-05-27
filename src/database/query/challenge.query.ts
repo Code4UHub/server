@@ -53,6 +53,7 @@ export const selectChallengeQuestionsByStudent = async (challenge_id: string, st
       where: {
         challenge_id: challenge_id
       },
+      order: [['question_id', 'ASC']],
       include: [
         {
           model: StudentQuestion,
@@ -210,13 +211,13 @@ export const selectChallengesByStudent = async (class_id: string, student_id: st
 
     const challengesByClass = await Module.findAll({
       raw: false,
-      // attributes: [],
       attributes: [
         'module_id',
         'title',
         [Sequelize.literal('"enabled_module"."is_active"'), 'is_active'],
         [Sequelize.literal('"student_module"."score"'), 'score']
       ],
+      order: [['module_id', 'ASC']],
       include: [
         {
           model: EnabledModule,
