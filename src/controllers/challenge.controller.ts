@@ -5,6 +5,7 @@ import {
   createChallengeQuestions,
   selectChallengeQuestionsByStudent,
   selectChallengesByStudent
+
 } from '../database/query/challenge.query'
 import { ChallengeType } from '../types/challenge.type'
 
@@ -58,6 +59,7 @@ export const getChallengeQuestions = async (req: Request, res: Response): Promis
     })
   }
 }
+
 
 export const getChallengesByStudent = async (req: Request, res: Response): Promise<void> => {
   try {

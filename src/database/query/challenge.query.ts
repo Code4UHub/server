@@ -9,6 +9,7 @@ import { StudentChallenge } from '../models/studentChallenge.model'
 import { StudentModule } from '../models/studentModule.model'
 import { Sequelize } from 'sequelize'
 
+
 export const selectChallenge = async (challenge_id: string) => {
   try {
     const challenge = await Challenge.findOne({
@@ -54,6 +55,7 @@ export const selectChallengeQuestionsByStudent = async (challenge_id: string, st
         challenge_id: challenge_id
       },
       order: [['question_id', 'ASC']],
+
       include: [
         {
           model: StudentQuestion,
@@ -69,6 +71,7 @@ export const selectChallengeQuestionsByStudent = async (challenge_id: string, st
     throw e
   }
 }
+
 
 export const selectChallengeOpenQuestions = async (challenge_id: string) => {
   try {
@@ -149,6 +152,7 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
     throw e
   }
 }
+
 
 // export const selectChallengesByStudent = async (class_id: string, student_id: string): Promise<EnabledModule[]> => {
 //   try {
@@ -265,3 +269,4 @@ export const selectChallengesByStudent = async (class_id: string, student_id: st
     throw e
   }
 }
+
