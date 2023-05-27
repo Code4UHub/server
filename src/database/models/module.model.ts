@@ -1,6 +1,8 @@
 import { Table, Column, Model, DataType, ForeignKey, BelongsTo, HasOne, HasMany } from 'sequelize-typescript'
 import { Challenge } from './challenge.model'
+import { StudentModule } from './studentModule.model'
 import { Subject } from './subject.model'
+import { EnabledModule } from './enabledModule'
 
 @Table({ tableName: 'module' })
 export class Module extends Model {
@@ -28,4 +30,10 @@ export class Module extends Model {
 
   @HasMany(() => Challenge)
   challenge: Challenge
+
+  @HasMany(() => StudentModule)
+  student_module: StudentModule
+
+  @HasMany(() => EnabledModule)
+  enabled_module: EnabledModule
 }

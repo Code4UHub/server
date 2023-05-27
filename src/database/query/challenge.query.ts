@@ -3,6 +3,11 @@ import { ChallengeType } from '../../types/challenge.type'
 import { selectDifficulty } from './difficulty.query'
 import { StudentQuestion } from '../models/studentQuestion.model'
 import { Question } from '../models/question.model'
+import { EnabledModule } from '../models/enabledModule'
+import { Module } from '../models/module.model'
+import { StudentChallenge } from '../models/studentChallenge.model'
+import { StudentModule } from '../models/studentModule.model'
+import { Sequelize } from 'sequelize'
 
 export const selectChallenge = async (challenge_id: string) => {
   try {
@@ -156,6 +161,128 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
 
     return res
   } catch (e: any) {
+    throw e
+  }
+}
+
+// export const selectChallengesByStudent = async (class_id: string, student_id: string): Promise<EnabledModule[]> => {
+//   try {
+//     // Modulo -> titulo y score
+//     // Challenge []
+
+//     const challengesByClass = await EnabledModule.findAll({
+//       raw: false,
+//       // attributes: [],
+//       attributes: ['module_id', [Sequelize.literal('"module"."title"'), 'title']],
+//       where: {
+//         class_id: class_id
+//       },
+//       // group: ['module.module_id'],
+//       include: [
+//         {
+//           model: Module,
+//           attributes: [],
+//           // attributes: ['student_module.score'],
+//           // attributes: [[Sequelize.literal('"student_module"."score"'), 'score']],
+//           required: true,
+//           include: [
+//             {
+//               model: StudentModule,
+//               attributes: [],
+//               // attributes: ['score'],
+//               required: true
+//               // where: {
+//               //   student_id: student_id
+//               // }
+//             },
+// {
+//   model: Challenge,
+//   attributes: [],
+//   // required: true,
+//   include: [
+//     {
+//       model: StudentChallenge,
+//       attributes: [],
+//       // attributes: ['title', 'score'],
+//       required: true
+//     }
+//               ]
+//             }
+//           ]
+//         }
+//       ]
+//     })
+//     return challengesByClass
+//   } catch (e: any) {
+//     // throw new Error("MY ERROR")
+//     throw e
+//   }
+// }
+
+export const selectChallengesByStudent = async (class_id: string, student_id: string): Promise<Module[]> => {
+  try {
+    // Modulo -> titulo y score
+    // Challenge []
+
+    const challengesByClass = await Module.findAll({
+      raw: false,
+      // attributes: [],
+      attributes: [
+        'module_id',
+        'title',
+        [Sequelize.literal('"enabled_module"."is_active"'), 'is_active'],
+        [Sequelize.literal('"student_module"."score"'), 'score']
+      ],
+      include: [
+        {
+          model: EnabledModule,
+          attributes: [],
+          where: {
+            class_id: class_id
+          },
+          required: true
+        },
+        {
+          model: StudentModule,
+          attributes: [],
+          required: true,
+          where: {
+            student_id: student_id
+          }
+        },
+        {
+          model: Challenge,
+          attributes: [
+            'challenge_id',
+            'title',
+            'difficulty_id',
+            'total_points'
+            // [Sequelize.literal('"student_challenge"."score"'), 'student_score']
+            // [
+            //   Sequelize.literal(
+            //     '(SELECT "score" FROM "student_challenge" WHERE "student_challenge"."challenge_id" = "challenge"."challenge_id" AND "student_challenge"."student_id" = :student_id)'
+            //   ),
+            //   'student_challenge_score'
+            // ]
+          ],
+          required: false,
+          include: [
+            {
+              model: StudentChallenge,
+              // attributes: [],
+              attributes: ['score'],
+              required: true,
+              where: {
+                student_id: student_id
+              }
+            }
+          ]
+        }
+      ]
+    })
+    return challengesByClass
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
     throw e
   }
 }
