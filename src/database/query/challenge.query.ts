@@ -3,6 +3,12 @@ import { ChallengeType } from '../../types/challenge.type'
 import { selectDifficulty } from './difficulty.query'
 import { StudentQuestion } from '../models/studentQuestion.model'
 import { Question } from '../models/question.model'
+import { EnabledModule } from '../models/enabledModule'
+import { Module } from '../models/module.model'
+import { StudentChallenge } from '../models/studentChallenge.model'
+import { StudentModule } from '../models/studentModule.model'
+import { Sequelize } from 'sequelize'
+
 
 export const selectChallenge = async (challenge_id: string) => {
   try {
@@ -48,6 +54,8 @@ export const selectChallengeQuestionsByStudent = async (challenge_id: string, st
       where: {
         challenge_id: challenge_id
       },
+      order: [['question_id', 'ASC']],
+
       include: [
         {
           model: StudentQuestion,
@@ -64,19 +72,6 @@ export const selectChallengeQuestionsByStudent = async (challenge_id: string, st
   }
 }
 
-// export const selectChallengeQuestions = async (challenge_id: string) => {
-//   try {
-//     const res = await Question.findAll({
-//       // attributes: ['question_id', 'type', 'challenge_id'],
-//       attributes: ['type', [models.sequelize.fn('sum', models.sequelize.col('payments.payment_amount')), 'total_cost']]
-//       where: { challenge_id: challenge_id },
-//       group: 'type'
-//     })
-//     return res
-//   } catch (e: any) {
-//     throw e
-//   }
-// }
 
 export const selectChallengeOpenQuestions = async (challenge_id: string) => {
   try {
@@ -111,8 +106,6 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
       throw new Error('Challenge not found')
     }
 
-    console.log(challenge)
-    console.log('--------------------------')
     // Obtener todas las preguntas que tengan el challenge id
     const openQuestions = await selectChallengeOpenQuestions(challenge_id)
     openQuestions.sort(() => Math.random() - 0.5)
@@ -159,3 +152,121 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
     throw e
   }
 }
+
+
+// export const selectChallengesByStudent = async (class_id: string, student_id: string): Promise<EnabledModule[]> => {
+//   try {
+//     // Modulo -> titulo y score
+//     // Challenge []
+
+//     const challengesByClass = await EnabledModule.findAll({
+//       raw: false,
+//       // attributes: [],
+//       attributes: ['module_id', [Sequelize.literal('"module"."title"'), 'title']],
+//       where: {
+//         class_id: class_id
+//       },
+//       // group: ['module.module_id'],
+//       include: [
+//         {
+//           model: Module,
+//           attributes: [],
+//           // attributes: ['student_module.score'],
+//           // attributes: [[Sequelize.literal('"student_module"."score"'), 'score']],
+//           required: true,
+//           include: [
+//             {
+//               model: StudentModule,
+//               attributes: [],
+//               // attributes: ['score'],
+//               required: true
+//               // where: {
+//               //   student_id: student_id
+//               // }
+//             },
+// {
+//   model: Challenge,
+//   attributes: [],
+//   // required: true,
+//   include: [
+//     {
+//       model: StudentChallenge,
+//       attributes: [],
+//       // attributes: ['title', 'score'],
+//       required: true
+//     }
+//               ]
+//             }
+//           ]
+//         }
+//       ]
+//     })
+//     return challengesByClass
+//   } catch (e: any) {
+//     // throw new Error("MY ERROR")
+//     throw e
+//   }
+// }
+
+export const selectChallengesByStudent = async (class_id: string, student_id: string): Promise<Module[]> => {
+  try {
+    // Modulo -> titulo y score
+    // Challenge []
+
+    const challengesByClass = await Module.findAll({
+      raw: false,
+      attributes: [
+        'module_id',
+        'title',
+        [Sequelize.literal('"enabled_module"."is_active"'), 'is_active'],
+        [Sequelize.literal('"student_module"."score"'), 'score']
+      ],
+      order: [['module_id', 'ASC']],
+      include: [
+        {
+          model: EnabledModule,
+          attributes: [],
+          where: {
+            class_id: class_id
+          },
+          required: true
+        },
+        {
+          model: StudentModule,
+          attributes: [],
+          required: true,
+          where: {
+            student_id: student_id
+          }
+        },
+        {
+          model: Challenge,
+          attributes: [
+            'challenge_id',
+            'title',
+            'difficulty_id',
+            'total_points'
+            // [Sequelize.literal('"student_challenge"."score"'), 'student_score']
+          ],
+          required: false,
+          include: [
+            {
+              model: StudentChallenge,
+              // attributes: [],
+              attributes: ['score'],
+              required: true,
+              where: {
+                student_id: student_id
+              }
+            }
+          ]
+        }
+      ]
+    })
+    return challengesByClass
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
