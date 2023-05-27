@@ -34,10 +34,6 @@ export const getChallengeQuestions = async (req: Request, res: Response): Promis
     const student_id = req.params.student_id
 
     const query = await selectChallengeQuestionsByStudent(challenge_id, student_id)
-    console.log('000000000000000000000000000000000')
-    console.log(query)
-    console.log('000000000000000000000000000000000')
-    // const query = await createChallenge(newChallenge)
 
     if (query.length > 0) {
       res.status(201).json({
@@ -47,10 +43,12 @@ export const getChallengeQuestions = async (req: Request, res: Response): Promis
       return
     }
 
-    const queryCreate = await createChallengeQuestions(challenge_id, student_id)
+    await createChallengeQuestions(challenge_id, student_id)
+    const newQuery = await selectChallengeQuestionsByStudent(challenge_id, student_id)
+
     res.status(201).json({
       status: 'success',
-      data: queryCreate
+      data: newQuery
     })
   } catch (e: any) {
     console.log(e)

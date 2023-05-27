@@ -69,20 +69,6 @@ export const selectChallengeQuestionsByStudent = async (challenge_id: string, st
   }
 }
 
-// export const selectChallengeQuestions = async (challenge_id: string) => {
-//   try {
-//     const res = await Question.findAll({
-//       // attributes: ['question_id', 'type', 'challenge_id'],
-//       attributes: ['type', [models.sequelize.fn('sum', models.sequelize.col('payments.payment_amount')), 'total_cost']]
-//       where: { challenge_id: challenge_id },
-//       group: 'type'
-//     })
-//     return res
-//   } catch (e: any) {
-//     throw e
-//   }
-// }
-
 export const selectChallengeOpenQuestions = async (challenge_id: string) => {
   try {
     const res = await Question.findAll({
@@ -116,8 +102,6 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
       throw new Error('Challenge not found')
     }
 
-    console.log(challenge)
-    console.log('--------------------------')
     // Obtener todas las preguntas que tengan el challenge id
     const openQuestions = await selectChallengeOpenQuestions(challenge_id)
     openQuestions.sort(() => Math.random() - 0.5)
