@@ -17,7 +17,6 @@ import { StudentQuestion } from './models/studentQuestion.model'
 import { StudentChallenge } from './models/studentChallenge.model'
 import { StudentModule } from './models/studentModule.model'
 
-
 dotenv.config({ path: `${__dirname}/../../.env` })
 
 export const createDb = async () => {
@@ -65,7 +64,7 @@ export const createDb = async () => {
       StudentQuestion,
       StudentChallenge,
       StudentModule
-
+    ])
 
     return sequelize
   } catch (e) {
