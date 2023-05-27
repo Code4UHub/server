@@ -331,6 +331,7 @@ export const selectEnabledModulesByClass = async (class_id: string): Promise<Ena
       where: {
         class_id: class_id
       },
+      order: [['module_id', 'ASC']],
       include: [
         {
           model: Module,
