@@ -5,7 +5,6 @@ import {
   createChallengeQuestions,
   selectChallengeQuestionsByStudent,
   selectChallengesByStudent
-
 } from '../database/query/challenge.query'
 import { ChallengeType } from '../types/challenge.type'
 
@@ -60,7 +59,6 @@ export const getChallengeQuestions = async (req: Request, res: Response): Promis
   }
 }
 
-
 export const getChallengesByStudent = async (req: Request, res: Response): Promise<void> => {
   try {
     const student_id = req.params.student_id
@@ -77,7 +75,7 @@ export const getChallengesByStudent = async (req: Request, res: Response): Promi
       return
     }
 
-    res.status(204).json({
+    res.status(200).json({
       status: 'success',
       data: []
     })

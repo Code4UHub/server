@@ -12,6 +12,8 @@ import { Sequelize } from 'sequelize'
 import { EnabledModule } from '../models/enabledModule'
 import { Module } from '../models/module.model'
 import { Challenge } from '../models/challenge.model'
+import { StudentModule } from '../models/studentModule.model'
+import { StudentChallenge } from '../models/studentChallenge.model'
 
 export const selectClasses = async (): Promise<Class[]> => {
   try {
@@ -291,32 +293,82 @@ export const rejectManyStudentToClass = async (arrStudentClass: StudentClassType
   }
 }
 
-export const selectChallengesByClass = async (class_id: string): Promise<EnabledModule[]> => {
+export const selectLeaderboardByClass = async (class_id: string) => {
   try {
     const challengesByClass = await EnabledModule.findAll({
       raw: false,
-      attributes: ['module_id'],
+      attributes: ['class_id'],
       where: {
         class_id: class_id
       },
-      // group: ['module.module_id'],
       include: [
         {
           model: Module,
-          attributes: ['module_id', 'title'],
+          attributes: ['module_id'],
           required: true,
-          // nested: true,
           include: [
             {
               model: Challenge,
-              attributes: ['title'],
-              required: true
+              attributes: ['challenge_id'],
+              required: true,
+              include: [
+                {
+                  model: StudentChallenge,
+                  attributes: ['student_id', 'score'],
+                  required: true,
+                  include: [
+                    {
+                      model: Student,
+                      attributes: ['first_name', 'last_name'],
+                      required: true
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }
       ]
     })
-    return challengesByClass
+
+    // Format to leaderboard
+    const leaderBoard: { [key: string]: any } = {}
+    const leaderBoardArray: { student: string; score: number; name: string; position?: number }[] = []
+
+    for (let i = 0; i < challengesByClass.length; i++) {
+      const element: { [index: string]: any } = challengesByClass[i].module.challenge
+      const chal: { [index: string]: any } = element[0]
+      const stu_chal: { [index: string]: any } = chal.student_challenge
+
+      for (let j = 0; j < stu_chal.length; j++) {
+        const newElement = stu_chal[j]
+
+        if (newElement.student_id in leaderBoard) {
+          leaderBoard[newElement.student_id].score += newElement.score
+        } else {
+          leaderBoard[newElement.student_id] = {
+            score: newElement.score,
+            name: newElement.student.first_name + ' ' + newElement.student.last_name
+          }
+        }
+      }
+    }
+
+    Object.keys(leaderBoard).forEach((key) => {
+      const value = leaderBoard[key]
+      leaderBoardArray.push({ student: key, score: value.score, name: value.name })
+    })
+
+    leaderBoardArray.sort((a, b) => {
+      return b.score - a.score
+    })
+
+    const finalLeaderboard = leaderBoardArray.map((el, idx) => {
+      el['position'] = idx + 1
+      return el
+    })
+
+    return finalLeaderboard
   } catch (e: any) {
     // throw new Error("MY ERROR")
     throw e

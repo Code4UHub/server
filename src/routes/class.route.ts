@@ -22,4 +22,6 @@ router
   .get(classController.getEnabledModulesByClass)
   .put(classController.putEnabledModulesByClass)
 
-router.route('/class/:class_id/challenges').get(classController.getChallengesByClass)
+router.route('/class/:class_id/leaderboard').get(classController.getLeaderboardByClass)
+
+// router.route('/class/:class_id/modules/stats').get(classController.getModulesStatsByClass)
