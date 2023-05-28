@@ -13,6 +13,13 @@ export class Class extends Model {
   class_id: string
 
   @Column({
+    type: DataType.INTEGER,
+    defaultValue: 0,
+    allowNull: false
+  })
+  number_of_students: number
+
+  @Column({
     type: DataType.BOOLEAN,
     defaultValue: false,
     allowNull: false
