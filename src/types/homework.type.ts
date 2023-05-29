@@ -1,5 +1,5 @@
 export type HomeworkType = {
-  homework_id: number
+  // homework_id: number
   class_id: string
   difficulty_id: number
   title: string
