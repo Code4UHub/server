@@ -2,6 +2,7 @@ import { Table, Column, Model, DataType, BelongsTo, ForeignKey, HasMany } from '
 import { Student } from './student.model'
 import { Module } from './module.model'
 import { Challenge } from './challenge.model'
+import { EnabledModule } from './enabledModule'
 
 @Table({ tableName: 'student_module' })
 export class StudentModule extends Model {
@@ -33,4 +34,7 @@ export class StudentModule extends Model {
 
   @BelongsTo(() => Module)
   module: Module
+
+  // @HasMany(() => EnabledModule)
+  // enabled_module: EnabledModule
 }

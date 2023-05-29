@@ -1,6 +1,7 @@
-import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript'
 import { Module } from './module.model'
 import { Class } from './class.model'
+import { StudentModule } from './studentModule.model'
 
 @Table({ tableName: 'enabled_module' })
 export class EnabledModule extends Model {

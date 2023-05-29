@@ -9,7 +9,7 @@ import {
   rejectStudentToClass,
   acceptManyStudentToClass,
   rejectManyStudentToClass,
-  selectChallengesByClass,
+  selectLeaderboardByClass,
   selectEnabledModulesByClass,
   updateEnabledModulesByClass
 } from '../database/query/class.query'
@@ -377,10 +377,10 @@ export const deleteManyStudentClass = async (req: Request, res: Response): Promi
   }
 }
 
-export const getChallengesByClass = async (req: Request, res: Response): Promise<void> => {
+export const getLeaderboardByClass = async (req: Request, res: Response): Promise<void> => {
   try {
     const class_id: string = req.params.class_id as string
-    const query: EnabledModule[] = await selectChallengesByClass(class_id)
+    const query = await selectLeaderboardByClass(class_id)
 
     // If class has more than one student
     if (query.length > 0) {
@@ -392,7 +392,7 @@ export const getChallengesByClass = async (req: Request, res: Response): Promise
     }
 
     // If class doesnt have any students
-    res.status(204).json({
+    res.status(200).json({
       status: 'success',
       data: []
     })
@@ -420,7 +420,7 @@ export const getEnabledModulesByClass = async (req: Request, res: Response): Pro
     }
 
     // If class doesnt have any students
-    res.status(204).json({
+    res.status(200).json({
       status: 'success',
       data: []
     })
@@ -473,3 +473,31 @@ export const putEnabledModulesByClass = async (req: Request, res: Response): Pro
     })
   }
 }
+
+// export const getModulesStatsByClass = async (req: Request, res: Response): Promise<void> => {
+//   try {
+//     const class_id: string = req.params.class_id as string
+//     const query: EnabledModule[] = await selectModulesStatsByClass(class_id)
+
+//     // If class has more than one student
+//     if (query.length > 0) {
+//       res.status(200).json({
+//         status: 'success',
+//         data: query
+//       })
+//       return
+//     }
+
+//     // If class doesnt have any students
+//     res.status(200).json({
+//       status: 'success',
+//       data: []
+//     })
+//   } catch (e: any) {
+//     console.log(e)
+//     res.status(500).json({
+//       status: 'error',
+//       data: 'Couldnt get enabled of class'
+//     })
+//   }
+// }
