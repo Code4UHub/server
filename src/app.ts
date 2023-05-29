@@ -13,6 +13,7 @@ import { router as challengeRouter } from './routes/challenge.route'
 import { router as classRouter } from './routes/class.route'
 import { router as configurationRouter } from './routes/configuration.route'
 import { router as compilerRouter } from './routes/compiler.route'
+import { router as homeworkRouter } from './routes/homework.route'
 import authMiddleware from './middleware/auth.middleware'
 
 export const db = createDb()
@@ -93,5 +94,6 @@ app.use(`${url}`, challengeRouter)
 app.use(`${url}`, questionRouter)
 app.use(`${url}`, configurationRouter)
 app.use(`${url}`, compilerRouter)
+app.use(`${url}`, homeworkRouter)
 
 export default app
