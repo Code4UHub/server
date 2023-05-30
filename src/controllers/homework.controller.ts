@@ -1,5 +1,11 @@
 import { Request, Response } from 'express'
-import { selectQuestions, createQuestion, createHomework } from '../database/query/homework.query'
+import {
+  selectQuestions,
+  createQuestion,
+  createHomework,
+  createHomeworkQuestions,
+  selectHomeworkQuestionsByStudent
+} from '../database/query/homework.query'
 import { HomeworkType } from '../types/homework.type'
 
 import { QuestionHType } from '../types/questionH.type'
@@ -63,7 +69,38 @@ export const postHomework = async (req: Request, res: Response): Promise<void> =
     console.log(e)
     res.status(500).json({
       status: 'error',
-      data: 'Couldnt create challenge'
+      data: 'Couldnt create homework'
+    })
+  }
+}
+
+export const getHomeworkQuestions = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const homework_id = req.params.homework_id
+    const student_id = req.params.student_id
+
+    const query = await selectHomeworkQuestionsByStudent(homework_id, student_id)
+
+    if (query.length > 0) {
+      res.status(201).json({
+        status: 'success',
+        data: query
+      })
+      return
+    }
+
+    await createHomeworkQuestions(homework_id, student_id)
+    const newQuery = await selectHomeworkQuestionsByStudent(homework_id, student_id)
+
+    res.status(201).json({
+      status: 'success',
+      data: newQuery
+    })
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get questions'
     })
   }
 }

@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript'
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript'
+import { StudentHomeworkQuestion } from './studentHomeworkQuestion.model'
 
 @Table({ tableName: 'question_h' })
 export class QuestionH extends Model {
@@ -21,4 +22,7 @@ export class QuestionH extends Model {
     allowNull: false
   })
   type: string
+
+  @HasMany(() => StudentHomeworkQuestion)
+  student_homework_question: StudentHomeworkQuestion
 }

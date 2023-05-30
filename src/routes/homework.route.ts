@@ -7,3 +7,4 @@ router.route('/homework/question').get(homeworkController.getQuestions)
 router.route('/homework/question').post(homeworkController.postQuestion)
 
 router.route('/homework').post(homeworkController.postHomework)
+router.route('/homework/:homework_id/student/:student_id/questions').get(homeworkController.getHomeworkQuestions)
