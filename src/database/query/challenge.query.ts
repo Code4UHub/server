@@ -9,7 +9,6 @@ import { StudentChallenge } from '../models/studentChallenge.model'
 import { StudentModule } from '../models/studentModule.model'
 import { Sequelize } from 'sequelize'
 
-
 export const selectChallenge = async (challenge_id: string) => {
   try {
     const challenge = await Challenge.findOne({
@@ -71,7 +70,6 @@ export const selectChallengeQuestionsByStudent = async (challenge_id: string, st
     throw e
   }
 }
-
 
 export const selectChallengeOpenQuestions = async (challenge_id: string) => {
   try {
@@ -153,61 +151,6 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
   }
 }
 
-
-// export const selectChallengesByStudent = async (class_id: string, student_id: string): Promise<EnabledModule[]> => {
-//   try {
-//     // Modulo -> titulo y score
-//     // Challenge []
-
-//     const challengesByClass = await EnabledModule.findAll({
-//       raw: false,
-//       // attributes: [],
-//       attributes: ['module_id', [Sequelize.literal('"module"."title"'), 'title']],
-//       where: {
-//         class_id: class_id
-//       },
-//       // group: ['module.module_id'],
-//       include: [
-//         {
-//           model: Module,
-//           attributes: [],
-//           // attributes: ['student_module.score'],
-//           // attributes: [[Sequelize.literal('"student_module"."score"'), 'score']],
-//           required: true,
-//           include: [
-//             {
-//               model: StudentModule,
-//               attributes: [],
-//               // attributes: ['score'],
-//               required: true
-//               // where: {
-//               //   student_id: student_id
-//               // }
-//             },
-// {
-//   model: Challenge,
-//   attributes: [],
-//   // required: true,
-//   include: [
-//     {
-//       model: StudentChallenge,
-//       attributes: [],
-//       // attributes: ['title', 'score'],
-//       required: true
-//     }
-//               ]
-//             }
-//           ]
-//         }
-//       ]
-//     })
-//     return challengesByClass
-//   } catch (e: any) {
-//     // throw new Error("MY ERROR")
-//     throw e
-//   }
-// }
-
 export const selectChallengesByStudent = async (class_id: string, student_id: string): Promise<Module[]> => {
   try {
     // Modulo -> titulo y score
@@ -269,4 +212,3 @@ export const selectChallengesByStudent = async (class_id: string, student_id: st
     throw e
   }
 }
-
