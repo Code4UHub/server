@@ -8,6 +8,7 @@ import { Module } from '../models/module.model'
 import { StudentChallenge } from '../models/studentChallenge.model'
 import { StudentModule } from '../models/studentModule.model'
 import { Sequelize } from 'sequelize'
+import { Difficulty } from '../models/difficulty.model'
 
 export const selectChallenge = async (challenge_id: string) => {
   try {
@@ -110,8 +111,6 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
     const closedQuestions = await selectChallengeClosedQuestions(challenge_id)
     closedQuestions.sort(() => Math.random() - 0.5)
 
-    console.log(openQuestions)
-
     if (challenge.closed_questions > closedQuestions.length) {
       throw new Error('Not enough closed question')
     }
@@ -187,7 +186,6 @@ export const selectChallengesByStudent = async (class_id: string, student_id: st
           attributes: [
             'challenge_id',
             'title',
-            'difficulty_id',
             'total_points'
             // [Sequelize.literal('"student_challenge"."score"'), 'student_score']
           ],
@@ -201,6 +199,11 @@ export const selectChallengesByStudent = async (class_id: string, student_id: st
               where: {
                 student_id: student_id
               }
+            },
+            {
+              model: Difficulty,
+              attributes: ['difficulty', 'difficulty_id'],
+              required: true
             }
           ]
         }

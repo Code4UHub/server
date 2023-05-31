@@ -14,3 +14,15 @@ export const selectDifficulty = async (difficulty_id: number) => {
     throw e
   }
 }
+
+export const selectDifficulties = async () => {
+  try {
+    const difficulties = await Difficulty.findAll({
+      raw: true
+    })
+
+    return difficulties
+  } catch (e) {
+    throw e
+  }
+}

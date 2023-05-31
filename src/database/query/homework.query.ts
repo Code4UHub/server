@@ -35,6 +35,21 @@ export const selectQuestions = async () => {
   }
 }
 
+export const selectQuestionsByDifficultyId = async (difficulty_id: string): Promise<QuestionH[]> => {
+  try {
+    const questionsByDifficulty = await QuestionH.findAll({
+      raw: true,
+      where: {
+        difficulty_id: difficulty_id
+      }
+    })
+    return questionsByDifficulty
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
 export const createQuestion = async (newQuestion: QuestionHType): Promise<QuestionH | null> => {
   try {
     const res = await QuestionH.create(newQuestion)

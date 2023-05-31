@@ -65,7 +65,6 @@ export const getChallengesByStudent = async (req: Request, res: Response): Promi
     const class_id = req.params.class_id
 
     const query = await selectChallengesByStudent(class_id, student_id)
-    console.log(query)
 
     if (query.length > 0) {
       res.status(200).json({
