@@ -4,7 +4,8 @@ import {
   createQuestion,
   createHomework,
   createHomeworkQuestions,
-  selectHomeworkQuestionsByStudent
+  selectHomeworkQuestionsByStudent,
+  selectQuestionsByDifficultyId
 } from '../database/query/homework.query'
 import { HomeworkType } from '../types/homework.type'
 
@@ -14,6 +15,20 @@ export const getQuestions = async (req: Request, res: Response) => {
   // res.status(200).send('It works!')
   try {
     const query = await selectQuestions()
+    res.status(200).json({
+      status: 'success',
+      data: query
+    })
+  } catch (e) {
+    throw e
+  }
+}
+
+export const getQuestionsByDifficultyId = async (req: Request, res: Response) => {
+  const difficulty_id = req.params.difficulty_id
+
+  try {
+    const query = await selectQuestionsByDifficultyId(difficulty_id)
     res.status(200).json({
       status: 'success',
       data: query
