@@ -10,6 +10,13 @@ import { TeacherType } from '../types/teacher.type'
 import { generateToken } from '../utils/jwt-sign'
 import { Class } from '../database/models/class.model'
 
+/**
+ * Retrieves all existing teachers.
+ *
+ * @returns 200: Teachers could be retrieved.
+ *
+ * @throws 500: Server-side error.
+ */
 export const getTeachers = async (req: Request, res: Response): Promise<void> => {
   try {
     const query: TeacherType[] = await selectTeachers()
@@ -25,6 +32,17 @@ export const getTeachers = async (req: Request, res: Response): Promise<void> =>
   }
 }
 
+/**
+ * Retrieves a teacher based on the provided email and password.
+ *
+ * @returns
+ * - 200: Login is successful and the teacher information is found.
+ * - 400: Provided email is invalid.
+ * - 401: Provided password is incorrect.
+ * - 404: Teacher is not found.
+ *
+ * @throws 500: Server-side error.
+ */
 export const getTeacher = async (req: Request, res: Response): Promise<void> => {
   try {
     const email: string = req.query.email as string
@@ -87,6 +105,16 @@ export const getTeacher = async (req: Request, res: Response): Promise<void> => 
   }
 }
 
+/**
+ * Creates a teacher based on the provided credentials
+ *
+ * @returns
+ * - 200: Teacher has been created.
+ * - 400: Email is invalid.
+ * - 409: Email is already in use.
+ *
+ * @throws 500: Server-side error.
+ */
 export const postTeacher = async (req: Request, res: Response): Promise<void> => {
   try {
     const teacher: TeacherType = req.body
@@ -137,6 +165,13 @@ export const postTeacher = async (req: Request, res: Response): Promise<void> =>
   }
 }
 
+/**
+ * Retrieves all the classes of a teacher.
+ *
+ * @returns 200: Classes could be retrieved.
+ *
+ * @throws 500: Server-side error.
+ */
 export const getTeacherClasses = async (req: Request, res: Response): Promise<void> => {
   try {
     const teacher_id: string = req.params.teacher_id as string

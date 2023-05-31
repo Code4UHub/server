@@ -4,7 +4,7 @@ export const runCode = async (req: Request, res: Response): Promise<void> => {
   try {
     const url = 'http://localhost:8080/run'
     const data = JSON.stringify(req.body)
-    console.log(data)
+    // console.log(data)
 
     const result = await fetch(url, {
       method: 'POST',
@@ -14,16 +14,16 @@ export const runCode = async (req: Request, res: Response): Promise<void> => {
       body: data
     })
     const responseText = await result.json()
-    console.log(responseText.status)
+    console.log(responseText)
 
-    if (result.status === 200) {
+    if (responseText.status == 'success') {
       res.status(200).json({
         status: 'success',
         data: responseText
       })
       return
     }
-    res.status(400).json({
+    res.status(200).json({
       status: 'failed',
       data: responseText
     })

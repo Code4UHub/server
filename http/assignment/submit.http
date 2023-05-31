@@ -4,29 +4,47 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "source_code": "def add(a,b):\n\treturn int(a) + int(b)\n\nimport sys\ntry:\n\ttest = sys.argv[1]\n\tinput = test.split()\n\tprint(add(input[0], input[1]))\nexcept:\n\tprint('Error has ocurred')\n",
+  "source_code": "name=input();print(\"Hola, \" + name + \"!\")",
   "shown_tests": [
     {
-      "input": "1 2",
-      "output": "3"
+      "input": "Andre",
+      "output": "Hola, Andre!"
     },
     {
-      "input": "10 20",
-      "output": "30"
+      "input": "0001",
+      "output": "Hola, 0001!"
     },
     {
-      "input": "1 2",
-      "output": "3"
+      "input": "_XAMP45",
+      "output": "Hola, _XAMP45!"
+    },
+    {
+      "input": "andre",
+      "output": "Hola, andre!"
     }
-  ],
-  "hidden_tests": [
+  ]
+}
+
+
+### Run code
+POST {{host}}/{{version}}/run
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "source_code": "x=int(input());y=int(input());print([x+y,x*y])",
+  "shown_tests": [
     {
-      "input": "1 2",
-      "output": "3"
+      "input": [2, 3],
+      "output": [5, 6]
     },
     {
-      "input": "10 20",
-      "output": "30"
+      "input": [10, -5],
+      "output": [5, -50]
+    },
+    {
+      "input": [0, 8],
+      "output": [8, 0]
     }
   ]
 }
