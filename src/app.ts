@@ -7,13 +7,13 @@ import { router as studentRouter } from './routes/student.route'
 import { router as teacherRouter } from './routes/teacher.route'
 import { router as subjectRouter } from './routes/subject.route'
 import { router as questionRouter } from './routes/question.route'
-// import { router as assignmentRouter } from './routes/assignment.route'
 import { router as moduleRouter } from './routes/module.route'
 import { router as challengeRouter } from './routes/challenge.route'
 import { router as classRouter } from './routes/class.route'
 import { router as configurationRouter } from './routes/configuration.route'
 import { router as compilerRouter } from './routes/compiler.route'
 import { router as homeworkRouter } from './routes/homework.route'
+import { router as difficultyRouter } from './routes/difficulty.route'
 import authMiddleware from './middleware/auth.middleware'
 
 export const db = createDb()
@@ -87,7 +87,6 @@ app.use(`${url}`, studentRouter)
 app.use(`${url}`, teacherRouter)
 
 app.use(`${url}`, subjectRouter)
-// app.use(`${url}`, assignmentRouter)
 app.use(`${url}`, moduleRouter)
 app.use(`${url}`, classRouter)
 app.use(`${url}`, challengeRouter)
@@ -95,5 +94,6 @@ app.use(`${url}`, questionRouter)
 app.use(`${url}`, configurationRouter)
 app.use(`${url}`, compilerRouter)
 app.use(`${url}`, homeworkRouter)
+app.use(`${url}`, difficultyRouter)
 
 export default app
