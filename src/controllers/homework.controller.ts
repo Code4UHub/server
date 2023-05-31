@@ -69,8 +69,9 @@ export const postQuestion = async (req: Request, res: Response): Promise<void> =
 
 export const postHomework = async (req: Request, res: Response): Promise<void> => {
   try {
-    const newHomework: HomeworkType = req.body.homework
-    const question_ids: string[] = req.body.question_ids
+    const newHomework = req.body
+    const question_ids = newHomework.question_ids
+    delete newHomework[question_ids]
 
     const query = await createHomework(newHomework, question_ids)
 
