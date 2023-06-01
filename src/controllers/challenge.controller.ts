@@ -4,7 +4,8 @@ import {
   // selectChallengeQuestions,
   createChallengeQuestions,
   selectChallengeQuestionsByStudent,
-  selectChallengesByStudent
+  selectChallengesByStudent,
+  updateStudentChallengeStatus
 } from '../database/query/challenge.query'
 import { ChallengeType } from '../types/challenge.type'
 
@@ -83,6 +84,38 @@ export const getChallengesByStudent = async (req: Request, res: Response): Promi
     res.status(500).json({
       status: 'error',
       data: 'Couldnt get challenges of student'
+    })
+  }
+}
+
+export const putChallengeStatus = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const challenge_id = req.body.challenge_id
+    const student_id = req.body.student_id
+    console.log(challenge_id)
+    console.log(student_id)
+
+    const query = await updateStudentChallengeStatus(challenge_id, student_id)
+
+    console.log(query)
+    // If the student was accepted
+    if (Array.isArray(query)) {
+      res.status(200).json({
+        status: 'success',
+        data: 'Status changed'
+      })
+      return
+    }
+
+    // If student couldnt be accepted
+    res.status(400).json({
+      status: 'failed',
+      data: query
+    })
+  } catch (e: any) {
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt accept student to class'
     })
   }
 }

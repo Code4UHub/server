@@ -7,3 +7,6 @@ export const router: Router = Router()
 router.route('/challenge').post(challengeController.postChallenge)
 router.route('/challenge/:challenge_id/student/:student_id/questions').get(challengeController.getChallengeQuestions)
 router.route('/challenge/class/:class_id/student/:student_id').get(challengeController.getChallengesByStudent)
+
+// Update status from a challenge to continue
+router.route('/challenge/updateStatus').put(challengeController.putChallengeStatus)
