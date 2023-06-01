@@ -35,12 +35,16 @@ export const selectQuestions = async () => {
   }
 }
 
-export const selectQuestionsByDifficultyId = async (difficulty_id: string): Promise<QuestionH[]> => {
+export const selectQuestionsByModuleAndDifficultyId = async (
+  module_id: string,
+  difficulty_id: string
+): Promise<QuestionH[]> => {
   try {
     const questionsByDifficulty = await QuestionH.findAll({
       raw: true,
       where: {
-        difficulty_id: difficulty_id
+        difficulty_id: difficulty_id,
+        module_id: module_id
       }
     })
     return questionsByDifficulty

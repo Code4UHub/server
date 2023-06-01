@@ -11,7 +11,8 @@ import {
   rejectManyStudentToClass,
   selectLeaderboardByClass,
   selectEnabledModulesByClass,
-  updateEnabledModulesByClass
+  updateEnabledModulesByClass,
+  selectHomeworksByClassId
 } from '../database/query/class.query'
 import { ClassType } from '../types/class.type'
 import { Class } from '../database/models/class.model'
@@ -501,3 +502,37 @@ export const putEnabledModulesByClass = async (req: Request, res: Response): Pro
 //     })
 //   }
 // }
+
+export const getHomeworks = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const class_id: string = req.params.class_id as string
+
+    const queryFilter: { limit?: string; startDate?: Date; endDate?: Date } = {}
+    if (req.query && req.query.limit) {
+      queryFilter.limit = (req.query as any).limit
+    }
+
+    if (req.query && req.query.startDate) {
+      queryFilter.startDate = (req.query as any).startDate
+    }
+
+    if (req.query && req.query.endDate) {
+      queryFilter.endDate = (req.query as any).endDate
+    }
+
+    const query = await selectHomeworksByClassId(class_id, queryFilter)
+    // const query: StudentClass[] = await selectStudentsByClass(homework_id)
+
+    res.status(200).json({
+      status: 'success',
+      data: query
+    })
+    return
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get students of class'
+    })
+  }
+}

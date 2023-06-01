@@ -8,12 +8,13 @@ import { Teacher } from '../models/teacher.model'
 import { Student } from '../models/student.model'
 import { StudentNotFoundError } from '../../errors/studentNotFoundError'
 import { ClassNotFoundError } from '../../errors/classNotFoundError'
-import { Sequelize } from 'sequelize'
+import { Op, Sequelize } from 'sequelize'
 import { EnabledModule } from '../models/enabledModule'
 import { Module } from '../models/module.model'
 import { Challenge } from '../models/challenge.model'
 import { StudentModule } from '../models/studentModule.model'
 import { StudentChallenge } from '../models/studentChallenge.model'
+import { Homework } from '../models/homework.model'
 
 export const selectClasses = async (): Promise<Class[]> => {
   try {
@@ -435,6 +436,35 @@ export const updateEnabledModulesByClass = async (class_id: string, modulesClass
 
     return enabledModuleClassStatus
   } catch (e: any) {
+    throw e
+  }
+}
+
+export const selectHomeworksByClassId = async (
+  class_id: string,
+  queryFilters: { limit?: string; startDate?: Date; endDate?: Date }
+): Promise<Homework[]> => {
+  const startDate = queryFilters.startDate ? queryFilters.startDate : new Date('2023-01-01')
+  const currentDate = new Date()
+  const endDate = queryFilters.endDate
+    ? queryFilters.endDate
+    : new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate())
+
+  try {
+    const homeworksByClass = await Homework.findAll({
+      raw: true,
+      limit: queryFilters.limit ? parseInt(queryFilters.limit) : undefined,
+      order: [['deadline', 'ASC']],
+      where: {
+        class_id: class_id,
+        deadline: {
+          [Op.between]: [startDate, endDate]
+        }
+      }
+    })
+    return homeworksByClass
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
     throw e
   }
 }
