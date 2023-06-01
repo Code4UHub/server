@@ -11,3 +11,6 @@ router.route('/homework/question').post(homeworkController.postQuestion)
 
 router.route('/homework').post(homeworkController.postHomework)
 router.route('/homework/:homework_id/student/:student_id/questions').get(homeworkController.getHomeworkQuestions)
+
+// check score for homework students
+router.route('/homework/:homework_id/student_scores').get(homeworkController.getStudentScores)

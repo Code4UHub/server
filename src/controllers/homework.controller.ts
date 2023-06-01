@@ -5,9 +5,9 @@ import {
   createHomework,
   createHomeworkQuestions,
   selectHomeworkQuestionsByStudent,
-  selectQuestionsBySubjectAndDifficultyId
+  selectQuestionsBySubjectAndDifficultyId,
+  selectStudentScoresByClassId
 } from '../database/query/homework.query'
-import { HomeworkType } from '../types/homework.type'
 
 import { QuestionHType } from '../types/questionH.type'
 
@@ -119,5 +119,19 @@ export const getHomeworkQuestions = async (req: Request, res: Response): Promise
       status: 'error',
       data: 'Couldnt get questions'
     })
+  }
+}
+
+export const getStudentScores = async (req: Request, res: Response) => {
+  const homework_id = req.params.homework_id
+
+  try {
+    const query = await selectStudentScoresByClassId(homework_id)
+    res.status(200).json({
+      status: 'success',
+      data: query
+    })
+  } catch (e) {
+    throw e
   }
 }
