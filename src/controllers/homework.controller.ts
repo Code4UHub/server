@@ -5,7 +5,7 @@ import {
   createHomework,
   createHomeworkQuestions,
   selectHomeworkQuestionsByStudent,
-  selectQuestionsByModuleAndDifficultyId
+  selectQuestionsBySubjectAndDifficultyId
 } from '../database/query/homework.query'
 import { HomeworkType } from '../types/homework.type'
 
@@ -24,12 +24,12 @@ export const getQuestions = async (req: Request, res: Response) => {
   }
 }
 
-export const getQuestionsByModuleAndDifficultyId = async (req: Request, res: Response) => {
-  const module_id = req.params.module_id
+export const getQuestionsBySubjectAndDifficultyId = async (req: Request, res: Response) => {
+  const subject_id = req.params.subject_id
   const difficulty_id = req.params.difficulty_id
 
   try {
-    const query = await selectQuestionsByModuleAndDifficultyId(module_id, difficulty_id)
+    const query = await selectQuestionsBySubjectAndDifficultyId(subject_id, difficulty_id)
     res.status(200).json({
       status: 'success',
       data: query

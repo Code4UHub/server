@@ -3,8 +3,10 @@ import { HomeworkQuestionType } from '../../types/homeworkQuestion.type'
 import { QuestionHType } from '../../types/questionH.type'
 import { Homework } from '../models/homework.model'
 import { HomeworkQuestion } from '../models/homeworkQuestion'
+import { Module } from '../models/module.model'
 import { QuestionH } from '../models/questionH.model'
 import { StudentHomeworkQuestion } from '../models/studentHomeworkQuestion.model'
+import { Subject } from '../models/subject.model'
 import { selectDifficulty } from './difficulty.query'
 
 export const selectHomework = async (homework_id: string) => {
@@ -35,17 +37,33 @@ export const selectQuestions = async () => {
   }
 }
 
-export const selectQuestionsByModuleAndDifficultyId = async (
-  module_id: string,
+export const selectQuestionsBySubjectAndDifficultyId = async (
+  subject_id: string,
   difficulty_id: string
 ): Promise<QuestionH[]> => {
   try {
     const questionsByDifficulty = await QuestionH.findAll({
       raw: true,
       where: {
-        difficulty_id: difficulty_id,
-        module_id: module_id
-      }
+        difficulty_id: difficulty_id
+      },
+      include: [
+        {
+          model: Module,
+          attributes: [],
+          required: true,
+          include: [
+            {
+              model: Subject,
+              attributes: [],
+              required: true,
+              where: {
+                subject_id: subject_id
+              }
+            }
+          ]
+        }
+      ]
     })
     return questionsByDifficulty
   } catch (e: any) {
