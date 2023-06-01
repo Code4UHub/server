@@ -21,13 +21,15 @@ export class QuestionH extends Model {
 
   @ForeignKey(() => Difficulty)
   @Column({
-    type: DataType.INTEGER
+    type: DataType.INTEGER,
+    allowNull: false
   })
   difficulty_id: number
 
   @ForeignKey(() => Module)
   @Column({
-    type: DataType.INTEGER
+    type: DataType.INTEGER,
+    allowNull: false
   })
   module_id: number
 
