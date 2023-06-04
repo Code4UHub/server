@@ -9,6 +9,7 @@ import { StudentChallenge } from '../models/studentChallenge.model'
 import { StudentModule } from '../models/studentModule.model'
 import { Sequelize } from 'sequelize'
 import { Difficulty } from '../models/difficulty.model'
+import { ModuleType } from '../../types/module.type'
 
 export const selectChallenge = async (challenge_id: string) => {
   try {
@@ -194,7 +195,7 @@ export const selectChallengesByStudent = async (class_id: string, student_id: st
             {
               model: StudentChallenge,
               // attributes: [],
-              attributes: ['score'],
+              attributes: ['score', 'status'],
               required: true,
               where: {
                 student_id: student_id
@@ -210,6 +211,129 @@ export const selectChallengesByStudent = async (class_id: string, student_id: st
       ]
     })
     return challengesByClass
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+export const updateStudentChallengeStatus = async (challenge_id: string, student_id: string): Promise<number[]> => {
+  try {
+    // If student registered then update his status
+    const studentChallenge = await StudentChallenge.update(
+      { status: 'continue' },
+      {
+        where: {
+          challenge_id: challenge_id,
+          student_id: student_id
+        }
+      }
+    )
+
+    return studentChallenge
+  } catch (e: any) {
+    console.log(e)
+    throw e
+  }
+}
+
+export const selectIncomingChallenge = async (class_id: string, student_id: string) => {
+  try {
+    const challengesByClass: Module[] = await Module.findAll({
+      raw: true,
+      attributes: ['module_id', 'title'],
+      order: [['module_id', 'ASC']],
+      include: [
+        {
+          model: EnabledModule,
+          attributes: [],
+          where: {
+            class_id: class_id
+          },
+          required: true
+        },
+        {
+          model: StudentModule,
+          attributes: [],
+          required: true,
+          where: {
+            student_id: student_id
+          }
+        },
+        {
+          model: Challenge,
+          attributes: ['challenge_id', 'title'],
+          required: false,
+          order: [['challenge_id', 'ASC']],
+          include: [
+            {
+              model: StudentChallenge,
+              attributes: ['status'],
+              required: true,
+              where: {
+                student_id: student_id
+              }
+            },
+            {
+              model: Difficulty,
+              attributes: ['difficulty', 'difficulty_id'],
+              required: true
+            }
+          ]
+        }
+      ]
+    })
+
+    let incomingChallenge: {
+      module_title: string
+      challenge_title: string
+      student_id: string
+      status: string
+      difficulty: string
+    } = {
+      module_title: 'title',
+      challenge_title: 'title',
+      student_id: 'aaaa',
+      status: 'status',
+      difficulty: 'difficulty'
+    }
+    let inconmingChallengeFound = false
+
+    // Looking for the fist challenge with continue status
+    for (let i = 0; i < challengesByClass.length && inconmingChallengeFound == false; i++) {
+      const challenge: { [index: string]: any } = challengesByClass[i]
+      const challengeStatus = challenge['challenge.student_challenge.status']
+
+      if (challengeStatus && challengeStatus == 'continue') {
+        incomingChallenge['module_title'] = challenge.title
+        incomingChallenge['challenge_title'] = challenge['challenge.title']
+        incomingChallenge['student_id'] = challenge['challenge.student_challenge.student_id']
+        incomingChallenge['status'] = challengeStatus
+        incomingChallenge['difficulty'] = challenge['challenge.difficulty.difficulty']
+        inconmingChallengeFound = true
+      }
+    }
+
+    // Looking for the fist challenge with start status
+    for (let i = 0; i < challengesByClass.length && inconmingChallengeFound == false; i++) {
+      const challenge: { [index: string]: any } = challengesByClass[i]
+      const challengeStatus = challenge['challenge.student_challenge.status']
+
+      if (challengeStatus && challengeStatus == 'start') {
+        incomingChallenge['module_title'] = challenge.title
+        incomingChallenge['challenge_title'] = challenge['challenge.title']
+        incomingChallenge['student_id'] = challenge['challenge.student_challenge.student_id']
+        incomingChallenge['status'] = challengeStatus
+        incomingChallenge['difficulty'] = challenge['challenge.difficulty.difficulty']
+        inconmingChallengeFound = true
+      }
+    }
+
+    if (inconmingChallengeFound == true) {
+      return incomingChallenge
+    } else {
+      return 'Incoming challenge not found'
+    }
   } catch (e: any) {
     // throw new Error("MY ERROR")
     throw e

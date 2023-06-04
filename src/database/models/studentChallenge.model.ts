@@ -27,6 +27,12 @@ export class StudentChallenge extends Model {
   })
   score: number
 
+  @Column({
+    type: DataType.STRING,
+    allowNull: false
+  })
+  status: string
+
   @BelongsTo(() => Student)
   student: Student
 
