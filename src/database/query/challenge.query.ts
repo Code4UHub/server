@@ -9,6 +9,7 @@ import { StudentChallenge } from '../models/studentChallenge.model'
 import { StudentModule } from '../models/studentModule.model'
 import { Sequelize } from 'sequelize'
 import { Difficulty } from '../models/difficulty.model'
+import { ModuleType } from '../../types/module.type'
 
 export const selectChallenge = async (challenge_id: string) => {
   try {
@@ -194,7 +195,7 @@ export const selectChallengesByStudent = async (class_id: string, student_id: st
             {
               model: StudentChallenge,
               // attributes: [],
-              attributes: ['score'],
+              attributes: ['score', 'status'],
               required: true,
               where: {
                 student_id: student_id
@@ -232,6 +233,87 @@ export const updateStudentChallengeStatus = async (challenge_id: string, student
     return studentChallenge
   } catch (e: any) {
     console.log(e)
+    throw e
+  }
+}
+
+export const selectIncomingChallenge = async (class_id: string, student_id: string) => {
+  try {
+    // Modulo -> titulo y score
+    // Challenge []
+
+    const challengesByClass: Module[] = await Module.findAll({
+      raw: true,
+      attributes: ['module_id'],
+      order: [['module_id', 'ASC']],
+      include: [
+        {
+          model: EnabledModule,
+          attributes: [],
+          where: {
+            class_id: class_id
+          },
+          required: true
+        },
+        {
+          model: StudentModule,
+          attributes: [],
+          required: true,
+          where: {
+            student_id: student_id
+          }
+        },
+        {
+          model: Challenge,
+          attributes: ['challenge_id'],
+          required: false,
+          include: [
+            {
+              model: StudentChallenge,
+              // attributes: [],
+              attributes: ['status'],
+              required: true,
+              where: {
+                student_id: student_id
+              }
+            },
+            {
+              model: Difficulty,
+              attributes: ['difficulty', 'difficulty_id'],
+              required: true
+            }
+          ]
+        }
+      ]
+    })
+
+    //   {
+    //     "module_id": 1,
+    //     "challenge.challenge_id": 1,
+    //     "challenge.student_challenge.challenge_id": 1,
+    //     "challenge.student_challenge.student_id": "A01735745",
+    //     "challenge.student_challenge.status": "continue",
+    //     "challenge.difficulty.difficulty": "Fácil",
+    //     "challenge.difficulty.difficulty_id": 1
+    // },
+
+    let incomingChallenge
+
+    // Looking
+    for (let i = 0; i < challengesByClass.length; i++) {
+      const challenge: { [index: string]: any } = challengesByClass[i]
+      const challengeStatus = challenge['challenge.student_challenge.status']
+
+      if (challengeStatus && challengeStatus == 'continue') {
+        incomingChallenge = challenge
+      }
+    }
+
+
+
+    return challengesByClass
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
     throw e
   }
 }

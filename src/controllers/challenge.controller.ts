@@ -5,7 +5,8 @@ import {
   createChallengeQuestions,
   selectChallengeQuestionsByStudent,
   selectChallengesByStudent,
-  updateStudentChallengeStatus
+  updateStudentChallengeStatus,
+  selectIncomingChallenge
 } from '../database/query/challenge.query'
 import { ChallengeType } from '../types/challenge.type'
 
@@ -116,6 +117,34 @@ export const putChallengeStatus = async (req: Request, res: Response): Promise<v
     res.status(500).json({
       status: 'error',
       data: 'Couldnt accept student to class'
+    })
+  }
+}
+
+export const getIncomingChallenge = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const student_id = req.params.student_id
+    const class_id = req.params.class_id
+
+    const query = await selectIncomingChallenge(class_id, student_id)
+
+    if (query.length > 0) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+      return
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: []
+    })
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get challenges of student'
     })
   }
 }
