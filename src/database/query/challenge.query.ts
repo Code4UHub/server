@@ -217,11 +217,37 @@ export const selectChallengesByStudent = async (class_id: string, student_id: st
   }
 }
 
-export const updateStudentChallengeStatus = async (challenge_id: string, student_id: string): Promise<number[]> => {
+export const updateStudentChallengeStatusContinue = async (
+  challenge_id: string,
+  student_id: string
+): Promise<number[]> => {
   try {
     // If student registered then update his status
     const studentChallenge = await StudentChallenge.update(
       { status: 'continue' },
+      {
+        where: {
+          challenge_id: challenge_id,
+          student_id: student_id
+        }
+      }
+    )
+
+    return studentChallenge
+  } catch (e: any) {
+    console.log(e)
+    throw e
+  }
+}
+
+export const updateStudentChallengeStatusStart = async (
+  challenge_id: string,
+  student_id: string
+): Promise<number[]> => {
+  try {
+    // If student registered then update his status
+    const studentChallenge = await StudentChallenge.update(
+      { status: 'start' },
       {
         where: {
           challenge_id: challenge_id,
