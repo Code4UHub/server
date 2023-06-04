@@ -128,18 +128,19 @@ export const getIncomingChallenge = async (req: Request, res: Response): Promise
 
     const query = await selectIncomingChallenge(class_id, student_id)
 
-    if (query.length > 0) {
+    if (typeof query == 'object') {
       res.status(200).json({
         status: 'success',
         data: query
       })
       return
+    } else {
+      res.status(400).json({
+        status: 'failed',
+        data: query
+      })
+      return
     }
-
-    res.status(200).json({
-      status: 'success',
-      data: []
-    })
   } catch (e: any) {
     console.log(e)
     res.status(500).json({
