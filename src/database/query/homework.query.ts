@@ -1,10 +1,15 @@
+import { Sequelize } from 'sequelize'
 import { HomeworkType } from '../../types/homework.type'
 import { HomeworkQuestionType } from '../../types/homeworkQuestion.type'
 import { QuestionHType } from '../../types/questionH.type'
 import { Homework } from '../models/homework.model'
 import { HomeworkQuestion } from '../models/homeworkQuestion'
+import { Module } from '../models/module.model'
 import { QuestionH } from '../models/questionH.model'
+import { Student } from '../models/student.model'
+import { StudentHomework } from '../models/studentHomework'
 import { StudentHomeworkQuestion } from '../models/studentHomeworkQuestion.model'
+import { Subject } from '../models/subject.model'
 import { selectDifficulty } from './difficulty.query'
 
 export const selectHomework = async (homework_id: string) => {
@@ -35,13 +40,34 @@ export const selectQuestions = async () => {
   }
 }
 
-export const selectQuestionsByDifficultyId = async (difficulty_id: string): Promise<QuestionH[]> => {
+
+export const selectQuestionsBySubjectAndDifficultyId = async (
+  subject_id: string,
+  difficulty_id: string
+): Promise<QuestionH[]> => {
   try {
     const questionsByDifficulty = await QuestionH.findAll({
       raw: true,
       where: {
         difficulty_id: difficulty_id
-      }
+      },
+      include: [
+        {
+          model: Module,
+          attributes: [],
+          required: true,
+          include: [
+            {
+              model: Subject,
+              attributes: [],
+              required: true,
+              where: {
+                subject_id: subject_id
+              }
+            }
+          ]
+        }
+      ]
     })
     return questionsByDifficulty
   } catch (e: any) {
@@ -220,6 +246,34 @@ export const createHomeworkQuestions = async (homework_id: string, student_id: s
 
     return res
   } catch (e: any) {
+    throw e
+  }
+}
+
+export const selectStudentScoresByClassId = async (homework_id: string): Promise<StudentHomework[]> => {
+  try {
+    const studentHomework = await StudentHomework.findAll({
+      raw: true,
+      attributes: [
+        [Sequelize.literal('"student"."first_name" || \' \' || "student"."last_name"'), 'student_name'],
+        'student_id',
+        'score'
+      ],
+      where: {
+        homework_id: homework_id
+      },
+      order: [['score', 'ASC']],
+      include: [
+        {
+          model: Student,
+          required: true,
+          attributes: []
+        }
+      ]
+    })
+    return studentHomework
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
     throw e
   }
 }

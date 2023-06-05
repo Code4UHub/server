@@ -25,3 +25,6 @@ router
 router.route('/class/:class_id/leaderboard').get(classController.getLeaderboardByClass)
 
 // router.route('/class/:class_id/modules/stats').get(classController.getModulesStatsByClass)
+
+// route to get homework of a class
+router.route('/class/:class_id/homework').get(classController.getHomeworks)
