@@ -71,47 +71,22 @@ export const submitCode = async (req: Request, res: Response): Promise<void> => 
         const responseText = await result.json()
         return responseText
       } else if (question.type === 'close') {
-        console.log('That')
+        return { result: 'CLOSED QUESTION' }
       } else {
-        console.log('Question type not valid')
+        return { result: 'INVALID' }
       }
     })
 
     Promise.all(studentQuestionsScore).then((data) => {
       console.log('================')
       console.log(data)
+      res.status(200).json({
+        status: 'success',
+        data: data
+      })
+      return
     })
 
-    // const result = await fetch(url, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: source_code
-    // })
-    // const responseText = await result.json()
-    // console.log(responseText)
-
-    // if (responseText.status == 'error') {
-    //   res.status(400).json({
-    //     status: 'failed',
-    //     data: responseText
-    //   })
-    //   return
-    // } else {
-    //   res.status(200).json({
-    //     status: 'failed',
-    //     data: responseText
-    //   })
-    //   return
-    // }
-    // updateStudentQuestionScore(student_question)
-
-    res.status(200).json({
-      status: 'success',
-      data: 'data goes here'
-    })
-    return
     // Update students submission with current code
     // call query that updates a score
   } catch (e: any) {

@@ -8,7 +8,7 @@ Content-Type: application/json
   "shown_tests": [
     {
       "input": "Andre",
-      "output": "Hola, Andre!"
+      "output": "Hola, Andr!"
     },
     {
       "input": "0001",
@@ -99,7 +99,7 @@ Content-Type: application/json
     {
       "question_id": 3,
       "type": "close",
-      "user_answer": 1,
+      "selected_choice": 1,
       "answer": 1
     }
   ]
