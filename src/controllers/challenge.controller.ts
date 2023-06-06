@@ -90,6 +90,7 @@ export const getChallengesByStudent = async (req: Request, res: Response): Promi
   }
 }
 
+
 export const putChallengeStatusContinue = async (req: Request, res: Response): Promise<void> => {
   try {
     const challenge_id = req.body.challenge_id
@@ -140,6 +141,7 @@ export const putChallengeStatusStart = async (req: Request, res: Response): Prom
     res.status(500).json({
       status: 'error',
       data: 'Couldnt change status'
+
     })
   }
 }
