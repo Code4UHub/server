@@ -3,4 +3,5 @@ export type StudentQuestionType = {
   question_id: number
   passed: boolean
   solution: object
+  score: number
 }

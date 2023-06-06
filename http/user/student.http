@@ -4,7 +4,7 @@ Authorization: Bearer {{token}}
 
 
 ### Get a student
-GET {{host}}/{{version}}/student/login?email=a00000001@tec.mx&password=Abc123456 HTTP/1.1
+GET {{host}}/{{version}}/student/login?email=a01734902@tec.mx&password=Abc123456 HTTP/1.1
 
 
 ### Create a student
@@ -12,10 +12,10 @@ POST {{host}}/{{version}}/student/register
 Content-Type: application/json
 
 {
-    "student_id": "a00000005",
-    "first_name": "John",
-    "last_name": "Wayne",
-    "email": "a00000005@tec.mx",
+    "student_id": "a01734902",
+    "first_name": "Carlos",
+    "last_name": "Diaz",
+    "email": "a01734902@tec.mx",
     "password": "Abc123456"
 }
 

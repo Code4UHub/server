@@ -40,13 +40,13 @@ export const selectQuestions = async () => {
   }
 }
 
-
 export const selectQuestionsBySubjectAndDifficultyId = async (
   subject_id: string,
   difficulty_id: string
 ): Promise<QuestionH[]> => {
   try {
     const questionsByDifficulty = await QuestionH.findAll({
+      attributes: ['question_h_id', 'difficulty_id', 'type', 'module_id', 'module.title', 'question'],
       raw: true,
       where: {
         difficulty_id: difficulty_id
@@ -148,7 +148,11 @@ export const selectHomeworkQuestionsByStudent = async (homework_id: string, stud
         'question_h_id',
         'question',
         'student_homework_question.solution',
-        'student_homework_question.passed'
+        'student_homework_question.passed',
+        'type',
+        'difficulty_id',
+        'module_id',
+        'module.title'
       ],
       raw: true,
 
@@ -160,6 +164,11 @@ export const selectHomeworkQuestionsByStudent = async (homework_id: string, stud
           required: true,
           attributes: [],
           where: { student_id: student_id }
+        },
+        {
+          model: Module,
+          required: true,
+          attributes: []
         }
       ]
     })
