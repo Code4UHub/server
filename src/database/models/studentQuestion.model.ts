@@ -2,7 +2,6 @@ import { Table, Column, Model, DataType, BelongsTo, ForeignKey, HasMany, Belongs
 import { Student } from './student.model'
 import { Question } from './question.model'
 
-
 @Table({ tableName: 'student_question' })
 export class StudentQuestion extends Model {
   @ForeignKey(() => Student)
@@ -14,7 +13,6 @@ export class StudentQuestion extends Model {
   student_id: string
 
   @ForeignKey(() => Question)
-
   @Column({
     type: DataType.STRING,
     primaryKey: true,
@@ -36,11 +34,16 @@ export class StudentQuestion extends Model {
   })
   passed: boolean
 
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  })
+  score: number
 
   @BelongsTo(() => Student)
   student: Student
 
   @BelongsTo(() => Question)
   question: Question
-
 }

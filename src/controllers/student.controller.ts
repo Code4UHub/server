@@ -9,9 +9,9 @@ import { StudentNotFoundError } from '../errors/studentNotFoundError'
 /**
  * Retrieves all existing students.
  *
- * @returns 200: If students could be retrieved
+ * @returns 200: Students could be retrieved.
  *
- * @throws 500: If there is an error retrieving the students.
+ * @throws 500: Server-side error.
  */
 export const getStudents = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -32,12 +32,12 @@ export const getStudents = async (req: Request, res: Response): Promise<void> =>
  * Retrieves a student based on the provided email and password.
  *
  * @returns
- * - 200: If the login is successful and the student information is found.
- * - 400: If the provided email is invalid.
- * - 401: If the provided password is incorrect.
- * - 404: If the student is not found.
+ * - 200: Login is successful and the student information is found.
+ * - 400: Provided email is invalid.
+ * - 401: Provided password is incorrect.
+ * - 404: Student is not found.
  *
- * @throws 500: If there is a server-side error.
+ * @throws 500: Server-side error.
  */
 export const getStudent = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -106,12 +106,11 @@ export const getStudent = async (req: Request, res: Response): Promise<void> => 
  * Creates a student based on the provided credentials
  *
  * @returns
- * - 200: If the login is successful and the student information is found.
- * - 400: If the provided email is invalid.
- * - 404: If the student is not found.
- * - 409: If the email is already in use.
+ * - 200: Student has been created.
+ * - 400: Email is invalid.
+ * - 409: Email is already in use.
  *
- * @throws 500: If there is a server-side error.
+ * @throws 500: Server-side error.
  */
 export const postStudent = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -166,10 +165,10 @@ export const postStudent = async (req: Request, res: Response): Promise<void> =>
  * Retrieves all the classes a student is registered to.
  *
  * @returns
- * - 200: If the student is registered to one or more classes.
- * - 409: If the student doesnt exist
+ * - 200: Classes could be retrieved.
+ * - 409: Student doesnt exist.
  *
- * @throws 500: If there is a server-side error.
+ * @throws 500: Server-side error.
  */
 export const getStudentClasses = async (req: Request, res: Response): Promise<void> => {
   try {
