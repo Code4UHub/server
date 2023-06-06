@@ -217,10 +217,12 @@ export const selectChallengesByStudent = async (class_id: string, student_id: st
   }
 }
 
+
 export const updateStudentChallengeStatusContinue = async (
   challenge_id: string,
   student_id: string
 ): Promise<number[]> => {
+
   try {
     // If student registered then update his status
     const studentChallenge = await StudentChallenge.update(
@@ -262,6 +264,7 @@ export const updateStudentChallengeStatusStart = async (
     throw e
   }
 }
+
 
 export const selectIncomingChallenge = async (class_id: string, student_id: string) => {
   try {
