@@ -9,7 +9,11 @@ router.route('/challenge/:challenge_id/student/:student_id/questions').get(chall
 router.route('/challenge/class/:class_id/student/:student_id').get(challengeController.getChallengesByStudent)
 
 // Update status from a challenge to continue
-router.route('/challenge/updateStatus').put(challengeController.putChallengeStatus)
+router.route('/challenge/update_status_continue').put(challengeController.putChallengeStatusContinue)
+
+// Update status from a challenge to continue
+router.route('/challenge/update_status_start').put(challengeController.putChallengeStatusStart)
+
 
 // get the incoming assignment for student
 router

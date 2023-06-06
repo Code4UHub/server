@@ -1,5 +1,6 @@
 import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript'
 import { QuestionH } from './questionH.model'
+import { Challenge } from './challenge.model'
 
 @Table({ tableName: 'difficulty' })
 export class Difficulty extends Model {
@@ -22,4 +23,7 @@ export class Difficulty extends Model {
 
   @HasMany(() => QuestionH)
   question_h: QuestionH
+
+  @HasMany(() => Challenge)
+  challenge: Challenge
 }

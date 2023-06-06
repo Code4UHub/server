@@ -5,7 +5,8 @@ import {
   createChallengeQuestions,
   selectChallengeQuestionsByStudent,
   selectChallengesByStudent,
-  updateStudentChallengeStatus,
+  updateStudentChallengeStatusContinue,
+  updateStudentChallengeStatusStart,
   selectIncomingChallenge
 } from '../database/query/challenge.query'
 import { ChallengeType } from '../types/challenge.type'
@@ -89,17 +90,14 @@ export const getChallengesByStudent = async (req: Request, res: Response): Promi
   }
 }
 
-export const putChallengeStatus = async (req: Request, res: Response): Promise<void> => {
+
+export const putChallengeStatusContinue = async (req: Request, res: Response): Promise<void> => {
   try {
     const challenge_id = req.body.challenge_id
     const student_id = req.body.student_id
-    console.log(challenge_id)
-    console.log(student_id)
 
-    const query = await updateStudentChallengeStatus(challenge_id, student_id)
+    const query = await updateStudentChallengeStatusContinue(challenge_id, student_id)
 
-    console.log(query)
-    // If the student was accepted
     if (Array.isArray(query)) {
       res.status(200).json({
         status: 'success',
@@ -108,7 +106,6 @@ export const putChallengeStatus = async (req: Request, res: Response): Promise<v
       return
     }
 
-    // If student couldnt be accepted
     res.status(400).json({
       status: 'failed',
       data: query
@@ -116,7 +113,35 @@ export const putChallengeStatus = async (req: Request, res: Response): Promise<v
   } catch (e: any) {
     res.status(500).json({
       status: 'error',
-      data: 'Couldnt accept student to class'
+      data: 'Couldnt change status'
+    })
+  }
+}
+
+export const putChallengeStatusStart = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const challenge_id = req.body.challenge_id
+    const student_id = req.body.student_id
+
+    const query = await updateStudentChallengeStatusStart(challenge_id, student_id)
+
+    if (Array.isArray(query)) {
+      res.status(200).json({
+        status: 'success',
+        data: 'Status changed'
+      })
+      return
+    }
+
+    res.status(400).json({
+      status: 'failed',
+      data: query
+    })
+  } catch (e: any) {
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt change status'
+
     })
   }
 }
