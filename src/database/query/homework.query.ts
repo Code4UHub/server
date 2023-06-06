@@ -182,8 +182,15 @@ export const selectHomeworkQuestionsByStudent = async (homework_id: string, stud
 export const selectHomeworkOpenQuestions = async (homework_id: string) => {
   try {
     const res = await QuestionH.findAll({
+      raw: true,
       attributes: ['question_h_id', 'type'],
-      where: { type: 'open' }
+      where: { type: 'open' },
+      include: [
+        {
+          model: HomeworkQuestion,
+          required: true
+        }
+      ]
     })
     return res
   } catch (e: any) {
@@ -194,8 +201,15 @@ export const selectHomeworkOpenQuestions = async (homework_id: string) => {
 export const selectHomeworkClosedQuestions = async (homework_id: string) => {
   try {
     const res = await QuestionH.findAll({
+      raw: true,
       attributes: ['question_h_id', 'type'],
-      where: { type: 'closed' }
+      where: { type: 'closed' },
+      include: [
+        {
+          model: HomeworkQuestion,
+          required: true
+        }
+      ]
     })
     return res
   } catch (e: any) {
@@ -215,6 +229,7 @@ export const createHomeworkQuestions = async (homework_id: string, student_id: s
     // Obtener todas las preguntas que tengan el challenge id
     const openQuestions = await selectHomeworkOpenQuestions(homework_id)
     openQuestions.sort(() => Math.random() - 0.5)
+
     const closedQuestions = await selectHomeworkClosedQuestions(homework_id)
     closedQuestions.sort(() => Math.random() - 0.5)
 
