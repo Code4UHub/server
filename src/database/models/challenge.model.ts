@@ -44,14 +44,17 @@ export class Challenge extends Model {
   })
   module_id: number
 
+  @BelongsTo(() => Difficulty)
+  difficulty: Difficulty
+
   @ForeignKey(() => Difficulty)
   @Column({
     type: DataType.INTEGER
   })
   difficulty_id: number
 
-  @BelongsTo(() => Difficulty)
-  difficulty: Difficulty
+  @BelongsTo(() => Module)
+  module: Module
 
   @HasMany(() => Question)
   questions: Question[]
