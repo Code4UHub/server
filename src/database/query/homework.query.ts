@@ -330,3 +330,35 @@ export const selectStudentScoresByClassId = async (homework_id: string): Promise
     throw e
   }
 }
+
+export const updateStudentHomeworkQuestion = async (
+  homework_id: string,
+  student_id: string,
+  question_id: string,
+  newSolution: object
+): Promise<number[] | string> => {
+  try {
+    // If student registered then update his status
+    const acceptedStudent = await StudentHomeworkQuestion.update(
+      { solution: newSolution },
+      {
+        where: {
+          homework_id: homework_id,
+          student_id: student_id,
+          question_h_id: question_id
+        }
+      }
+    )
+
+    // Check if a row was updated or not
+    if (acceptedStudent[0] == 0) {
+      return 'Student homework question not updated'
+    } else {
+      return acceptedStudent
+    }
+  } catch (e: any) {
+    console.log('ERROR')
+    console.log(e)
+    throw e
+  }
+}

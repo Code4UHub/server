@@ -19,3 +19,9 @@ router.route('/homework/:homework_id/student/:student_id/questions').get(homewor
 
 // check score for homework students
 router.route('/homework/:homework_id/student_scores').get(homeworkController.getStudentScores)
+
+// update student_homework_question
+router
+  // /v1/homework/15/student/A01735706/question/25
+  .route('/homework/:homework_id/student/:student_id/question/:question_id')
+  .put(homeworkController.putStudentHomeworkQuestion)
