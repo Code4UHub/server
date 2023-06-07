@@ -13,7 +13,8 @@ import {
   selectEnabledModulesByClass,
   updateEnabledModulesByClass,
   selectHomeworksByClassId,
-  selectChallengeAveragesByClass
+  selectChallengeAverageByClass,
+  selectChallengeProgressByClass
 } from '../database/query/class.query'
 import { ClassType } from '../types/class.type'
 import { Class } from '../database/models/class.model'
@@ -542,10 +543,10 @@ export const getHomeworks = async (req: Request, res: Response): Promise<void> =
 //
 //
 // stats
-export const getChallengeAveragesByClass = async (req: Request, res: Response): Promise<void> => {
+export const getChallengeAverageByClass = async (req: Request, res: Response): Promise<void> => {
   try {
     const class_id: string = req.params.class_id as string
-    const query = await selectChallengeAveragesByClass(class_id)
+    const query = await selectChallengeAverageByClass(class_id)
 
     if (query) {
       res.status(200).json({
@@ -563,6 +564,31 @@ export const getChallengeAveragesByClass = async (req: Request, res: Response): 
     res.status(500).json({
       status: 'error',
       data: 'Couldnt get challenge averages by class'
+    })
+  }
+}
+
+export const getChallengeAveragesByClass = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const class_id: string = req.params.class_id as string
+    const query = await selectChallengeProgressByClass(class_id)
+
+    if (query) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+    } else {
+      res.status(404).json({
+        status: 'failed',
+        data: []
+      })
+    }
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get challenge progress by class'
     })
   }
 }
