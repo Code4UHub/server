@@ -28,3 +28,6 @@ router.route('/class/:class_id/leaderboard').get(classController.getLeaderboardB
 
 // route to get homework of a class
 router.route('/class/:class_id/homework').get(classController.getHomeworks)
+
+// route to get average of a class by challenge
+router.route('/class/:class_id/challenge_averages').get(classController.getChallengeAveragesByClass)
