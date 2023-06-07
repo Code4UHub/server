@@ -76,6 +76,35 @@ export const selectQuestionsBySubjectAndDifficultyId = async (
   }
 }
 
+export const selectQuestionsByModuleAndDifficultyId = async (
+  module_id: string,
+  difficulty_id: string
+): Promise<QuestionH[]> => {
+  try {
+    const questionsByDifficulty = await QuestionH.findAll({
+      attributes: ['question_h_id', 'difficulty_id', 'type', 'module_id', 'module.title', 'question'],
+      raw: true,
+      where: {
+        difficulty_id: difficulty_id
+      },
+      include: [
+        {
+          model: Module,
+          attributes: [],
+          required: true,
+          where: {
+            module_id: module_id
+          }
+        }
+      ]
+    })
+    return questionsByDifficulty
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
 export const createQuestion = async (newQuestion: QuestionHType): Promise<QuestionH | null> => {
   try {
     const res = await QuestionH.create(newQuestion)

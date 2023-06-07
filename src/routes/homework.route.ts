@@ -7,6 +7,10 @@ router
   .route('/homework/question/subject/:subject_id/difficulty/:difficulty_id')
   .get(homeworkController.getQuestionsBySubjectAndDifficultyId)
 
+router
+  .route('/homework/question/module/:module_id/difficulty/:difficulty_id')
+  .get(homeworkController.getQuestionsByModuleAndDifficultyId)
+
 router.route('/homework/question').get(homeworkController.getQuestions)
 router.route('/homework/question').post(homeworkController.postQuestion)
 

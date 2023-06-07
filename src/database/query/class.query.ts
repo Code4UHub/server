@@ -468,3 +468,163 @@ export const selectHomeworksByClassId = async (
     throw e
   }
 }
+
+export const selectChallengeAverageByClass = async (class_id: string): Promise<Module[]> => {
+  try {
+    const modulesByClass = await Module.findAll({
+      raw: false,
+      attributes: ['module_id', 'title'],
+      order: [['module_id', 'ASC']],
+      include: [
+        {
+          model: EnabledModule,
+          attributes: [],
+          where: {
+            class_id: class_id
+          },
+          required: true
+        },
+        {
+          model: StudentModule,
+          attributes: [],
+          required: true
+        },
+        {
+          model: Challenge,
+          attributes: ['challenge_id', 'title', 'total_points'],
+          required: false,
+          include: [
+            {
+              model: StudentChallenge,
+              attributes: ['student_id', 'score', 'status'],
+              required: true
+            }
+          ]
+        }
+      ]
+    })
+
+    const modulesFormatted = []
+
+    for (let i = 0; i < modulesByClass.length; i++) {
+      const module = modulesByClass[i]
+      const currentModule = {} as any
+      currentModule['module_id'] = module.module_id
+      currentModule['title'] = module.title
+
+      const challenges = module.challenge as any
+      const challengesFormatted = []
+
+      let numberStudents
+      for (let j = 0; j < challenges.length; j++) {
+        const challenge = challenges[j]
+
+        const studentChallenges = challenge.student_challenge as any
+        numberStudents = studentChallenges.length
+        let sumScores = 0
+        for (let k = 0; k < studentChallenges.length; k++) {
+          const stuChall = studentChallenges[k]
+          sumScores += stuChall.score
+        }
+        const avgChallenge = sumScores / numberStudents
+
+        challengesFormatted.push({
+          challenge_id: challenge.challenge_id,
+          title: challenge.title,
+          average: avgChallenge / challenge.total_points
+        })
+      }
+      challengesFormatted.sort((a, b) => a.challenge_id - b.challenge_id)
+      currentModule['challenges'] = challengesFormatted
+      modulesFormatted.push(currentModule)
+    }
+
+    return modulesFormatted
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+export const selectChallengeProgressByClass = async (class_id: string): Promise<Module[]> => {
+  try {
+    const modulesByClass = await Module.findAll({
+      raw: false,
+      attributes: ['module_id', 'title'],
+      order: [['module_id', 'ASC']],
+
+      include: [
+        {
+          model: EnabledModule,
+          attributes: [],
+          where: {
+            class_id: class_id
+          },
+          required: true
+        },
+        {
+          model: StudentModule,
+          attributes: [],
+          required: true
+        },
+        {
+          model: Challenge,
+          attributes: ['challenge_id', 'title', 'total_points'],
+          required: false,
+          include: [
+            {
+              model: StudentChallenge,
+              attributes: ['student_id', 'score', 'status'],
+              required: true
+            }
+          ]
+        }
+      ]
+    })
+
+    const modulesFormatted = []
+
+    for (let i = 0; i < modulesByClass.length; i++) {
+      const module = modulesByClass[i]
+      const currentModule = {} as any
+      currentModule['module_id'] = module.module_id
+      currentModule['title'] = module.title
+
+      const challenges = module.challenge as any
+      const challengesFormatted = []
+
+      let numberStudents
+      for (let j = 0; j < challenges.length; j++) {
+        const challenge = challenges[j]
+
+        const studentChallenges = challenge.student_challenge as any
+        numberStudents = studentChallenges.length
+        let approvedStudents = 0
+        for (let k = 0; k < studentChallenges.length; k++) {
+          const stuChall = studentChallenges[k]
+
+          if (stuChall.score / challenge.total_points >= 0.7) {
+            approvedStudents += 1
+          }
+        }
+
+        const avgProgress = approvedStudents / numberStudents
+
+        challengesFormatted.push({
+          challenge_id: challenge.challenge_id,
+          title: challenge.title,
+          avgProgress: avgProgress
+        })
+      }
+
+      challengesFormatted.sort((a, b) => a.challenge_id - b.challenge_id)
+      currentModule['challenges'] = challengesFormatted
+      modulesFormatted.push(currentModule)
+    }
+
+    return modulesFormatted
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
