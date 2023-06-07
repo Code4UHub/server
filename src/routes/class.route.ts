@@ -34,4 +34,4 @@ router.route('/class/:class_id/challenge_average').get(classController.getChalle
 router.route('/class/:class_id/challenge_progress').get(classController.getChallengeAveragesByClass)
 
 router.route('/class/:class_id/module_average').get(classController.getModuleAverageByClass)
-// router.route('/class/:class_id/module_progress').get(classController.getModuleProgressByClass)
+router.route('/class/:class_id/module_progress').get(classController.getModuleProgressByClass)
