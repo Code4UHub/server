@@ -34,13 +34,6 @@ export class StudentQuestion extends Model {
   })
   passed: boolean
 
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-    defaultValue: 0
-  })
-  score: number
-
   @BelongsTo(() => Student)
   student: Student
 
