@@ -531,7 +531,7 @@ export const selectChallengeAverageByClass = async (class_id: string): Promise<M
         challengesFormatted.push({
           challenge_id: challenge.challenge_id,
           title: challenge.title,
-          average: avgChallenge / challenge.total_points
+          average: Math.floor((avgChallenge / challenge.total_points) * 100)
         })
       }
       challengesFormatted.sort((a, b) => a.challenge_id - b.challenge_id)
@@ -613,7 +613,7 @@ export const selectChallengeProgressByClass = async (class_id: string): Promise<
         challengesFormatted.push({
           challenge_id: challenge.challenge_id,
           title: challenge.title,
-          avgProgress: avgProgress
+          avgProgress: Math.floor(avgProgress * 100)
         })
       }
 
