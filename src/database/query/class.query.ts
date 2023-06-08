@@ -816,3 +816,43 @@ export const selectClassByStudent = async (class_id: string, student_id: string)
     throw e
   }
 }
+
+export const selectClassByTeacher = async (class_id: string, teacher_id: string): Promise<Class | null> => {
+  try {
+    const classDb: Class | null = await Class.findOne({
+      raw: true,
+      attributes: [
+        'class_id',
+        'is_finished',
+        'finished_date',
+        'days',
+        'start_time',
+        'end_time',
+        'teacher_id',
+        'subject_id',
+        'subject.subject_name',
+        [Sequelize.literal('"teacher"."first_name" || \' \' || "teacher"."last_name"'), 'teacher_name']
+      ],
+      where: {
+        class_id: class_id,
+        teacher_id: teacher_id
+      },
+      include: [
+        {
+          model: Subject,
+          attributes: [],
+          required: true
+        },
+        {
+          model: Teacher,
+          attributes: [],
+          required: true
+        }
+      ]
+    })
+    return classDb
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}

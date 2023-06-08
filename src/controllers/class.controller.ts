@@ -17,7 +17,8 @@ import {
   selectChallengeProgressByClass,
   selectModuleAverageByClass,
   selectModuleProgressByClass,
-  selectClassByStudent
+  selectClassByStudent,
+  selectClassByTeacher
 } from '../database/query/class.query'
 import { ClassType } from '../types/class.type'
 import { Class } from '../database/models/class.model'
@@ -656,6 +657,32 @@ export const getClassByStudent = async (req: Request, res: Response): Promise<vo
     const student_id: string = req.params.student_id as string
 
     const query = await selectClassByStudent(class_id, student_id)
+
+    if (query) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+    } else {
+      res.status(404).json({
+        status: 'failed',
+        data: []
+      })
+    }
+  } catch (e: any) {
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get class'
+    })
+  }
+}
+
+export const getClassByTeacher = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const class_id: string = req.params.class_id as string
+    const teacher_id: string = req.params.teacher_id as string
+
+    const query = await selectClassByTeacher(class_id, teacher_id)
 
     if (query) {
       res.status(200).json({
