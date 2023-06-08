@@ -50,7 +50,7 @@ export const createChallenge = async (challengeDb: ChallengeType): Promise<Chall
 export const selectChallengeQuestionsByStudent = async (challenge_id: string, student_id: string) => {
   try {
     const res = await Question.findAll({
-      attributes: ['question_id', 'question', 'student_question.solution', 'student_question.passed'],
+      attributes: ['question_id', 'question', 'student_question.solution', 'student_question.score'],
       raw: true,
       where: {
         challenge_id: challenge_id
@@ -128,7 +128,7 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
         student_id: student_id,
         question_id: openQuestions[i].question_id,
         solution: {},
-        passed: false
+        score: 0
       }
       arrQuestions.push(element)
     }
@@ -138,7 +138,7 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
         student_id: student_id,
         question_id: closedQuestions[i].question_id,
         solution: {},
-        passed: false
+        score: 0
       }
       arrQuestions.push(element)
     }
@@ -217,12 +217,10 @@ export const selectChallengesByStudent = async (class_id: string, student_id: st
   }
 }
 
-
 export const updateStudentChallengeStatusContinue = async (
   challenge_id: string,
   student_id: string
 ): Promise<number[]> => {
-
   try {
     // If student registered then update his status
     const studentChallenge = await StudentChallenge.update(
@@ -264,7 +262,6 @@ export const updateStudentChallengeStatusStart = async (
     throw e
   }
 }
-
 
 export const selectIncomingChallenge = async (class_id: string, student_id: string) => {
   try {
@@ -365,6 +362,36 @@ export const selectIncomingChallenge = async (class_id: string, student_id: stri
     }
   } catch (e: any) {
     // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+export const updateStudentChallengeQuestion = async (
+  student_id: string,
+  question_id: string,
+  newSolution: object
+): Promise<number[] | string> => {
+  try {
+    // If student registered then update his status
+    const stuQues = await StudentQuestion.update(
+      { solution: newSolution },
+      {
+        where: {
+          student_id: student_id,
+          question_id: question_id
+        }
+      }
+    )
+
+    // Check if a row was updated or not
+    if (stuQues[0] == 0) {
+      return 'Student challenge question not updated'
+    } else {
+      return stuQues
+    }
+  } catch (e: any) {
+    console.log('ERROR')
+    console.log(e)
     throw e
   }
 }

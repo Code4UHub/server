@@ -339,7 +339,7 @@ export const updateStudentHomeworkQuestion = async (
 ): Promise<number[] | string> => {
   try {
     // If student registered then update his status
-    const acceptedStudent = await StudentHomeworkQuestion.update(
+    const stuHome = await StudentHomeworkQuestion.update(
       { solution: newSolution },
       {
         where: {
@@ -351,10 +351,10 @@ export const updateStudentHomeworkQuestion = async (
     )
 
     // Check if a row was updated or not
-    if (acceptedStudent[0] == 0) {
+    if (stuHome[0] == 0) {
       return 'Student homework question not updated'
     } else {
-      return acceptedStudent
+      return stuHome
     }
   } catch (e: any) {
     console.log('ERROR')

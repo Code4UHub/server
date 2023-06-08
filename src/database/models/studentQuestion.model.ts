@@ -28,11 +28,10 @@ export class StudentQuestion extends Model {
   solution: object
 
   @Column({
-    type: DataType.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
+    type: DataType.INTEGER,
+    allowNull: false
   })
-  passed: boolean
+  score: number
 
   @BelongsTo(() => Student)
   student: Student
