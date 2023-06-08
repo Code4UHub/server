@@ -8,6 +8,10 @@ router.route('/class').get(classController.getClasses) //.post(classController.p
 router.route('/class/:class_id').get(classController.getClass)
 router.route('/class/create').post(classController.postClass)
 
+// validate user
+router.route('/class/:class_id/student/:student_id').get(classController.getClassByStudent)
+router.route('/class/:class_id/teacher/:teacher_id').get(classController.getClassByTeacher)
+
 router.route('/class/:class_id/register').post(classController.postRegisterStudent)
 router.route('/class/:class_id/students').get(classController.getStudentsByClass)
 
