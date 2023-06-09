@@ -19,7 +19,8 @@ import {
   selectModuleProgressByClass,
   selectClassByStudent,
   selectClassByTeacher,
-  selectProgressByClassStudentId
+  selectProgressByClassStudentId,
+  selectProgressByClassTeacherId
 } from '../database/query/class.query'
 import { ClassType } from '../types/class.type'
 import { Class } from '../database/models/class.model'
@@ -720,6 +721,43 @@ export const getProgressByClassStudentId = async (req: Request, res: Response): 
     
     if(exists){
       const query = await selectProgressByClassStudentId(class_id, student_id)
+     
+      if (typeof query=="number") {
+        res.status(200).json({
+          status: 'success',
+          data: query
+        })
+      } else {
+        res.status(404).json({
+          status: 'failed',
+          data: query
+        })
+      }
+
+      
+    }
+
+
+   
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get class'
+    })
+  }
+}
+
+export const getProgressByClassTeacherId = async (req: Request, res: Response) => {
+  try {
+    const class_id: string = req.params.class_id as string
+    const teacher_id: string = req.params.teacher_id as string
+
+    const exists = await selectClass(class_id)
+    
+    if(exists){
+      const query = await selectProgressByClassTeacherId(class_id, teacher_id)
+
      
       if (typeof query=="number") {
         res.status(200).json({
