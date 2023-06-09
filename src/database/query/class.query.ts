@@ -941,3 +941,29 @@ export const selectProgressByClassStudentId = async (class_id:string,
     
   }
 }
+
+
+
+export const selectProgressByClassTeacherId = async (class_id:string,
+  teacher_id:string)  => {
+  try {
+
+    const challenges = await selectChallengeProgressByClass(class_id)
+
+    const totalChalleges = challenges.length
+    let approvedChallenges = 0
+    for (let i = 0; i < totalChalleges; i++) {
+      const chall = challenges[i] as any
+      if(chall.percentage >= 70){
+        approvedChallenges += 1
+      }
+    }
+
+
+    return (approvedChallenges / totalChalleges) * 100
+  } catch (e: any) {
+    throw e
+    
+  }
+}
+
