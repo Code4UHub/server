@@ -491,7 +491,7 @@ export const selectChallengeAverageByClass = async (class_id: string): Promise<M
         },
         {
           model: Challenge,
-          attributes: ['challenge_id', 'title', 'total_points'],
+          attributes: ['challenge_id', 'title', 'total_points', "difficulty_id"],
           required: false,
           include: [
             {
@@ -504,7 +504,14 @@ export const selectChallengeAverageByClass = async (class_id: string): Promise<M
       ]
     })
 
+    const hashDif = {
+      1: "Fácil",
+      2: "Medio",
+      3: "Difícil"
+    } as any
+
     const modulesFormatted = []
+    const arrayChallenges = [] as any
 
     for (let i = 0; i < modulesByClass.length; i++) {
       const module = modulesByClass[i]
@@ -529,17 +536,18 @@ export const selectChallengeAverageByClass = async (class_id: string): Promise<M
         const avgChallenge = sumScores / numberStudents
 
         challengesFormatted.push({
-          challenge_id: challenge.challenge_id,
-          title: challenge.title,
-          average: Math.floor((avgChallenge / challenge.total_points) * 100)
+          id: challenge.challenge_id,
+          title: module.title + " - " + hashDif[challenge.difficulty_id],
+          percentage: Math.floor((avgChallenge / challenge.total_points) * 100)
         })
       }
-      challengesFormatted.sort((a, b) => a.challenge_id - b.challenge_id)
-      currentModule['challenges'] = challengesFormatted
-      modulesFormatted.push(currentModule)
+      challengesFormatted.sort((a, b) => a.id - b.id)
+      arrayChallenges.push(...challengesFormatted)
+      // currentModule['challenges'] = challengesFormatted
+      // modulesFormatted.push(currentModule)
     }
 
-    return modulesFormatted
+    return arrayChallenges
   } catch (e: any) {
     // throw new Error("MY ERROR")
     throw e
@@ -569,7 +577,7 @@ export const selectChallengeProgressByClass = async (class_id: string): Promise<
         },
         {
           model: Challenge,
-          attributes: ['challenge_id', 'title', 'total_points'],
+          attributes: ['challenge_id', 'title', 'total_points', "difficulty_id"],
           required: false,
           include: [
             {
@@ -582,7 +590,14 @@ export const selectChallengeProgressByClass = async (class_id: string): Promise<
       ]
     })
 
+    const hashDif = {
+      1: "Fácil",
+      2: "Medio",
+      3: "Difícil"
+    } as any
+
     const modulesFormatted = []
+    const arrayChallenges = [] as any
 
     for (let i = 0; i < modulesByClass.length; i++) {
       const module = modulesByClass[i]
@@ -611,18 +626,19 @@ export const selectChallengeProgressByClass = async (class_id: string): Promise<
         const avgProgress = approvedStudents / numberStudents
 
         challengesFormatted.push({
-          challenge_id: challenge.challenge_id,
-          title: challenge.title,
-          avgProgress: Math.floor(avgProgress * 100)
+          id: challenge.challenge_id,
+          title: module.title + " - " + hashDif[challenge.difficulty_id],
+          percentage: Math.floor(avgProgress * 100)
         })
       }
 
-      challengesFormatted.sort((a, b) => a.challenge_id - b.challenge_id)
+      challengesFormatted.sort((a, b) => a.id - b.id)
       currentModule['challenges'] = challengesFormatted
       modulesFormatted.push(currentModule)
+      arrayChallenges.push(...challengesFormatted)
     }
 
-    return modulesFormatted
+    return arrayChallenges
   } catch (e: any) {
     // throw new Error("MY ERROR")
     throw e
@@ -681,7 +697,7 @@ export const selectModuleAverageByClass = async (class_id: string): Promise<Modu
     for (let i = 0; i < modulesByClass.length; i++) {
       const module = modulesByClass[i]
       const currentModule = {} as any
-      currentModule['module_id'] = module.module_id
+      currentModule['id'] = module.module_id
       currentModule['title'] = module.title
       const totalPointsByModule = await selectTotalPointsByModule(module.module_id)
 
@@ -695,7 +711,7 @@ export const selectModuleAverageByClass = async (class_id: string): Promise<Modu
       }
 
       const avgModule = sumScores / numberStudents
-      currentModule['average'] = Math.floor((avgModule / totalPointsByModule) * 100)
+      currentModule['percentage'] = Math.floor((avgModule / totalPointsByModule) * 100)
       modulesFormatted.push(currentModule)
     }
 
@@ -734,7 +750,7 @@ export const selectModuleProgressByClass = async (class_id: string): Promise<Mod
     for (let i = 0; i < modulesByClass.length; i++) {
       const module = modulesByClass[i]
       const currentModule = {} as any
-      currentModule['module_id'] = module.module_id
+      currentModule['id'] = module.module_id
       currentModule['title'] = module.title
       const totalPointsByModule = await selectTotalPointsByModule(module.module_id)
 
@@ -751,9 +767,7 @@ export const selectModuleProgressByClass = async (class_id: string): Promise<Mod
       }
 
       const avgProgress = approvedStudents / numberStudents
-
-      const avgModule = approvedStudents / numberStudents
-      currentModule['average'] = Math.floor(avgModule * 100)
+      currentModule['percentage'] = Math.floor(avgProgress * 100)
       modulesFormatted.push(currentModule)
     }
 
