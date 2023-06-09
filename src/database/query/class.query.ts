@@ -870,3 +870,74 @@ export const selectClassByTeacher = async (class_id: string, teacher_id: string)
     throw e
   }
 }
+
+
+export const selectProgressByClassStudentId = async (class_id:string,
+  student_id:string)  => {
+  try {
+
+    const res = await selectStudentClass({class_id, student_id}as any)
+
+    const studentClassExists = res ? true : false
+
+    if (!studentClassExists) {
+      return 'Student is not registered to that class'
+    }
+
+    // If student registered
+    const challengesByClass  = await Class.findAll({
+      raw: true,
+      attributes: ["class_id"],
+      include: [
+        {
+          model: EnabledModule,
+          attributes: ["class_id"],
+          required: true,
+          where:{
+            class_id: class_id
+          },
+          include: [
+            {
+            model: Module,
+            attributes: ["module_id"],
+            required: true,
+            include: [
+              {
+              model: Challenge,
+              attributes: ["challenge_id", "total_points"],
+              required: true,
+              include: [
+                {
+                model: StudentChallenge,
+                attributes: ["score"],
+                required: true,
+                where:{
+                  student_id: student_id
+                }
+                }
+              ]
+              }
+            ]
+            }
+          ]
+        }
+      ]
+    }) as any
+
+    const numberChallenges = challengesByClass.length
+    let approvedChallenges = 0
+    for (let i = 0; i < challengesByClass.length; i++) {
+      const challenge = challengesByClass[i] 
+
+      if(challenge["enabled_module.module.challenge.student_challenge.score"] / challenge["enabled_module.module.challenge.total_points"] >= 0.7){
+        approvedChallenges += 1
+      }
+    }
+    
+
+    return (approvedChallenges / numberChallenges) * 100
+  } catch (e: any) {
+    throw e
+    
+  }
+}

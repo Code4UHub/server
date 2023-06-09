@@ -39,3 +39,8 @@ router.route('/class/:class_id/challenge_progress').get(classController.getChall
 
 router.route('/class/:class_id/module_average').get(classController.getModuleAverageByClass)
 router.route('/class/:class_id/module_progress').get(classController.getModuleProgressByClass)
+
+
+
+// route to get progress of student by class id
+router.route('/class/:class_id/student/:student_id/progress').get(classController.getProgressByClassStudentId)
