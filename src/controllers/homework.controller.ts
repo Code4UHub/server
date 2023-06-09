@@ -8,7 +8,8 @@ import {
   selectQuestionsBySubjectAndDifficultyId,
   selectQuestionsByModuleAndDifficultyId,
   selectStudentScoresByClassId,
-  updateStudentHomeworkQuestion
+  updateStudentHomeworkQuestion,
+  selectHomework
 } from '../database/query/homework.query'
 
 import { QuestionHType } from '../types/questionH.type'
@@ -112,6 +113,16 @@ export const getHomeworkQuestions = async (req: Request, res: Response): Promise
   try {
     const homework_id = req.params.homework_id
     const student_id = req.params.student_id
+
+    const homeworkExists = await selectHomework(homework_id)
+
+    if(!homeworkExists){
+      res.status(404).json({
+        status: 'failed',
+        data: "Homework does not exist"
+      })
+      return
+    }
 
     const query = await selectHomeworkQuestionsByStudent(homework_id, student_id)
 
