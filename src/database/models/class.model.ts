@@ -3,6 +3,7 @@ import { StudentClass } from './studentClass.model'
 import { Subject } from './subject.model'
 import { Teacher } from './teacher.model'
 import { EnabledModule } from './enabledModule'
+import { Homework } from './homework.model'
 
 @Table({ tableName: 'class' })
 export class Class extends Model {
@@ -71,6 +72,9 @@ export class Class extends Model {
 
   @HasMany(() => StudentClass)
   studentclass: StudentClass[]
+
+  @HasMany(() => Homework)
+  homework: Homework
 
   @HasMany(() => EnabledModule)
   enabled_module: EnabledModule
