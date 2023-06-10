@@ -317,12 +317,14 @@ export const selectIncomingChallenge = async (class_id: string, student_id: stri
     })
 
     let incomingChallenge: {
+      challenge_id: number
       module_title: string
       challenge_title: string
       student_id: string
       status: string
       difficulty: string
     } = {
+      challenge_id: 1,
       module_title: 'title',
       challenge_title: 'title',
       student_id: 'aaaa',
@@ -337,6 +339,7 @@ export const selectIncomingChallenge = async (class_id: string, student_id: stri
       const challengeStatus = challenge['challenge.student_challenge.status']
 
       if (challengeStatus && challengeStatus == 'continue') {
+        incomingChallenge['challenge_id'] = challenge['challenge.challenge_id']
         incomingChallenge['module_title'] = challenge.title
         incomingChallenge['challenge_title'] = challenge['challenge.title']
         incomingChallenge['student_id'] = challenge['challenge.student_challenge.student_id']
@@ -352,6 +355,7 @@ export const selectIncomingChallenge = async (class_id: string, student_id: stri
       const challengeStatus = challenge['challenge.student_challenge.status']
 
       if (challengeStatus && challengeStatus == 'start') {
+        incomingChallenge['challenge_id'] = challenge['challenge.challenge_id']
         incomingChallenge['module_title'] = challenge.title
         incomingChallenge['challenge_title'] = challenge['challenge.title']
         incomingChallenge['student_id'] = challenge['challenge.student_challenge.student_id']
