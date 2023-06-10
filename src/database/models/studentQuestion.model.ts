@@ -28,13 +28,6 @@ export class StudentQuestion extends Model {
   solution: object
 
   @Column({
-    type: DataType.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
-  })
-  passed: boolean
-
-  @Column({
     type: DataType.INTEGER,
     allowNull: false,
     defaultValue: 0

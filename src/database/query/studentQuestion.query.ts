@@ -3,8 +3,13 @@ import { StudentQuestion } from '../models/studentQuestion.model'
 
 export const updateStudentQuestionScore = async (student_question: StudentQuestionType): Promise<number[]> => {
   try {
+    console.log('_(_((#&$#@*)))')
+    console.log(student_question.question_id)
     const score = await StudentQuestion.update(
-      { score: student_question.score },
+      {
+        score: student_question.score,
+        solution: student_question.solution
+      },
       {
         where: {
           student_id: student_question.student_id,
