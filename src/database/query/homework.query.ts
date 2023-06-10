@@ -128,6 +128,7 @@ export const createHomework = async (newHomework: HomeworkType, arrQuestions: st
     newHomework.total_points = (openQuestions + closedQuestions) * difficultyObj.points_per_question
     const res = await Homework.create(newHomework)
 
+
     // Link the homework id with the questions
     const homework_id = res.homework_id
     const homeworkQuestions = arrQuestions.map((question_h_id) => {
@@ -136,6 +137,7 @@ export const createHomework = async (newHomework: HomeworkType, arrQuestions: st
         question_h_id: question_h_id
       }
     })
+
     await HomeworkQuestion.bulkCreate(homeworkQuestions)
 
     return res
@@ -184,9 +186,7 @@ export const selectHomeworkQuestionsByStudent = async (homework_id: string, stud
         'module.title'
       ],
       raw: true,
-
       order: [['question_h_id', 'ASC']],
-
       include: [
         {
           model: StudentHomeworkQuestion,
@@ -198,7 +198,14 @@ export const selectHomeworkQuestionsByStudent = async (homework_id: string, stud
           model: Module,
           required: true,
           attributes: []
-        }
+        },
+        {
+          model: HomeworkQuestion,
+          required: true,
+          attributes: [],
+          where: { homework_id: homework_id }
+        },
+
       ]
     })
     return res
