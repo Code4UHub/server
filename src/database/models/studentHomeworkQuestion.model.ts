@@ -2,6 +2,7 @@ import { Table, Column, Model, DataType, BelongsTo, ForeignKey } from 'sequelize
 import { Student } from './student.model'
 import { QuestionH } from './questionH.model'
 import { Homework } from './homework.model'
+import { HomeworkQuestion } from './homeworkQuestion'
 
 @Table({ tableName: 'student_homework_question' })
 export class StudentHomeworkQuestion extends Model {
@@ -51,4 +52,5 @@ export class StudentHomeworkQuestion extends Model {
 
   @BelongsTo(() => Student)
   student: Student
+
 }

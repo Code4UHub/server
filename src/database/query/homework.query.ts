@@ -128,18 +128,20 @@ export const createHomework = async (newHomework: HomeworkType, arrQuestions: st
     newHomework.total_points = (openQuestions + closedQuestions) * difficultyObj.points_per_question
     const res = await Homework.create(newHomework)
 
+    console.log("open: ", openQuestions)
+    console.log("closed: ", closedQuestions)
+    console.log("arrQuestions: ", arrQuestions)
 
     // Link the homework id with the questions
     const homework_id = res.homework_id
-    const homeworkQuestions = arrQuestions.map((question_h_id) => {
-      return {
+    arrQuestions.map(async (question_h_id) => {
+      await HomeworkQuestion.create({
         homework_id: homework_id,
         question_h_id: question_h_id
-      }
+      })
     })
 
-    await HomeworkQuestion.bulkCreate(homeworkQuestions)
-
+    
     return res
   } catch (e: any) {
     throw e
@@ -192,7 +194,7 @@ export const selectHomeworkQuestionsByStudent = async (homework_id: string, stud
           model: StudentHomeworkQuestion,
           required: true,
           attributes: [],
-          where: { student_id: student_id }
+          where: { student_id: student_id, homework_id: homework_id }
         },
         {
           model: Module,
@@ -224,7 +226,8 @@ export const selectHomeworkOpenQuestions = async (homework_id: string) => {
       include: [
         {
           model: HomeworkQuestion,
-          required: true
+          required: true,
+          where:{homework_id: homework_id}
         }
       ]
     })
@@ -243,7 +246,8 @@ export const selectHomeworkClosedQuestions = async (homework_id: string) => {
       include: [
         {
           model: HomeworkQuestion,
-          required: true
+          required: true,
+          where:{homework_id: homework_id}
         }
       ]
     })
