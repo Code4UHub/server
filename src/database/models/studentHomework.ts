@@ -26,6 +26,11 @@ export class StudentHomework extends Model {
   })
   score: number
 
+  @Column({
+    type: DataType.NUMBER,
+  })
+  start_date: number
+
   @BelongsTo(() => Student)
   student: Student
 

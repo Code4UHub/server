@@ -3,6 +3,7 @@ import { Difficulty } from './difficulty.model'
 import { Module } from './module.model'
 import { StudentHomeworkQuestion } from './studentHomeworkQuestion.model'
 import { HomeworkQuestion } from './homeworkQuestion'
+import { StudentHomework } from './studentHomework'
 
 @Table({ tableName: 'question_h' })
 export class QuestionH extends Model {
@@ -51,4 +52,5 @@ export class QuestionH extends Model {
 
   @HasMany(() => StudentHomeworkQuestion)
   student_homework_question: StudentHomeworkQuestion
+
 }
