@@ -4,7 +4,8 @@ import {
   selectTeacher,
   selectTeachers,
   selectClassesByTeacher,
-  selectTeacherRequests
+  selectTeacherRequests,
+  selectHomeworksByTeacherId
 } from '../database/query/teacher.query'
 import { TeacherType } from '../types/teacher.type'
 import { generateToken } from '../utils/jwt-sign'
@@ -190,6 +191,7 @@ export const getTeacherClasses = async (req: Request, res: Response): Promise<vo
 }
 
 export const getTeacherRequest = async (req: Request, res: Response): Promise<void> => {
+  
   try {
     const teacher_id: string = req.params.teacher_id as string
     const query = await selectTeacherRequests(teacher_id)
@@ -203,6 +205,28 @@ export const getTeacherRequest = async (req: Request, res: Response): Promise<vo
     res.status(404).json({
       status: 'error',
       data: e
+    })
+  }
+}
+
+
+
+export const getHomeworksByTeacherId = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const teacher_id: string = req.params.teacher_id as string
+    const query = await selectHomeworksByTeacherId(teacher_id)
+
+    res.status(200).json({
+      status: 'success',
+      data: query
+    })
+    return
+
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: "Something went wrong"
     })
   }
 }

@@ -20,7 +20,8 @@ import {
   selectClassByStudent,
   selectClassByTeacher,
   selectProgressByClassStudentId,
-  selectProgressByClassTeacherId
+  selectProgressByClassTeacherId,
+  selectHomeworksByStudentId
 } from '../database/query/class.query'
 import { ClassType } from '../types/class.type'
 import { Class } from '../database/models/class.model'
@@ -774,10 +775,36 @@ export const getProgressByClassTeacherId = async (req: Request, res: Response) =
       
     }
 
-
-   
   } catch (e: any) {
     console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get class'
+    })
+  }
+}
+
+
+
+export const getHomeworksByStudentId = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const student_id: string = req.params.student_id as string
+    const class_id: string = req.params.class_id as string
+
+    const query= await selectHomeworksByStudentId(class_id, student_id)
+
+    if (query) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+    } else {
+      res.status(404).json({
+        status: 'failed',
+        data: []
+      })
+    }
+  } catch (e: any) {
     res.status(500).json({
       status: 'error',
       data: 'Couldnt get class'
