@@ -125,14 +125,16 @@ export const getHomeworkQuestions = async (req: Request, res: Response): Promise
     }
 
     const query = await selectHomeworkQuestionsByStudent(homework_id, student_id)
-    // console.log(query)
+
     if (query.length > 0) {
+      console.log("HEEEEEREEEE")
       res.status(201).json({
         status: 'success',
         data: query
       })
       return
     }
+
 
     await createHomeworkQuestions(homework_id, student_id)
     const newQuery = await selectHomeworkQuestionsByStudent(homework_id, student_id)
