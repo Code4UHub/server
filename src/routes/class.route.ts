@@ -46,3 +46,9 @@ router.route('/class/:class_id/module_progress').get(classController.getModulePr
 router.route('/class/:class_id/student/:student_id/progress').get(classController.getProgressByClassStudentId)
 
 router.route('/class/:class_id/teacher/:teacher_id/progress').get(classController.getProgressByClassTeacherId)
+
+
+
+
+// homeworks of a student
+router.route('/class/:class_id/student/:student_id/homeworks').get(classController.getHomeworksByStudentId)

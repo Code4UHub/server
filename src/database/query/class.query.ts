@@ -15,6 +15,7 @@ import { Challenge } from '../models/challenge.model'
 import { StudentModule } from '../models/studentModule.model'
 import { StudentChallenge } from '../models/studentChallenge.model'
 import { Homework } from '../models/homework.model'
+import { StudentHomework } from '../models/studentHomework'
 
 export const selectClasses = async (): Promise<Class[]> => {
   try {
@@ -969,3 +970,37 @@ export const selectProgressByClassTeacherId = async (class_id:string,
   }
 }
 
+
+
+export const selectHomeworksByStudentId = async (class_id:string, student_id: string) => {
+  try {
+    const homeworks = await StudentHomework.findAll({
+      raw: true,
+      attributes:["homework_id", "homework.title", "score", "homework.deadline", "homework.difficulty_id", "homework.total_points"],
+      where: {
+        student_id: student_id,
+      },
+      include: [
+        {
+          model: Homework,
+          required: true,
+          attributes: [],
+          include: [
+            {
+              model: Class,
+              required: true,
+              attributes: [],
+              where:{
+                class_id: class_id
+              }
+            }
+          ]
+        }
+      ]
+    })
+    
+    return homeworks
+  } catch (e: any) {
+    throw e
+  }
+}
