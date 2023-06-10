@@ -20,6 +20,7 @@ import { QuestionH } from './models/questionH.model'
 import { Homework } from './models/homework.model'
 import { HomeworkQuestion } from './models/homeworkQuestion'
 import { StudentHomeworkQuestion } from './models/studentHomeworkQuestion.model'
+import { StudentHomework } from './models/studentHomework'
 
 dotenv.config({ path: `${__dirname}/../../.env` })
 
@@ -71,7 +72,8 @@ export const createDb = async () => {
       QuestionH,
       Homework,
       HomeworkQuestion,
-      StudentHomeworkQuestion
+      StudentHomeworkQuestion,
+      StudentHomework
     ])
 
     return sequelize

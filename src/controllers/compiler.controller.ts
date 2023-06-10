@@ -1,4 +1,4 @@
-import { Request, Response, response } from 'express'
+mport { Request, Response, response } from 'express'
 import { updateStudentQuestionScore } from '../database/query/studentQuestion.query'
 import { StudentQuestionType } from '../types/studentQuestion.type'
 
@@ -9,7 +9,6 @@ const scorePerDifficulty: { [difficulty: number]: number } = {
   2: 0.5,
   3: 0.7
 }
-
 export const runCode = async (req: Request, res: Response): Promise<void> => {
   try {
     const data = JSON.stringify(req.body)

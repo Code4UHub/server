@@ -5,9 +5,12 @@ import {
   createHomework,
   createHomeworkQuestions,
   selectHomeworkQuestionsByStudent,
-  selectQuestionsByDifficultyId
+  selectQuestionsBySubjectAndDifficultyId,
+  selectQuestionsByModuleAndDifficultyId,
+  selectStudentScoresByClassId,
+  updateStudentHomeworkQuestion,
+  selectHomework
 } from '../database/query/homework.query'
-import { HomeworkType } from '../types/homework.type'
 
 import { QuestionHType } from '../types/questionH.type'
 
@@ -24,11 +27,27 @@ export const getQuestions = async (req: Request, res: Response) => {
   }
 }
 
-export const getQuestionsByDifficultyId = async (req: Request, res: Response) => {
+export const getQuestionsBySubjectAndDifficultyId = async (req: Request, res: Response) => {
+  const subject_id = req.params.subject_id
   const difficulty_id = req.params.difficulty_id
 
   try {
-    const query = await selectQuestionsByDifficultyId(difficulty_id)
+    const query = await selectQuestionsBySubjectAndDifficultyId(subject_id, difficulty_id)
+    res.status(200).json({
+      status: 'success',
+      data: query
+    })
+  } catch (e) {
+    throw e
+  }
+}
+
+export const getQuestionsByModuleAndDifficultyId = async (req: Request, res: Response) => {
+  const module_id = req.params.module_id
+  const difficulty_id = req.params.difficulty_id
+
+  try {
+    const query = await selectQuestionsByModuleAndDifficultyId(module_id, difficulty_id)
     res.status(200).json({
       status: 'success',
       data: query
@@ -95,15 +114,27 @@ export const getHomeworkQuestions = async (req: Request, res: Response): Promise
     const homework_id = req.params.homework_id
     const student_id = req.params.student_id
 
+    const homeworkExists = await selectHomework(homework_id)
+
+    if(!homeworkExists){
+      res.status(404).json({
+        status: 'failed',
+        data: "Homework does not exist"
+      })
+      return
+    }
+
     const query = await selectHomeworkQuestionsByStudent(homework_id, student_id)
 
     if (query.length > 0) {
+      console.log("HEEEEEREEEE")
       res.status(201).json({
         status: 'success',
         data: query
       })
       return
     }
+
 
     await createHomeworkQuestions(homework_id, student_id)
     const newQuery = await selectHomeworkQuestionsByStudent(homework_id, student_id)
@@ -117,6 +148,51 @@ export const getHomeworkQuestions = async (req: Request, res: Response): Promise
     res.status(500).json({
       status: 'error',
       data: 'Couldnt get questions'
+    })
+  }
+}
+
+export const getStudentScores = async (req: Request, res: Response) => {
+  const homework_id = req.params.homework_id
+
+  try {
+    const query = await selectStudentScoresByClassId(homework_id)
+    res.status(200).json({
+      status: 'success',
+      data: query
+    })
+  } catch (e) {
+    throw e
+  }
+}
+
+// udpate solution for homework question
+export const putStudentHomeworkQuestion = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const homework_id = req.params.homework_id
+    const student_id = req.params.student_id
+    const question_id = req.params.question_id
+    const solution = req.body
+
+    const query = await updateStudentHomeworkQuestion(homework_id, student_id, question_id, solution)
+
+    console.log(query)
+    if (Array.isArray(query)) {
+      res.status(200).json({
+        status: 'success',
+        data: 'Student homework questions updated'
+      })
+      return
+    }
+
+    res.status(400).json({
+      status: 'failed',
+      data: query
+    })
+  } catch (e: any) {
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt udpate student homework questions updated'
     })
   }
 }
