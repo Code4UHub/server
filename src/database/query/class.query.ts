@@ -768,6 +768,8 @@ export const selectModuleProgressByClass = async (class_id: string): Promise<Mod
 
       const avgProgress = approvedStudents / numberStudents
       currentModule['percentage'] = Math.floor(avgProgress * 100)
+      currentModule['number_of_students'] = numberStudents
+      currentModule['number_approved_students'] = approvedStudents
       modulesFormatted.push(currentModule)
     }
 

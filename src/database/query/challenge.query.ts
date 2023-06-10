@@ -50,7 +50,7 @@ export const createChallenge = async (challengeDb: ChallengeType): Promise<Chall
 export const selectChallengeQuestionsByStudent = async (challenge_id: string, student_id: string) => {
   try {
     const res = await Question.findAll({
-      attributes: ['question_id', 'question', 'student_question.solution', 'student_question.score'],
+      attributes: ['question_id', 'question', 'student_question.solution', 'student_question.score', "type", "challenge.difficulty_id", "challenge.module_id", "challenge.title"],
       raw: true,
       where: {
         challenge_id: challenge_id
@@ -63,6 +63,12 @@ export const selectChallengeQuestionsByStudent = async (challenge_id: string, st
           required: true,
           attributes: [],
           where: { student_id: student_id }
+        },
+        {
+          model: Challenge,
+          required: true,
+          attributes: [],
+          
         }
       ]
     })
