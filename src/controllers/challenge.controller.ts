@@ -39,7 +39,7 @@ export const getChallengeQuestions = async (req: Request, res: Response): Promis
 
     const query = await selectChallengeQuestionsByStudent(challenge_id, student_id)
 
-    if (query.length > 0) {
+    if (typeof query == "object" && query.challenges.length > 0) {
       res.status(201).json({
         status: 'success',
         data: query

@@ -29,9 +29,15 @@ export class StudentChallenge extends Model {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false
+    allowNull: false,
+    defaultValue: "start"
   })
   status: string
+
+  @Column({
+    type: DataType.NUMBER,
+  })
+  start_date: number
 
   @BelongsTo(() => Student)
   student: Student

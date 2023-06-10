@@ -27,6 +27,30 @@ export const selectChallenge = async (challenge_id: string) => {
   }
 }
 
+export const selectStudentChallenge = async (student_id: string, challenge_id: string) => {
+  try {
+    const challenge = await Challenge.findOne({
+      raw: true,
+      attributes: ["challenge_id", "title", "student_challenge.student_id", "student_challenge.start_date"],
+      where: {
+        challenge_id: challenge_id
+      },
+      include: [
+        {
+          model: StudentChallenge,
+          required: true,
+          attributes: [],
+          where: { student_id: student_id, challenge_id: challenge_id }
+        }
+      ]
+    })
+
+    return challenge
+  } catch (e) {
+    throw e
+  }
+}
+
 export const createChallenge = async (challengeDb: ChallengeType): Promise<Challenge | null> => {
   try {
     const difficultyId = challengeDb.difficulty_id
@@ -72,7 +96,17 @@ export const selectChallengeQuestionsByStudent = async (challenge_id: string, st
         }
       ]
     })
-    return res
+
+
+    const studentChallenge = await selectStudentChallenge(student_id, challenge_id) as any
+
+    const listChallenges = {} as any
+    listChallenges["start_date"] = studentChallenge?.start_date
+    listChallenges["title"] = studentChallenge?.title
+    listChallenges["challenges"] = res
+
+
+    return listChallenges
   } catch (e: any) {
     console.log(e.message)
     throw e
@@ -150,6 +184,20 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
     }
 
     const res = await StudentQuestion.bulkCreate(arrQuestions)
+
+
+    // set the start date for the student challenge
+    const stuChall = await StudentChallenge.update(
+      { start_date: new Date().getTime()},
+      {
+        where: {
+          challenge_id: challenge_id,
+          student_id: student_id,
+        }
+      }
+    )
+
+
 
     return res
   } catch (e: any) {
