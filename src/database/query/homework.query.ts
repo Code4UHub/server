@@ -14,7 +14,7 @@ import { selectDifficulty } from './difficulty.query'
 
 export const selectHomework = async (homework_id: string) => {
   try {
-    const challenge = await Homework.findOne({
+    const homework = await Homework.findOne({
       raw: true,
       // attributes: [],
       where: {
@@ -22,11 +22,36 @@ export const selectHomework = async (homework_id: string) => {
       }
     })
 
-    return challenge
+    return homework
   } catch (e) {
     throw e
   }
 }
+
+export const selectStudentHomework = async (homework_id: string, student_id: string) => {
+  try {
+    const studentHomework = await StudentHomework.findOne({
+      raw: true,
+      attributes: ["student_id", "homework_id", "start_date", "homework.title"],
+      where: {
+        homework_id: homework_id,
+        student_id: student_id
+      },
+      include: [
+        {
+          model: Homework,
+          attributes: [],
+          required: true,
+        }
+      ]
+    })
+
+    return studentHomework
+  } catch (e) {
+    throw e
+  }
+}
+
 
 export const selectQuestions = async () => {
   try {
@@ -206,11 +231,22 @@ export const selectHomeworkQuestionsByStudent = async (homework_id: string, stud
           required: true,
           attributes: [],
           where: { homework_id: homework_id }
-        },
-
+        }
       ]
     })
-    return res
+
+    const studentHomework = await selectStudentHomework(homework_id, student_id) as any
+
+    const listHomeworks = {} as any
+    listHomeworks["start_date"] = studentHomework?.start_date
+    listHomeworks["title"] = studentHomework?.title
+    listHomeworks["homeworks"] = res
+
+
+
+
+
+    return listHomeworks
   } catch (e: any) {
     console.log(e.message)
     throw e
@@ -307,6 +343,18 @@ export const createHomeworkQuestions = async (homework_id: string, student_id: s
     }
 
     const res = await StudentHomeworkQuestion.bulkCreate(arrStudentHomeworkQuestion)
+
+
+    // set the start date for the student homework
+    const stuHome = await StudentHomework.update(
+      { start_date: new Date().getTime()},
+      {
+        where: {
+          homework_id: homework_id,
+          student_id: student_id,
+        }
+      }
+    )
 
     return res
   } catch (e: any) {

@@ -159,8 +159,8 @@ export const getIncomingChallenge = async (req: Request, res: Response): Promise
       })
       return
     } else {
-      res.status(400).json({
-        status: 'failed',
+      res.status(200).json({
+        status: 'success',
         data: query
       })
       return

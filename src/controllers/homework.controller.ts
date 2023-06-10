@@ -126,7 +126,7 @@ export const getHomeworkQuestions = async (req: Request, res: Response): Promise
 
     const query = await selectHomeworkQuestionsByStudent(homework_id, student_id)
 
-    if (query.length > 0) {
+    if (typeof query == "object" && query.homeworks.length > 0) {
       console.log("HEEEEEREEEE")
       res.status(201).json({
         status: 'success',
