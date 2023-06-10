@@ -77,7 +77,7 @@ Content-Type: application/json
     {
       "question_id": 30,
       "type": "open",
-      "source_code": "#I am here\nnae=input();last=input();print(\"Hola\",name,last+\", ¡bienvenido!\")",
+      "source_code": "#I am here\nnamme=input();last=input();print(\"Hola\",name,last+\", ¡bienvenido!\")",
       "shown_tests": [
         {
           "input": ["Juan", "Pérez"],

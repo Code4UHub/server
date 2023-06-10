@@ -115,7 +115,6 @@ export const submitCode = async (req: Request, res: Response): Promise<void> => 
 
     const solvedStudentQuestions = await Promise.all(studentQuestionsScore)
 
-    console.log(`Total score is ${totalScore}`)
     res.status(200).json({
       status: 'success',
       data: {
@@ -129,12 +128,8 @@ export const submitCode = async (req: Request, res: Response): Promise<void> => 
     // call query that updates a score
     solvedStudentQuestions.forEach(async (studentQuestionScore) => {
       studentQuestionScore.student_id = student_id
-      // console.log('================')
-      // console.log(studentQuestionScore.score)
       const result = await updateStudentQuestionScore(studentQuestionScore)
-      console.log(result)
     })
-    console.log('UPDATE FINISHED')
     return
   } catch (e: any) {
     console.log(e)
