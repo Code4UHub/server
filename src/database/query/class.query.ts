@@ -297,12 +297,16 @@ export const rejectManyStudentToClass = async (arrStudentClass: StudentClassType
 
 export const selectLeaderboardByClass = async (class_id: string) => {
   try {
+    const arrStudentsClass = (await selectStudentsByClass(class_id)).map((stu) => stu.student_id)
+
+
     const challengesByClass = await EnabledModule.findAll({
       raw: false,
       attributes: ['class_id'],
       where: {
         class_id: class_id
       },
+      
       include: [
         {
           model: Module,
@@ -322,7 +326,12 @@ export const selectLeaderboardByClass = async (class_id: string) => {
                     {
                       model: Student,
                       attributes: ['first_name', 'last_name'],
-                      required: true
+                      required: true,
+                      where: {
+                        student_id: {
+                          [Op.in]: arrStudentsClass
+                        }
+                      }
                     }
                   ]
                 }
