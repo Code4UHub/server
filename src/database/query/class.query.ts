@@ -480,6 +480,8 @@ export const selectHomeworksByClassId = async (
 }
 
 export const selectChallengeAverageByClass = async (class_id: string): Promise<Module[]> => {
+  const arrStudentsClass = (await selectStudentsByClass(class_id)).map((stu) => stu.student_id)
+  
   try {
     const modulesByClass = await Module.findAll({
       raw: false,
@@ -507,7 +509,12 @@ export const selectChallengeAverageByClass = async (class_id: string): Promise<M
             {
               model: StudentChallenge,
               attributes: ['student_id', 'score', 'status'],
-              required: true
+              required: true,
+              where: {
+                student_id: {
+                  [Op.in]: arrStudentsClass
+                }
+              }
             }
           ]
         }
@@ -566,6 +573,8 @@ export const selectChallengeAverageByClass = async (class_id: string): Promise<M
 
 export const selectChallengeProgressByClass = async (class_id: string): Promise<Module[]> => {
   try {
+    const arrStudentsClass = (await selectStudentsByClass(class_id)).map((stu) => stu.student_id)
+
     const modulesByClass = await Module.findAll({
       raw: false,
       attributes: ['module_id', 'title'],
@@ -593,7 +602,12 @@ export const selectChallengeProgressByClass = async (class_id: string): Promise<
             {
               model: StudentChallenge,
               attributes: ['student_id', 'score', 'status'],
-              required: true
+              required: true,
+              where: {
+                student_id: {
+                  [Op.in]: arrStudentsClass
+                }
+              }
             }
           ]
         }
@@ -681,6 +695,8 @@ export const selectTotalPointsByModule = async (module_id: number) => {
 
 export const selectModuleAverageByClass = async (class_id: string): Promise<Module[]> => {
   try {
+    const arrStudentsClass = (await selectStudentsByClass(class_id)).map((stu) => stu.student_id)
+    
     const modulesByClass = await Module.findAll({
       raw: false,
       attributes: ['module_id', 'title'],
@@ -697,7 +713,12 @@ export const selectModuleAverageByClass = async (class_id: string): Promise<Modu
         {
           model: StudentModule,
           attributes: ['score'],
-          required: true
+          required: true,
+          where: {
+            student_id: {
+              [Op.in]: arrStudentsClass
+            }
+          }
         }
       ]
     })
@@ -734,6 +755,8 @@ export const selectModuleAverageByClass = async (class_id: string): Promise<Modu
 
 export const selectModuleProgressByClass = async (class_id: string): Promise<Module[]> => {
   try {
+    const arrStudentsClass = (await selectStudentsByClass(class_id)).map((stu) => stu.student_id)
+
     const modulesByClass = await Module.findAll({
       raw: false,
       attributes: ['module_id', 'title'],
@@ -750,7 +773,12 @@ export const selectModuleProgressByClass = async (class_id: string): Promise<Mod
         {
           model: StudentModule,
           attributes: ['score'],
-          required: true
+          required: true,
+          where: {
+            student_id: {
+              [Op.in]: arrStudentsClass
+            }
+          }
         }
       ]
     })
