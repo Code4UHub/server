@@ -200,6 +200,7 @@ export const getStudentsByClass = async (req: Request, res: Response): Promise<v
     })
     return
   } catch (e: any) {
+    console.log(e)
     res.status(500).json({
       status: 'error',
       data: 'Couldnt get students of class'

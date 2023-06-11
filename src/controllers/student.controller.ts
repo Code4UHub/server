@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { createStudent, selectStudent, selectStudents } from '../database/query/student.query'
+import { createStudent, selectStudent, selectStudents, selectHomeworksByStudentId } from '../database/query/student.query'
 import { selectClassesByStudent } from '../database/query/student.query'
 import { StudentType } from '../types/student.type'
 import { generateToken } from '../utils/jwt-sign'
@@ -192,6 +192,27 @@ export const getStudentClasses = async (req: Request, res: Response): Promise<vo
     res.status(500).json({
       status: 'error',
       data: 'Couldnt get student classes'
+    })
+  }
+}
+
+
+export const getHomeworksByStudentId = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const student_id: string = req.params.student_id as string
+    const query = await selectHomeworksByStudentId(student_id)
+
+    res.status(200).json({
+      status: 'success',
+      data: query
+    })
+    return
+
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: "Something went wrong"
     })
   }
 }
