@@ -6,6 +6,8 @@ import { StudentType } from '../../types/student.type'
 import { StudentClass } from '../models/studentClass.model'
 import { Sequelize } from 'sequelize'
 import { StudentNotFoundError } from '../../errors/studentNotFoundError'
+import { StudentHomework } from '../models/studentHomework'
+import { Homework } from '../models/homework.model'
 
 export const selectStudents = async (): Promise<StudentType[]> => {
   try {
@@ -107,6 +109,44 @@ export const selectClassesByStudent = async (student_id: string): Promise<Studen
     })
     return classesByStudent
   } catch (e: any) {
+    throw e
+  }
+}
+
+
+
+export const selectHomeworksByStudentId = async (student_id: string) => {
+  try {
+    const homeworks = await StudentHomework.findAll({
+      raw: true,
+      attributes: ["homework_id", "homework.title", "homework.deadline", "score", "homework.total_points"],
+      where: {
+        student_id: student_id
+      },
+      include: [
+        {
+          model: Homework,
+          attributes: [],
+          required: true,
+          include: [{
+            model: Class,
+            attributes: ["class_id"],
+            required: true,
+            include: [{
+              model: Subject,
+              attributes: ["subject_id", "subject_name"],
+              required: true
+    
+            }]
+          }]
+
+        },
+        
+      ],
+    })
+    return homeworks
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
     throw e
   }
 }
