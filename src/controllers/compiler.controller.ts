@@ -22,9 +22,9 @@ export const runCode = async (req: Request, res: Response): Promise<void> => {
     })
 
     const responseText = await result.json()
-    console.log(responseText)
+    // console.log(responseText)
 
-    if (responseText.grade !== 100) {
+    if (responseText.score !== 100) {
       res.status(200).json({
         status: 'failed',
         data: responseText
@@ -46,11 +46,11 @@ export const runCode = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
-export const submitCode = async (req: Request, res: Response): Promise<void> => {
+export const submitChallenge = async (req: Request, res: Response): Promise<void> => {
   try {
     const student_id = req.body.student_id
-    const difficulty_id = req.body.difficulty_id
     const questions = req.body.questions
+    const difficulty_id = questions[0].difficulty_id
 
     const scoreFactor: number = scorePerDifficulty[difficulty_id]
 
@@ -59,17 +59,15 @@ export const submitCode = async (req: Request, res: Response): Promise<void> => 
     let totalScore = 0
 
     // Submit each question of a students challenge
-    const studentQuestionsScore = questions.map(async (question: any) => {
-      if (question.type === 'open') {
-        // console.log('----------------')
-        // console.log(question)
+    const studentQuestionsScore = questions.map(async (question_object: any) => {
+      if (question_object.type === 'open') {
+        const { question, ...questionData } = question_object
+        const updatedInput = { ...questionData, tests: question.tests }
 
-        const data = JSON.stringify(question)
-        // const data = JSON.stringify({
-        //   question_id: question.question_id,
-        //   source_code: question.source_code,
-        //   shown_tests: question.shown_tests
-        // })
+        // console.log('===============')
+        // console.log(updatedInput)
+
+        const data = JSON.stringify(updatedInput)
 
         const result = await fetch(`${URL}/submit`, {
           method: 'POST',
@@ -80,32 +78,29 @@ export const submitCode = async (req: Request, res: Response): Promise<void> => 
         })
 
         const responseText = await result.json()
-        // console.log('--=-==')
-        // console.log(responseText)
         totalScore += responseText.score * scoreFactor
-        // return responseText
         return {
-          question_id: question.question_id,
-          type: question.type,
+          question_id: question_object.question_id,
+          type: question_object.type,
           max_score: questionScore,
           total_score: responseText.score * scoreFactor,
-          solution: { solution: question.source_code },
-          shown_tests: responseText.tests
+          solution: { solution: question_object.source_code }
+          // tests: responseText.tests
         }
       }
       // If closed question
-      else if (question.type === 'close') {
+      else if (question_object.type === 'closed') {
         let obtainedScore = 0
-        if (question.selected_choice === question.answer) {
+        if (question_object.selected_choice === question_object.question.answer) {
           totalScore += questionScore
           obtainedScore = questionScore
         }
         return {
-          question_id: question.question_id,
-          type: question.type,
+          question_id: question_object.question_id,
+          type: question_object.type,
           max_score: questionScore,
           total_score: obtainedScore,
-          solution: { solution: question.selected_choice }
+          solution: { solution: question_object.selected_choice }
         }
       } else {
         return { status: 'error' }
@@ -125,10 +120,12 @@ export const submitCode = async (req: Request, res: Response): Promise<void> => 
 
     // Update students submission with current code
     // call query that updates a score
+
     solvedStudentQuestions.forEach(async (studentQuestionScore) => {
       studentQuestionScore.student_id = student_id
       const result = await updateStudentQuestionScore(studentQuestionScore)
     })
+
     return
   } catch (e: any) {
     console.log(e)
