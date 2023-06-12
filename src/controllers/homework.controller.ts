@@ -9,7 +9,8 @@ import {
   selectQuestionsByModuleAndDifficultyId,
   selectStudentScoresByClassId,
   updateStudentHomeworkQuestion,
-  selectHomework
+  selectHomework,
+  updateStudentHomeworkTime
 } from '../database/query/homework.query'
 
 import { QuestionHType } from '../types/questionH.type'
@@ -193,6 +194,37 @@ export const putStudentHomeworkQuestion = async (req: Request, res: Response): P
     res.status(500).json({
       status: 'error',
       data: 'Couldnt udpate student homework questions updated'
+    })
+  }
+}
+
+
+
+export const putStudentHomeworkTime = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const homework_id = req.params.homework_id
+    const student_id = req.params.student_id
+
+    const addedTime = req.body.added_time
+
+    const query = await updateStudentHomeworkTime(homework_id, student_id, addedTime)
+
+    if (typeof query == "object" && query?.homework_id) {
+      res.status(200).json({
+        status: 'success',
+        data: 'Student homework updated'
+      })
+      return
+    }
+
+    res.status(400).json({
+      status: 'failed',
+      data: query
+    })
+  } catch (e: any) {
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt udpate student homework'
     })
   }
 }
