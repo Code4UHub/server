@@ -365,7 +365,8 @@ export const selectStudentScoresByClassId = async (homework_id: string): Promise
       attributes: [
         [Sequelize.literal('"student"."first_name" || \' \' || "student"."last_name"'), 'student_name'],
         'student_id',
-        'score'
+        'score',
+        "out_of_focus_time"
       ],
       where: {
         homework_id: homework_id
