@@ -131,27 +131,34 @@ export const selectTeacherRequests = async (teacher_id: string): Promise<Class[]
 
 export const selectHomeworksByTeacherId = async (teacher_id: string) => {
   try {
-    const homeworks = await Class.findAll({
+    const homeworks = await Homework.findAll({
       raw: true,
-      attributes: ["subject.subject_name", "homework.homework_id", "homework.title", "homework.is_active" , "homework.difficulty_id", "homework.deadline", "homework.class_id", "homework.total_points", "homework.open_questions", "homework.closed_questions"],
-      where: {
-        teacher_id: teacher_id
-      },
+      attributes: ["homework_id", "title", "is_active" , "difficulty_id", "deadline", "class_id", "total_points", "open_questions", "closed_questions"],
+      order: [['deadline', 'ASC']],
       include: [
         {
-          model: Homework,
+          model: Class,
           attributes: [],
-          required: true
-
+          required: true,
+          where: {
+            teacher_id: teacher_id
+          },
+          include: [
+            {
+              model: Subject,
+              attributes: ["subject_name"],
+              required: true
+    
+            }
+          ]
         },
-        {
-          model: Subject,
-          attributes: [],
-          required: true
-
-        }
       ],
+    }) as any
+
+    homeworks.sort((a: any, b: any) => {
+      return a["deadline"] - b["deadline"]
     })
+
     return homeworks
   } catch (e: any) {
     // throw new Error("MY ERROR")
