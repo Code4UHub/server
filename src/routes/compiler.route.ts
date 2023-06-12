@@ -4,4 +4,5 @@ import * as compilerController from '../controllers/compiler.controller'
 export const router: Router = Router()
 
 router.route('/run').put(compilerController.runCode)
-router.route('/submit').put(compilerController.submitCode)
+router.route('/challenge/submit').put(compilerController.submitChallenge)
+router.route('/homework/submit').put(compilerController.submitChallenge)
