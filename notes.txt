@@ -1,6 +1,0 @@
-Cuando un alumno es aceptado a una clase
-	- En base a la clase, buscar sus modulos:
-		- Por cada modulo, buscar sus challenges y llenar ScoreChallenge
-        
-Cuando un alumno le da click a un challenge
-	- Get (find/create) StudentQuestion en base al challenge_id y student_id
