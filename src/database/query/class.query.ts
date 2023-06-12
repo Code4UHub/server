@@ -15,6 +15,7 @@ import { Challenge } from '../models/challenge.model'
 import { StudentModule } from '../models/studentModule.model'
 import { StudentChallenge } from '../models/studentChallenge.model'
 import { Homework } from '../models/homework.model'
+import { StudentHomework } from '../models/studentHomework'
 
 export const selectClasses = async (): Promise<Class[]> => {
   try {
@@ -296,12 +297,16 @@ export const rejectManyStudentToClass = async (arrStudentClass: StudentClassType
 
 export const selectLeaderboardByClass = async (class_id: string) => {
   try {
+    const arrStudentsClass = (await selectStudentsByClass(class_id)).map((stu) => stu.student_id)
+
+
     const challengesByClass = await EnabledModule.findAll({
       raw: false,
       attributes: ['class_id'],
       where: {
         class_id: class_id
       },
+      
       include: [
         {
           model: Module,
@@ -321,7 +326,12 @@ export const selectLeaderboardByClass = async (class_id: string) => {
                     {
                       model: Student,
                       attributes: ['first_name', 'last_name'],
-                      required: true
+                      required: true,
+                      where: {
+                        student_id: {
+                          [Op.in]: arrStudentsClass
+                        }
+                      }
                     }
                   ]
                 }
@@ -465,6 +475,569 @@ export const selectHomeworksByClassId = async (
     return homeworksByClass
   } catch (e: any) {
     // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+export const selectChallengeAverageByClass = async (class_id: string): Promise<Module[]> => {
+  const arrStudentsClass = (await selectStudentsByClass(class_id)).map((stu) => stu.student_id)
+  
+  try {
+    const modulesByClass = await Module.findAll({
+      raw: false,
+      attributes: ['module_id', 'title'],
+      order: [['module_id', 'ASC']],
+      include: [
+        {
+          model: EnabledModule,
+          attributes: [],
+          where: {
+            class_id: class_id
+          },
+          required: true
+        },
+        {
+          model: StudentModule,
+          attributes: [],
+          required: true
+        },
+        {
+          model: Challenge,
+          attributes: ['challenge_id', 'title', 'total_points', "difficulty_id"],
+          required: false,
+          include: [
+            {
+              model: StudentChallenge,
+              attributes: ['student_id', 'score', 'status'],
+              required: true,
+              where: {
+                student_id: {
+                  [Op.in]: arrStudentsClass
+                }
+              }
+            }
+          ]
+        }
+      ]
+    })
+
+    const hashDif = {
+      1: "Fácil",
+      2: "Medio",
+      3: "Difícil"
+    } as any
+
+    const modulesFormatted = []
+    const arrayChallenges = [] as any
+
+    for (let i = 0; i < modulesByClass.length; i++) {
+      const module = modulesByClass[i]
+      const currentModule = {} as any
+      currentModule['module_id'] = module.module_id
+      currentModule['title'] = module.title
+
+      const challenges = module.challenge as any
+      const challengesFormatted = []
+
+      let numberStudents
+      for (let j = 0; j < challenges.length; j++) {
+        const challenge = challenges[j]
+
+        const studentChallenges = challenge.student_challenge as any
+        numberStudents = studentChallenges.length
+        let sumScores = 0
+        for (let k = 0; k < studentChallenges.length; k++) {
+          const stuChall = studentChallenges[k]
+          sumScores += stuChall.score
+        }
+        const avgChallenge = sumScores / numberStudents
+
+        challengesFormatted.push({
+          id: challenge.challenge_id,
+          title: module.title + " - " + hashDif[challenge.difficulty_id],
+          percentage: Math.floor((avgChallenge / challenge.total_points) * 100)
+        })
+      }
+      challengesFormatted.sort((a, b) => a.id - b.id)
+      arrayChallenges.push(...challengesFormatted)
+      // currentModule['challenges'] = challengesFormatted
+      // modulesFormatted.push(currentModule)
+    }
+
+    return arrayChallenges
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+export const selectChallengeProgressByClass = async (class_id: string): Promise<Module[]> => {
+  try {
+    const arrStudentsClass = (await selectStudentsByClass(class_id)).map((stu) => stu.student_id)
+
+    const modulesByClass = await Module.findAll({
+      raw: false,
+      attributes: ['module_id', 'title'],
+      order: [['module_id', 'ASC']],
+
+      include: [
+        {
+          model: EnabledModule,
+          attributes: [],
+          where: {
+            class_id: class_id
+          },
+          required: true
+        },
+        {
+          model: StudentModule,
+          attributes: [],
+          required: true
+        },
+        {
+          model: Challenge,
+          attributes: ['challenge_id', 'title', 'total_points', "difficulty_id"],
+          required: false,
+          include: [
+            {
+              model: StudentChallenge,
+              attributes: ['student_id', 'score', 'status'],
+              required: true,
+              where: {
+                student_id: {
+                  [Op.in]: arrStudentsClass
+                }
+              }
+            }
+          ]
+        }
+      ]
+    })
+
+    const hashDif = {
+      1: "Fácil",
+      2: "Medio",
+      3: "Difícil"
+    } as any
+
+    const modulesFormatted = []
+    const arrayChallenges = [] as any
+
+    for (let i = 0; i < modulesByClass.length; i++) {
+      const module = modulesByClass[i]
+      const currentModule = {} as any
+      currentModule['module_id'] = module.module_id
+      currentModule['title'] = module.title
+
+      const challenges = module.challenge as any
+      const challengesFormatted = []
+
+      let numberStudents
+      for (let j = 0; j < challenges.length; j++) {
+        const challenge = challenges[j]
+
+        const studentChallenges = challenge.student_challenge as any
+        numberStudents = studentChallenges.length
+        let approvedStudents = 0
+        for (let k = 0; k < studentChallenges.length; k++) {
+          const stuChall = studentChallenges[k]
+
+          if (stuChall.score / challenge.total_points >= 0.7) {
+            approvedStudents += 1
+          }
+        }
+
+        const avgProgress = approvedStudents / numberStudents
+
+        challengesFormatted.push({
+          id: challenge.challenge_id,
+          title: module.title + " - " + hashDif[challenge.difficulty_id],
+          percentage: Math.floor(avgProgress * 100)
+        })
+      }
+
+      challengesFormatted.sort((a, b) => a.id - b.id)
+      currentModule['challenges'] = challengesFormatted
+      modulesFormatted.push(currentModule)
+      arrayChallenges.push(...challengesFormatted)
+    }
+
+    return arrayChallenges
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+export const selectTotalPointsByModule = async (module_id: number) => {
+  try {
+    const totalPointsByModule: any = await Challenge.findAll({
+      raw: true,
+      attributes: [[Sequelize.literal('SUM(total_points)'), 'sumValue']],
+      group: ['module.module_id'],
+      include: [
+        {
+          model: Module,
+          required: true,
+          attributes: ['module_id'],
+          where: {
+            module_id: module_id
+          }
+        }
+      ]
+    })
+
+    return totalPointsByModule[0].sumValue
+  } catch (e: any) {
+    throw e
+  }
+}
+
+export const selectModuleAverageByClass = async (class_id: string): Promise<Module[]> => {
+  try {
+    const arrStudentsClass = (await selectStudentsByClass(class_id)).map((stu) => stu.student_id)
+    
+    const modulesByClass = await Module.findAll({
+      raw: false,
+      attributes: ['module_id', 'title'],
+      order: [['module_id', 'ASC']],
+      include: [
+        {
+          model: EnabledModule,
+          attributes: [],
+          where: {
+            class_id: class_id
+          },
+          required: true
+        },
+        {
+          model: StudentModule,
+          attributes: ['score'],
+          required: true,
+          where: {
+            student_id: {
+              [Op.in]: arrStudentsClass
+            }
+          }
+        }
+      ]
+    })
+
+    const modulesFormatted = []
+
+    for (let i = 0; i < modulesByClass.length; i++) {
+      const module = modulesByClass[i]
+      const currentModule = {} as any
+      currentModule['id'] = module.module_id
+      currentModule['title'] = module.title
+      const totalPointsByModule = await selectTotalPointsByModule(module.module_id)
+
+      const studentModules = module.student_module as any
+      let numberStudents = studentModules.length
+      let sumScores = 0
+
+      for (let k = 0; k < studentModules.length; k++) {
+        const stuMod = studentModules[k]
+        sumScores += stuMod.score
+      }
+
+      const avgModule = sumScores / numberStudents
+      currentModule['percentage'] = Math.floor((avgModule / totalPointsByModule) * 100)
+      modulesFormatted.push(currentModule)
+    }
+
+    return modulesFormatted
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+export const selectModuleProgressByClass = async (class_id: string): Promise<Module[]> => {
+  try {
+    const arrStudentsClass = (await selectStudentsByClass(class_id)).map((stu) => stu.student_id)
+
+    const modulesByClass = await Module.findAll({
+      raw: false,
+      attributes: ['module_id', 'title'],
+      order: [['module_id', 'ASC']],
+      include: [
+        {
+          model: EnabledModule,
+          attributes: [],
+          where: {
+            class_id: class_id
+          },
+          required: true
+        },
+        {
+          model: StudentModule,
+          attributes: ['score'],
+          required: true,
+          where: {
+            student_id: {
+              [Op.in]: arrStudentsClass
+            }
+          }
+        }
+      ]
+    })
+
+    const modulesFormatted = []
+
+    for (let i = 0; i < modulesByClass.length; i++) {
+      const module = modulesByClass[i]
+      const currentModule = {} as any
+      currentModule['id'] = module.module_id
+      currentModule['title'] = module.title
+      const totalPointsByModule = await selectTotalPointsByModule(module.module_id)
+
+      const studentModules = module.student_module as any
+      let numberStudents = studentModules.length
+      let approvedStudents = 0
+
+      for (let k = 0; k < studentModules.length; k++) {
+        const stuMod = studentModules[k]
+
+        if (stuMod.score / totalPointsByModule >= 0.7) {
+          approvedStudents += 1
+        }
+      }
+
+      const avgProgress = approvedStudents / numberStudents
+      currentModule['percentage'] = Math.floor(avgProgress * 100)
+      currentModule['number_of_students'] = numberStudents
+      currentModule['number_approved_students'] = approvedStudents
+      modulesFormatted.push(currentModule)
+    }
+
+    return modulesFormatted
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+//
+//
+//
+//
+// "security"
+export const selectClassByStudent = async (class_id: string, student_id: string): Promise<Class | null> => {
+  try {
+    const classDb: Class | null = await Class.findOne({
+      raw: true,
+      attributes: [
+        'class_id',
+        'is_finished',
+        'finished_date',
+        'days',
+        'start_time',
+        'end_time',
+        'teacher_id',
+        'subject_id',
+        'subject.subject_name',
+        [Sequelize.literal('"teacher"."first_name" || \' \' || "teacher"."last_name"'), 'teacher_name']
+      ],
+      where: {
+        class_id: class_id
+      },
+      include: [
+        {
+          model: Subject,
+          attributes: [],
+          required: true
+        },
+        {
+          model: Teacher,
+          attributes: [],
+          required: true
+        },
+        {
+          model: StudentClass,
+          attributes: [],
+          required: true,
+          where: {
+            student_id: student_id,
+            pending: false
+          }
+        }
+      ]
+    })
+    return classDb
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+export const selectClassByTeacher = async (class_id: string, teacher_id: string): Promise<Class | null> => {
+  try {
+    const classDb: Class | null = await Class.findOne({
+      raw: true,
+      attributes: [
+        'class_id',
+        'is_finished',
+        'finished_date',
+        'days',
+        'start_time',
+        'end_time',
+        'teacher_id',
+        'subject_id',
+        'subject.subject_name',
+        [Sequelize.literal('"teacher"."first_name" || \' \' || "teacher"."last_name"'), 'teacher_name']
+      ],
+      where: {
+        class_id: class_id,
+        teacher_id: teacher_id
+      },
+      include: [
+        {
+          model: Subject,
+          attributes: [],
+          required: true
+        },
+        {
+          model: Teacher,
+          attributes: [],
+          required: true
+        }
+      ]
+    })
+    return classDb
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+
+export const selectProgressByClassStudentId = async (class_id:string,
+  student_id:string)  => {
+  try {
+
+    const res = await selectStudentClass({class_id, student_id}as any)
+
+    const studentClassExists = res ? true : false
+
+    if (!studentClassExists) {
+      return 'Student is not registered to that class'
+    }
+
+    // If student registered
+    const challengesByClass  = await Class.findAll({
+      raw: true,
+      attributes: ["class_id"],
+      include: [
+        {
+          model: EnabledModule,
+          attributes: ["class_id"],
+          required: true,
+          where:{
+            class_id: class_id
+          },
+          include: [
+            {
+            model: Module,
+            attributes: ["module_id"],
+            required: true,
+            include: [
+              {
+              model: Challenge,
+              attributes: ["challenge_id", "total_points"],
+              required: true,
+              include: [
+                {
+                model: StudentChallenge,
+                attributes: ["score"],
+                required: true,
+                where:{
+                  student_id: student_id
+                }
+                }
+              ]
+              }
+            ]
+            }
+          ]
+        }
+      ]
+    }) as any
+
+    const numberChallenges = challengesByClass.length
+    let approvedChallenges = 0
+    for (let i = 0; i < challengesByClass.length; i++) {
+      const challenge = challengesByClass[i] 
+
+      if(challenge["enabled_module.module.challenge.student_challenge.score"] / challenge["enabled_module.module.challenge.total_points"] >= 0.7){
+        approvedChallenges += 1
+      }
+    }
+    
+
+    return (approvedChallenges / numberChallenges) * 100
+  } catch (e: any) {
+    throw e
+    
+  }
+}
+
+
+
+export const selectProgressByClassTeacherId = async (class_id:string,
+  teacher_id:string)  => {
+  try {
+
+    const challenges = await selectChallengeProgressByClass(class_id)
+
+    const totalChalleges = challenges.length
+    let approvedChallenges = 0
+    for (let i = 0; i < totalChalleges; i++) {
+      const chall = challenges[i] as any
+      if(chall.percentage >= 70){
+        approvedChallenges += 1
+      }
+    }
+
+
+    return (approvedChallenges / totalChalleges) * 100
+  } catch (e: any) {
+    throw e
+    
+  }
+}
+
+
+
+export const selectHomeworksByStudentId = async (class_id:string, student_id: string) => {
+  try {
+    const homeworks = await StudentHomework.findAll({
+      raw: true,
+      attributes:["homework_id", "homework.title", "score", "homework.deadline", "homework.difficulty_id", "homework.total_points"],
+      where: {
+        student_id: student_id,
+      },
+      include: [
+        {
+          model: Homework,
+          required: true,
+          attributes: [],
+          include: [
+            {
+              model: Class,
+              required: true,
+              attributes: [],
+              where:{
+                class_id: class_id
+              }
+            }
+          ]
+        }
+      ]
+    })
+    
+    return homeworks
+  } catch (e: any) {
     throw e
   }
 }

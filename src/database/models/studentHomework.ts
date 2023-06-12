@@ -26,6 +26,17 @@ export class StudentHomework extends Model {
   })
   score: number
 
+  @Column({
+    type: DataType.NUMBER,
+  })
+  start_date: number
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false
+  })
+  out_of_focus_time: number
+
   @BelongsTo(() => Student)
   student: Student
 

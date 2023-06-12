@@ -14,8 +14,13 @@ router.route('/challenge/update_status_continue').put(challengeController.putCha
 // Update status from a challenge to continue
 router.route('/challenge/update_status_start').put(challengeController.putChallengeStatusStart)
 
-
 // get the incoming assignment for student
 router
   .route('/challenge/class/:class_id/student/:student_id/incoming_challenge')
   .get(challengeController.getIncomingChallenge)
+
+router
+
+  //v1/challenge/20/student/a01734902/question/30
+  .route('/challenge/student/:student_id/question/:question_id')
+  .put(challengeController.putStudentChallengeQuestion)

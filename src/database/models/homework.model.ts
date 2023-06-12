@@ -54,6 +54,13 @@ export class Homework extends Model {
   })
   deadline: Date
 
+  @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: true
+  })
+  is_active: boolean
+
   @BelongsTo(() => Difficulty)
   difficulty: Difficulty
 

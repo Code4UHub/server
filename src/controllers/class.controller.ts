@@ -12,7 +12,16 @@ import {
   selectLeaderboardByClass,
   selectEnabledModulesByClass,
   updateEnabledModulesByClass,
-  selectHomeworksByClassId
+  selectHomeworksByClassId,
+  selectChallengeAverageByClass,
+  selectChallengeProgressByClass,
+  selectModuleAverageByClass,
+  selectModuleProgressByClass,
+  selectClassByStudent,
+  selectClassByTeacher,
+  selectProgressByClassStudentId,
+  selectProgressByClassTeacherId,
+  selectHomeworksByStudentId
 } from '../database/query/class.query'
 import { ClassType } from '../types/class.type'
 import { Class } from '../database/models/class.model'
@@ -191,6 +200,7 @@ export const getStudentsByClass = async (req: Request, res: Response): Promise<v
     })
     return
   } catch (e: any) {
+    console.log(e)
     res.status(500).json({
       status: 'error',
       data: 'Couldnt get students of class'
@@ -533,6 +543,272 @@ export const getHomeworks = async (req: Request, res: Response): Promise<void> =
     res.status(500).json({
       status: 'error',
       data: 'Couldnt get students of class'
+    })
+  }
+}
+
+//
+//
+//
+// stats
+export const getChallengeAverageByClass = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const class_id: string = req.params.class_id as string
+    const query = await selectChallengeAverageByClass(class_id)
+
+    if (query) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+    } else {
+      res.status(404).json({
+        status: 'failed',
+        data: []
+      })
+    }
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get challenge averages by class'
+    })
+  }
+}
+
+export const getChallengeAveragesByClass = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const class_id: string = req.params.class_id as string
+    const query = await selectChallengeProgressByClass(class_id)
+
+    if (query) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+    } else {
+      res.status(404).json({
+        status: 'failed',
+        data: []
+      })
+    }
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get challenge progress by class'
+    })
+  }
+}
+
+export const getModuleAverageByClass = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const class_id: string = req.params.class_id as string
+    const query = await selectModuleAverageByClass(class_id)
+
+    if (query) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+    } else {
+      res.status(404).json({
+        status: 'failed',
+        data: []
+      })
+    }
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      
+      status: 'error',
+      data: 'Couldnt get module averages by class'
+    })
+  }
+}
+
+export const getModuleProgressByClass = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const class_id: string = req.params.class_id as string
+    const query = await selectModuleProgressByClass(class_id)
+
+    if (query) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+    } else {
+      res.status(404).json({
+        status: 'failed',
+        data: []
+      })
+    }
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get module progress by class'
+    })
+  }
+}
+
+//
+//
+//
+// "security"
+export const getClassByStudent = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const class_id: string = req.params.class_id as string
+    const student_id: string = req.params.student_id as string
+
+    const query = await selectClassByStudent(class_id, student_id)
+
+    if (query) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+    } else {
+      res.status(404).json({
+        status: 'failed',
+        data: []
+      })
+    }
+  } catch (e: any) {
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get class'
+    })
+  }
+}
+
+export const getClassByTeacher = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const class_id: string = req.params.class_id as string
+    const teacher_id: string = req.params.teacher_id as string
+
+    const query = await selectClassByTeacher(class_id, teacher_id)
+
+    if (query) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+    } else {
+      res.status(404).json({
+        status: 'failed',
+        data: []
+      })
+    }
+  } catch (e: any) {
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get class'
+    })
+  }
+}
+
+
+
+//
+//
+//
+// "progress"
+export const getProgressByClassStudentId = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const class_id: string = req.params.class_id as string
+    const student_id: string = req.params.student_id as string
+
+    const exists = await selectClassByStudent(class_id, student_id)
+    
+    if(exists){
+      const query = await selectProgressByClassStudentId(class_id, student_id)
+     
+      if (typeof query=="number") {
+        res.status(200).json({
+          status: 'success',
+          data: query
+        })
+      } else {
+        res.status(404).json({
+          status: 'failed',
+          data: query
+        })
+      }
+
+      
+    }
+
+
+   
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get class'
+    })
+  }
+}
+
+export const getProgressByClassTeacherId = async (req: Request, res: Response) => {
+  try {
+    const class_id: string = req.params.class_id as string
+    const teacher_id: string = req.params.teacher_id as string
+
+    const exists = await selectClass(class_id)
+    
+    if(exists){
+      const query = await selectProgressByClassTeacherId(class_id, teacher_id)
+
+     
+      if (typeof query=="number") {
+        res.status(200).json({
+          status: 'success',
+          data: query
+        })
+      } else {
+        res.status(404).json({
+          status: 'failed',
+          data: query
+        })
+      }
+
+      
+    }
+
+  } catch (e: any) {
+    console.log(e)
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get class'
+    })
+  }
+}
+
+
+
+export const getHomeworksByStudentId = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const student_id: string = req.params.student_id as string
+    const class_id: string = req.params.class_id as string
+
+    const query= await selectHomeworksByStudentId(class_id, student_id)
+
+    if (query) {
+      res.status(200).json({
+        status: 'success',
+        data: query
+      })
+    } else {
+      res.status(404).json({
+        status: 'failed',
+        data: []
+      })
+    }
+  } catch (e: any) {
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt get class'
     })
   }
 }

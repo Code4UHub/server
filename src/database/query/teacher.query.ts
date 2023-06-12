@@ -7,6 +7,7 @@ import { Student } from '../models/student.model'
 import { Module } from '../models/module.model'
 import { EnabledModule } from '../models/enabledModule'
 import { Challenge } from '../models/challenge.model'
+import { Homework } from '../models/homework.model'
 
 export const selectTeachers = async (): Promise<TeacherType[]> => {
   try {
@@ -120,6 +121,38 @@ export const selectTeacherRequests = async (teacher_id: string): Promise<Class[]
     })
 
     return teacherRequest
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+
+
+export const selectHomeworksByTeacherId = async (teacher_id: string) => {
+  try {
+    const homeworks = await Class.findAll({
+      raw: true,
+      attributes: ["subject.subject_name", "homework.homework_id", "homework.title", "homework.is_active" , "homework.difficulty_id", "homework.deadline", "homework.class_id", "homework.total_points", "homework.open_questions", "homework.closed_questions"],
+      where: {
+        teacher_id: teacher_id
+      },
+      include: [
+        {
+          model: Homework,
+          attributes: [],
+          required: true
+
+        },
+        {
+          model: Subject,
+          attributes: [],
+          required: true
+
+        }
+      ],
+    })
+    return homeworks
   } catch (e: any) {
     // throw new Error("MY ERROR")
     throw e

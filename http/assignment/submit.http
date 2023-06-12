@@ -4,6 +4,21 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
+  "source_code": "print('Hello world')",
+  "shown_tests": [
+    {
+      "input": ["Juan", "Perez"],
+      "output": "Hola Juan Perez ¡bienvenido!"
+    }
+  ]
+}
+
+### Run code
+PUT {{host}}/{{version}}/run
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
   "source_code": "name=input();print(\"Hola, \" + name + \"!\")",
   "shown_tests": [
     {
@@ -56,48 +71,57 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "student_id": "A0000001",
+  "student_id": "a01734902",
+  "difficulty_id": 1,
   "questions": [
     {
-      "question_id": 1,
+      "question_id": 30,
       "type": "open",
-      "source_code": "the code that goes here",
+      "source_code": "#I am here\nnamme=input();last=input();print(\"Hola\",name,last+\", ¡bienvenido!\")",
       "shown_tests": [
         {
-          "input": "1 2",
-          "output": "3"
+          "input": ["Juan", "Pérez"],
+          "output": "Hola Juan Pérez, ¡bienvenido!"
         },
         {
-          "input": "10 20",
-          "output": "30"
+          "input": ["Ana", "Gómez"],
+          "output": "Hola Ana Gómez, ¡bienvenido!"
         },
         {
-          "input": "1 2",
-          "output": "3"
+          "input": ["Pedro", "Ramírez"],
+          "output": "Hola Pedro Ramírez, ¡bienvenido!"
+        },
+        {
+          "input": ["María", "Hernández"],
+          "output": "Hola María Hernández, ¡bienvenido!"
         }
       ]
     },
     {
-      "question_id": 2,
+      "question_id": 31,
       "type": "open",
-      "source_code": "x=int(input());y=int(input());print([x+y,x*y])",
+      "source_code": "name=input();last=input();print(\"Hola\",name,last+\", ¡bienvenido!\")",
       "shown_tests": [
         {
-          "input": "1 2",
-          "output": "3"
+          "input": ["Juan", "Pérez"],
+          "output": "Hola Juan Pérez, ¡bienvenido!"
         },
         {
-          "input": "10 20",
-          "output": "30"
+          "input": ["Ana", "Gómez"],
+          "output": "Hola Ana Gómez, ¡bienvenido!"
         },
         {
-          "input": "1 2",
-          "output": "3"
+          "input": ["Pedro", "Ramírez"],
+          "output": "Hola Pedro Ramírez, ¡bienvenido!"
+        },
+        {
+          "input": ["María", "Hernández"],
+          "output": "Hola María Hernández, ¡bienvenido!"
         }
       ]
     },
     {
-      "question_id": 3,
+      "question_id": 79,
       "type": "close",
       "selected_choice": 1,
       "answer": 1

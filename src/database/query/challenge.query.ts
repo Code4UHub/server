@@ -27,6 +27,30 @@ export const selectChallenge = async (challenge_id: string) => {
   }
 }
 
+export const selectStudentChallenge = async (student_id: string, challenge_id: string) => {
+  try {
+    const challenge = await Challenge.findOne({
+      raw: true,
+      attributes: ["challenge_id", "title", "student_challenge.student_id", "student_challenge.start_date"],
+      where: {
+        challenge_id: challenge_id
+      },
+      include: [
+        {
+          model: StudentChallenge,
+          required: true,
+          attributes: [],
+          where: { student_id: student_id, challenge_id: challenge_id }
+        }
+      ]
+    })
+
+    return challenge
+  } catch (e) {
+    throw e
+  }
+}
+
 export const createChallenge = async (challengeDb: ChallengeType): Promise<Challenge | null> => {
   try {
     const difficultyId = challengeDb.difficulty_id
@@ -50,7 +74,7 @@ export const createChallenge = async (challengeDb: ChallengeType): Promise<Chall
 export const selectChallengeQuestionsByStudent = async (challenge_id: string, student_id: string) => {
   try {
     const res = await Question.findAll({
-      attributes: ['question_id', 'question', 'student_question.solution', 'student_question.passed'],
+      attributes: ['question_id', 'question', 'student_question.solution', 'student_question.score', "type", "challenge.difficulty_id", "challenge.module_id", "challenge.title"],
       raw: true,
       where: {
         challenge_id: challenge_id
@@ -63,10 +87,26 @@ export const selectChallengeQuestionsByStudent = async (challenge_id: string, st
           required: true,
           attributes: [],
           where: { student_id: student_id }
+        },
+        {
+          model: Challenge,
+          required: true,
+          attributes: [],
+          
         }
       ]
     })
-    return res
+
+
+    const studentChallenge = await selectStudentChallenge(student_id, challenge_id) as any
+
+    const listChallenges = {} as any
+    listChallenges["start_date"] = studentChallenge?.start_date
+    listChallenges["title"] = studentChallenge?.title
+    listChallenges["challenges"] = res
+
+
+    return listChallenges
   } catch (e: any) {
     console.log(e.message)
     throw e
@@ -128,7 +168,7 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
         student_id: student_id,
         question_id: openQuestions[i].question_id,
         solution: {},
-        passed: false
+        score: 0
       }
       arrQuestions.push(element)
     }
@@ -138,12 +178,26 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
         student_id: student_id,
         question_id: closedQuestions[i].question_id,
         solution: {},
-        passed: false
+        score: 0
       }
       arrQuestions.push(element)
     }
 
     const res = await StudentQuestion.bulkCreate(arrQuestions)
+
+
+    // set the start date for the student challenge
+    const stuChall = await StudentChallenge.update(
+      { start_date: new Date().getTime()},
+      {
+        where: {
+          challenge_id: challenge_id,
+          student_id: student_id,
+        }
+      }
+    )
+
+
 
     return res
   } catch (e: any) {
@@ -217,12 +271,10 @@ export const selectChallengesByStudent = async (class_id: string, student_id: st
   }
 }
 
-
 export const updateStudentChallengeStatusContinue = async (
   challenge_id: string,
   student_id: string
 ): Promise<number[]> => {
-
   try {
     // If student registered then update his status
     const studentChallenge = await StudentChallenge.update(
@@ -264,7 +316,6 @@ export const updateStudentChallengeStatusStart = async (
     throw e
   }
 }
-
 
 export const selectIncomingChallenge = async (class_id: string, student_id: string) => {
   try {
@@ -314,12 +365,14 @@ export const selectIncomingChallenge = async (class_id: string, student_id: stri
     })
 
     let incomingChallenge: {
+      challenge_id: number
       module_title: string
       challenge_title: string
       student_id: string
       status: string
       difficulty: string
     } = {
+      challenge_id: 1,
       module_title: 'title',
       challenge_title: 'title',
       student_id: 'aaaa',
@@ -334,6 +387,7 @@ export const selectIncomingChallenge = async (class_id: string, student_id: stri
       const challengeStatus = challenge['challenge.student_challenge.status']
 
       if (challengeStatus && challengeStatus == 'continue') {
+        incomingChallenge['challenge_id'] = challenge['challenge.challenge_id']
         incomingChallenge['module_title'] = challenge.title
         incomingChallenge['challenge_title'] = challenge['challenge.title']
         incomingChallenge['student_id'] = challenge['challenge.student_challenge.student_id']
@@ -349,6 +403,7 @@ export const selectIncomingChallenge = async (class_id: string, student_id: stri
       const challengeStatus = challenge['challenge.student_challenge.status']
 
       if (challengeStatus && challengeStatus == 'start') {
+        incomingChallenge['challenge_id'] = challenge['challenge.challenge_id']
         incomingChallenge['module_title'] = challenge.title
         incomingChallenge['challenge_title'] = challenge['challenge.title']
         incomingChallenge['student_id'] = challenge['challenge.student_challenge.student_id']
@@ -365,6 +420,36 @@ export const selectIncomingChallenge = async (class_id: string, student_id: stri
     }
   } catch (e: any) {
     // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+export const updateStudentChallengeQuestion = async (
+  student_id: string,
+  question_id: string,
+  newSolution: object
+): Promise<number[] | string> => {
+  try {
+    // If student registered then update his status
+    const stuQues = await StudentQuestion.update(
+      { solution: newSolution },
+      {
+        where: {
+          student_id: student_id,
+          question_id: question_id
+        }
+      }
+    )
+
+    // Check if a row was updated or not
+    if (stuQues[0] == 0) {
+      return 'Student challenge question not updated'
+    } else {
+      return stuQues
+    }
+  } catch (e: any) {
+    console.log('ERROR')
+    console.log(e)
     throw e
   }
 }

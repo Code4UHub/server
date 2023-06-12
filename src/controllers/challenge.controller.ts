@@ -7,7 +7,8 @@ import {
   selectChallengesByStudent,
   updateStudentChallengeStatusContinue,
   updateStudentChallengeStatusStart,
-  selectIncomingChallenge
+  selectIncomingChallenge,
+  updateStudentChallengeQuestion
 } from '../database/query/challenge.query'
 import { ChallengeType } from '../types/challenge.type'
 
@@ -38,7 +39,7 @@ export const getChallengeQuestions = async (req: Request, res: Response): Promis
 
     const query = await selectChallengeQuestionsByStudent(challenge_id, student_id)
 
-    if (query.length > 0) {
+    if (typeof query == "object" && query.challenges.length > 0) {
       res.status(201).json({
         status: 'success',
         data: query
@@ -90,7 +91,6 @@ export const getChallengesByStudent = async (req: Request, res: Response): Promi
   }
 }
 
-
 export const putChallengeStatusContinue = async (req: Request, res: Response): Promise<void> => {
   try {
     const challenge_id = req.body.challenge_id
@@ -141,7 +141,6 @@ export const putChallengeStatusStart = async (req: Request, res: Response): Prom
     res.status(500).json({
       status: 'error',
       data: 'Couldnt change status'
-
     })
   }
 }
@@ -160,8 +159,8 @@ export const getIncomingChallenge = async (req: Request, res: Response): Promise
       })
       return
     } else {
-      res.status(400).json({
-        status: 'failed',
+      res.status(200).json({
+        status: 'success',
         data: query
       })
       return
@@ -171,6 +170,34 @@ export const getIncomingChallenge = async (req: Request, res: Response): Promise
     res.status(500).json({
       status: 'error',
       data: 'Couldnt get challenges of student'
+    })
+  }
+}
+
+export const putStudentChallengeQuestion = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const student_id = req.params.student_id
+    const question_id = req.params.question_id
+    const solution = req.body
+
+    const query = await updateStudentChallengeQuestion(student_id, question_id, solution)
+
+    if (Array.isArray(query)) {
+      res.status(200).json({
+        status: 'success',
+        data: 'Student challenge question updated'
+      })
+      return
+    }
+
+    res.status(400).json({
+      status: 'failed',
+      data: query
+    })
+  } catch (e: any) {
+    res.status(500).json({
+      status: 'error',
+      data: 'Couldnt udpate student homework questions updated'
     })
   }
 }

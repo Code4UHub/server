@@ -14,7 +14,7 @@ import { selectDifficulty } from './difficulty.query'
 
 export const selectHomework = async (homework_id: string) => {
   try {
-    const challenge = await Homework.findOne({
+    const homework = await Homework.findOne({
       raw: true,
       // attributes: [],
       where: {
@@ -22,11 +22,36 @@ export const selectHomework = async (homework_id: string) => {
       }
     })
 
-    return challenge
+    return homework
   } catch (e) {
     throw e
   }
 }
+
+export const selectStudentHomework = async (homework_id: string, student_id: string) => {
+  try {
+    const studentHomework = await StudentHomework.findOne({
+      raw: true,
+      attributes: ["student_id", "homework_id", "start_date", "homework.title"],
+      where: {
+        homework_id: homework_id,
+        student_id: student_id
+      },
+      include: [
+        {
+          model: Homework,
+          attributes: [],
+          required: true,
+        }
+      ]
+    })
+
+    return studentHomework
+  } catch (e) {
+    throw e
+  }
+}
+
 
 export const selectQuestions = async () => {
   try {
@@ -76,6 +101,35 @@ export const selectQuestionsBySubjectAndDifficultyId = async (
   }
 }
 
+export const selectQuestionsByModuleAndDifficultyId = async (
+  module_id: string,
+  difficulty_id: string
+): Promise<QuestionH[]> => {
+  try {
+    const questionsByDifficulty = await QuestionH.findAll({
+      attributes: ['question_h_id', 'difficulty_id', 'type', 'module_id', 'module.title', 'question'],
+      raw: true,
+      where: {
+        difficulty_id: difficulty_id
+      },
+      include: [
+        {
+          model: Module,
+          attributes: [],
+          required: true,
+          where: {
+            module_id: module_id
+          }
+        }
+      ]
+    })
+    return questionsByDifficulty
+  } catch (e: any) {
+    // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
 export const createQuestion = async (newQuestion: QuestionHType): Promise<QuestionH | null> => {
   try {
     const res = await QuestionH.create(newQuestion)
@@ -99,16 +153,20 @@ export const createHomework = async (newHomework: HomeworkType, arrQuestions: st
     newHomework.total_points = (openQuestions + closedQuestions) * difficultyObj.points_per_question
     const res = await Homework.create(newHomework)
 
+    console.log("open: ", openQuestions)
+    console.log("closed: ", closedQuestions)
+    console.log("arrQuestions: ", arrQuestions)
+
     // Link the homework id with the questions
     const homework_id = res.homework_id
-    const homeworkQuestions = arrQuestions.map((question_h_id) => {
-      return {
+    arrQuestions.map(async (question_h_id) => {
+      await HomeworkQuestion.create({
         homework_id: homework_id,
         question_h_id: question_h_id
-      }
+      })
     })
-    await HomeworkQuestion.bulkCreate(homeworkQuestions)
 
+    
     return res
   } catch (e: any) {
     throw e
@@ -155,24 +213,40 @@ export const selectHomeworkQuestionsByStudent = async (homework_id: string, stud
         'module.title'
       ],
       raw: true,
-
       order: [['question_h_id', 'ASC']],
-
       include: [
         {
           model: StudentHomeworkQuestion,
           required: true,
           attributes: [],
-          where: { student_id: student_id }
+          where: { student_id: student_id, homework_id: homework_id }
         },
         {
           model: Module,
           required: true,
           attributes: []
+        },
+        {
+          model: HomeworkQuestion,
+          required: true,
+          attributes: [],
+          where: { homework_id: homework_id }
         }
       ]
     })
-    return res
+
+    const studentHomework = await selectStudentHomework(homework_id, student_id) as any
+
+    const listHomeworks = {} as any
+    listHomeworks["start_date"] = studentHomework?.start_date
+    listHomeworks["title"] = studentHomework?.title
+    listHomeworks["homeworks"] = res
+
+
+
+
+
+    return listHomeworks
   } catch (e: any) {
     console.log(e.message)
     throw e
@@ -182,8 +256,16 @@ export const selectHomeworkQuestionsByStudent = async (homework_id: string, stud
 export const selectHomeworkOpenQuestions = async (homework_id: string) => {
   try {
     const res = await QuestionH.findAll({
+      raw: true,
       attributes: ['question_h_id', 'type'],
-      where: { type: 'open' }
+      where: { type: 'open' },
+      include: [
+        {
+          model: HomeworkQuestion,
+          required: true,
+          where:{homework_id: homework_id}
+        }
+      ]
     })
     return res
   } catch (e: any) {
@@ -194,8 +276,16 @@ export const selectHomeworkOpenQuestions = async (homework_id: string) => {
 export const selectHomeworkClosedQuestions = async (homework_id: string) => {
   try {
     const res = await QuestionH.findAll({
+      raw: true,
       attributes: ['question_h_id', 'type'],
-      where: { type: 'closed' }
+      where: { type: 'closed' },
+      include: [
+        {
+          model: HomeworkQuestion,
+          required: true,
+          where:{homework_id: homework_id}
+        }
+      ]
     })
     return res
   } catch (e: any) {
@@ -215,6 +305,7 @@ export const createHomeworkQuestions = async (homework_id: string, student_id: s
     // Obtener todas las preguntas que tengan el challenge id
     const openQuestions = await selectHomeworkOpenQuestions(homework_id)
     openQuestions.sort(() => Math.random() - 0.5)
+
     const closedQuestions = await selectHomeworkClosedQuestions(homework_id)
     closedQuestions.sort(() => Math.random() - 0.5)
 
@@ -253,6 +344,18 @@ export const createHomeworkQuestions = async (homework_id: string, student_id: s
 
     const res = await StudentHomeworkQuestion.bulkCreate(arrStudentHomeworkQuestion)
 
+
+    // set the start date for the student homework
+    const stuHome = await StudentHomework.update(
+      { start_date: new Date().getTime()},
+      {
+        where: {
+          homework_id: homework_id,
+          student_id: student_id,
+        }
+      }
+    )
+
     return res
   } catch (e: any) {
     throw e
@@ -283,6 +386,79 @@ export const selectStudentScoresByClassId = async (homework_id: string): Promise
     return studentHomework
   } catch (e: any) {
     // throw new Error("MY ERROR")
+    throw e
+  }
+}
+
+export const updateStudentHomeworkQuestion = async (
+  homework_id: string,
+  student_id: string,
+  question_id: string,
+  newSolution: object
+): Promise<number[] | string> => {
+  try {
+    // If student registered then update his status
+    const stuHome = await StudentHomeworkQuestion.update(
+      { solution: newSolution },
+      {
+        where: {
+          homework_id: homework_id,
+          student_id: student_id,
+          question_h_id: question_id
+        }
+      }
+    )
+
+    // Check if a row was updated or not
+    if (stuHome[0] == 0) {
+      return 'Student homework question not updated'
+    } else {
+      return stuHome
+    }
+  } catch (e: any) {
+    console.log('ERROR')
+    console.log(e)
+    throw e
+  }
+}
+
+
+export const updateStudentHomeworkTime = async (
+  homework_id: string, student_id: string, added_time: string
+) => {
+  try {
+    // If student registered then update his status
+    const stuHome = await StudentHomework.findOne({
+      where: {
+        homework_id: homework_id,
+        student_id: student_id,
+      }
+    });
+
+    if (stuHome) {
+      const previousValue = stuHome.out_of_focus_time;
+      const updatedValue = previousValue + added_time;
+    
+      const updateStuHomee = await StudentHomework.update(
+        {
+          out_of_focus_time: updatedValue
+        },
+        {
+          where: {
+            homework_id: homework_id,
+            student_id: student_id,
+          }
+        }
+      );
+        console.log(stuHome)
+
+      return stuHome
+    }
+
+    
+  } catch (e: any) {
+    console.log('ERROR')
+    console.log(e)
     throw e
   }
 }
