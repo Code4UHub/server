@@ -242,10 +242,6 @@ export const selectHomeworkQuestionsByStudent = async (homework_id: string, stud
     listHomeworks["title"] = studentHomework?.title
     listHomeworks["homeworks"] = res
 
-
-
-
-
     return listHomeworks
   } catch (e: any) {
     console.log(e.message)
