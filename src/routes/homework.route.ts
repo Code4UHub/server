@@ -25,3 +25,7 @@ router
   // /v1/homework/15/student/A01735706/question/25
   .route('/homework/:homework_id/student/:student_id/question/:question_id')
   .put(homeworkController.putStudentHomeworkQuestion)
+
+
+router.route("/homework/:homework_id/student/:student_id/update_time").put(homeworkController.putStudentHomeworkTime)
+

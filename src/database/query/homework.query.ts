@@ -421,3 +421,44 @@ export const updateStudentHomeworkQuestion = async (
     throw e
   }
 }
+
+
+export const updateStudentHomeworkTime = async (
+  homework_id: string, student_id: string, added_time: string
+) => {
+  try {
+    // If student registered then update his status
+    const stuHome = await StudentHomework.findOne({
+      where: {
+        homework_id: homework_id,
+        student_id: student_id,
+      }
+    });
+
+    if (stuHome) {
+      const previousValue = stuHome.out_of_focus_time;
+      const updatedValue = previousValue + added_time;
+    
+      const updateStuHomee = await StudentHomework.update(
+        {
+          out_of_focus_time: updatedValue
+        },
+        {
+          where: {
+            homework_id: homework_id,
+            student_id: student_id,
+          }
+        }
+      );
+        console.log(stuHome)
+
+      return stuHome
+    }
+
+    
+  } catch (e: any) {
+    console.log('ERROR')
+    console.log(e)
+    throw e
+  }
+}
