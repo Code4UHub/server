@@ -133,7 +133,7 @@ export const selectHomeworksByTeacherId = async (teacher_id: string) => {
   try {
     const homeworks = await Class.findAll({
       raw: true,
-      attributes: ["subject.subject_name", "homework.homework_id", "homework.title", "homework.difficulty_id", "homework.deadline", "homework.class_id", "homework.total_points", "homework.open_questions", "homework.closed_questions"],
+      attributes: ["subject.subject_name", "homework.homework_id", "homework.title", "homework.is_active" , "homework.difficulty_id", "homework.deadline", "homework.class_id", "homework.total_points", "homework.open_questions", "homework.closed_questions"],
       where: {
         teacher_id: teacher_id
       },
