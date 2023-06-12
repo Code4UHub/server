@@ -1,4 +1,4 @@
-mport { Request, Response, response } from 'express'
+import { Request, Response } from 'express'
 import { updateStudentQuestionScore } from '../database/query/studentQuestion.query'
 import { StudentQuestionType } from '../types/studentQuestion.type'
 
