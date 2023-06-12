@@ -38,11 +38,11 @@ export class StudentHomeworkQuestion extends Model {
   solution: object
 
   @Column({
-    type: DataType.BOOLEAN,
+    type: DataType.INTEGER,
     allowNull: false,
-    defaultValue: false
+    defaultValue: 0
   })
-  passed: boolean
+  score: number
 
   @BelongsTo(() => Homework)
   homework: Homework
