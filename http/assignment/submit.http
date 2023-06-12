@@ -5,7 +5,7 @@ Content-Type: application/json
 
 {
   "source_code": "print('Hello world')",
-  "shown_tests": [
+  "tests": [
     {
       "input": ["Juan", "Perez"],
       "output": "Hola Juan Perez ¡bienvenido!"
@@ -20,7 +20,7 @@ Content-Type: application/json
 
 {
   "source_code": "name=input();print(\"Hola, \" + name + \"!\")",
-  "shown_tests": [
+  "tests": [
     {
       "input": "Andre",
       "output": "Hola, Andr!"
@@ -41,14 +41,14 @@ Content-Type: application/json
 }
 
 
-### Run code
+### Submit a challenge
 PUT {{host}}/{{version}}/run
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
   "source_code": "x=int(input());y=int(input());print([x+y,x*y])",
-  "shown_tests": [
+  "tests": [
     {
       "input": [2, 3],
       "output": [5, 6]
@@ -66,65 +66,78 @@ Content-Type: application/json
 
 
 ### Submit an assignment
-PUT {{host}}/{{version}}/submit
+PUT {{host}}/{{version}}/challenge/submit
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
   "student_id": "a01734902",
-  "difficulty_id": 1,
   "questions": [
     {
       "question_id": 30,
       "type": "open",
-      "source_code": "#I am here\nnamme=input();last=input();print(\"Hola\",name,last+\", ¡bienvenido!\")",
-      "shown_tests": [
-        {
-          "input": ["Juan", "Pérez"],
-          "output": "Hola Juan Pérez, ¡bienvenido!"
-        },
-        {
-          "input": ["Ana", "Gómez"],
-          "output": "Hola Ana Gómez, ¡bienvenido!"
-        },
-        {
-          "input": ["Pedro", "Ramírez"],
-          "output": "Hola Pedro Ramírez, ¡bienvenido!"
-        },
-        {
-          "input": ["María", "Hernández"],
-          "output": "Hola María Hernández, ¡bienvenido!"
-        }
-      ]
+      "difficulty_id": 1,
+      "source_code": "#I am here\nname=input();last=input();print(\"Hola\",name,last+\", ¡bienvenido!\")",
+      "question": {
+        "tests": [
+          {
+            "input": ["Juan", "Pérez"],
+            "output": "Hola Juan Pérez, ¡bienvenido!"
+          },
+          {
+            "input": ["Ana", "Gómez"],
+            "output": "Hola Ana Gómez, ¡bienvenido!"
+          },
+          {
+            "input": ["Pedro", "Ramírez"],
+            "output": "Hola Pedro Ramírez, ¡bienvenido!"
+          },
+          {
+            "input": ["María", "Hernández"],
+            "output": "Hola María Hernández, ¡bienvenido!"
+          }
+        ]
+      }
     },
     {
       "question_id": 31,
       "type": "open",
       "source_code": "name=input();last=input();print(\"Hola\",name,last+\", ¡bienvenido!\")",
-      "shown_tests": [
-        {
-          "input": ["Juan", "Pérez"],
-          "output": "Hola Juan Pérez, ¡bienvenido!"
-        },
-        {
-          "input": ["Ana", "Gómez"],
-          "output": "Hola Ana Gómez, ¡bienvenido!"
-        },
-        {
-          "input": ["Pedro", "Ramírez"],
-          "output": "Hola Pedro Ramírez, ¡bienvenido!"
-        },
-        {
-          "input": ["María", "Hernández"],
-          "output": "Hola María Hernández, ¡bienvenido!"
-        }
-      ]
+      "question": {
+        "tests": [
+          {
+            "input": ["Juan", "Pérez"],
+            "output": "Hola Juan Pérez, ¡bienvenido!"
+          },
+          {
+            "input": ["Ana", "Gómez"],
+            "output": "Hola Ana Gómez, ¡bienvenido!"
+          },
+          {
+            "input": ["Pedro", "Ramírez"],
+            "output": "Hola Pedro Ramírez, ¡bienvenido!"
+          },
+          {
+            "input": ["María", "Hernández"],
+            "output": "Hola María Hernández, ¡bienvenido!"
+          }
+        ]
+      }
     },
     {
       "question_id": 79,
-      "type": "close",
+      "type": "closed",
+      "difficulty_id": 1,
       "selected_choice": 1,
-      "answer": 1
+      "question": {
+        "answer": 1,
+        "options": [
+          {
+            "text": "4",
+            "explanation": "Correcto"
+          }
+        ]
+      }
     }
   ]
 }
