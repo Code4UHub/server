@@ -143,7 +143,13 @@ export const selectHomeworksByStudentId = async (student_id: string) => {
         },
         
       ],
+    }) as any
+    console.log(homeworks)
+
+    homeworks.sort((a: any, b: any) => {
+      return a["deadline"] - b["deadline"]
     })
+
     return homeworks
   } catch (e: any) {
     // throw new Error("MY ERROR")
