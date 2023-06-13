@@ -6,8 +6,7 @@ export const updateStudentHomeworkQuestionScore = async (
 ): Promise<number[]> => {
   try {
     console.log('=============')
-    console.log(student_question.question_h_id)
-    console.log(student_question.solution)
+    console.log(student_question)
     const score = await StudentHomeworkQuestion.update(
       {
         score: student_question.score,
@@ -16,7 +15,7 @@ export const updateStudentHomeworkQuestionScore = async (
       {
         where: {
           student_id: student_question.student_id,
-          question_id: student_question.question_h_id
+          question_h_id: student_question.question_h_id
         }
       }
     )

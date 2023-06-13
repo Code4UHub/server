@@ -173,7 +173,7 @@ export const submitHomework = async (req: Request, res: Response): Promise<void>
         const responseText = await result.json()
         totalScore += responseText.score * scoreFactor
         return {
-          question_id: question_object.question_id,
+          question_h_id: question_object.question_h_id,
           type: question_object.type,
           max_score: questionScore,
           total_score: responseText.score * scoreFactor,
@@ -190,7 +190,7 @@ export const submitHomework = async (req: Request, res: Response): Promise<void>
           obtainedScore = questionScore
         }
         return {
-          question_id: question_object.question_id,
+          question_h_id: question_object.question_h_id,
           type: question_object.type,
           max_score: questionScore,
           total_score: obtainedScore,
@@ -223,7 +223,7 @@ export const submitHomework = async (req: Request, res: Response): Promise<void>
 
     return
   } catch (e: any) {
-    console.log(e)
+    console.log(e.message)
     res.status(500).json({
       status: 'error',
       data: 'Couldnt submit your challenge'
