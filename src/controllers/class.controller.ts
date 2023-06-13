@@ -806,6 +806,7 @@ export const getHomeworksByStudentId = async (req: Request, res: Response): Prom
       })
     }
   } catch (e: any) {
+    console.log(e)
     res.status(500).json({
       status: 'error',
       data: 'Couldnt get class'
