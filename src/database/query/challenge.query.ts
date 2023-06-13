@@ -299,6 +299,7 @@ export const updateStudentChallengeStatusContinue = async (
   }
 }
 
+// this is actually to update status to finished
 export const updateStudentChallengeStatusStart = async (
   challenge_id: string,
   student_id: string
@@ -306,7 +307,7 @@ export const updateStudentChallengeStatusStart = async (
   try {
     // If student registered then update his status
     const studentChallenge = await StudentChallenge.update(
-      { status: 'start' },
+      { status: 'finished' },
       {
         where: {
           challenge_id: challenge_id,

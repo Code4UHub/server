@@ -1011,30 +1011,31 @@ export const selectProgressByClassTeacherId = async (class_id:string,
 
 export const selectHomeworksByStudentId = async (class_id:string, student_id: string) => {
   try {
-    const homeworks = await StudentHomework.findAll({
+    const homeworks = await Homework.findAll({
       raw: true,
-      attributes:["homework_id", "homework.title", "homework.is_active", "score", "homework.deadline", "homework.difficulty_id", "homework.total_points"],
-      where: {
-        student_id: student_id,
-      },
+      attributes:["homework_id", "title", "is_active", "student_homework.score", "deadline", "difficulty_id", "total_points"],
+      order: [["deadline", "ASC"]],
       include: [
         {
-          model: Homework,
+          model: StudentHomework,
           required: true,
           attributes: [],
-          include: [
-            {
-              model: Class,
-              required: true,
-              attributes: [],
-              where:{
-                class_id: class_id
-              }
-            }
-          ]
+          where: {
+            student_id: student_id,
+          },
+        },
+        {
+          model: Class,
+          required: true,
+          attributes: [],
+          where:{
+            class_id: class_id
+          }
         }
       ]
-    })
+    }) as any
+
+    homeworks.sort((a:any, b:any) => a.deadline - b.deadline)
     
     return homeworks
   } catch (e: any) {
