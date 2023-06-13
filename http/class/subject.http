@@ -1,0 +1,4 @@
+### Get all subjects
+GET {{host}}/{{version}}/subject
+Authorization: Bearer {{token}}
+

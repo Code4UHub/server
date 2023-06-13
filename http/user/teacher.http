@@ -1,0 +1,30 @@
+### Get all teachers
+GET {{host}}/{{version}}/teacher
+Authorization: Bearer {{token}}
+
+
+### Get a teacher
+GET {{host}}/{{version}}/teacher/login?email=l00000006@tec.mx&password=test_pass HTTP/1.1
+
+
+### Create a teacher
+POST {{host}}/{{version}}/teacher/register
+Content-Type: application/json
+
+{
+    "teacher_id": "l00000001",
+    "first_name": "Dan",
+    "last_name": "Perez",
+    "email": "dan.perez@tec.mx",
+    "password": "test_pass"
+}
+
+
+### Get classes of a teacher
+GET {{host}}/{{version}}/teacher/L00000001/class
+Authorization: Bearer {{token}}
+
+
+### Get all join request to a class for a teacher
+GET {{host}}/{{version}}/teacher/L00000001/student_class
+Authorization: Bearer {{token}}

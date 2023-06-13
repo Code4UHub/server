@@ -1,0 +1,14 @@
+.git
+.gitignore
+.vscode
+
+docs
+http
+test
+node_modules
+
+api.md
+.eslintrc
+jest.config.js
+package-lock.json
+.prettierrc.json

@@ -1,0 +1,9 @@
+{
+  "rest-client.environmentVariables": {
+    "$shared": {},
+    "local": {
+      "version": "v1",
+      "host": "http://localhost:8000"
+    }
+  }
+}

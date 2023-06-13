@@ -1,0 +1,49 @@
+### Get all classes
+GET {{host}}/{{version}}/class
+Authorization: Bearer {{token}}
+
+### Get attributes of a class
+GET {{host}}/{{version}}/class/thisIsCl3
+Authorization: Bearer {{token}}
+
+### Create a class
+POST {{host}}/{{version}}/class/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "class_id": "thisIsCl4",
+    "is_finished": false,
+    "finished_date": "2022-03-17",
+    "days": ["LU", "MA"],
+    "start_time": "08:00:00",
+    "end_time": "10:00:00",
+    "subject_id": "CS10101",
+    "teacher_id": "L00000001"
+}
+
+
+### Register a student to a class
+POST {{host}}/{{version}}/class/CodeCl1/register
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "student_id": "a00000001"
+}
+
+
+### Get students accepted in a class
+GET {{host}}/{{version}}/class/CodeCl1/students
+Authorization: Bearer {{token}}
+
+
+### Accept student
+PUT {{host}}/{{version}}/class/accept_student
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "class_id": "CodeCl1",
+    "student_id": "a00000009"
+}
