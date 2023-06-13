@@ -183,7 +183,8 @@ export const submitHomework = async (req: Request, res: Response): Promise<void>
       // If closed question
       else if (question_object.type === 'closed') {
         let obtainedScore = 0
-        if (question_object.selected_choice === question_object.question.answer) {
+        // Doing -1 because answer is 1-indexed
+        if (question_object.selected_choice === question_object.question.answer - 1) {
           totalScore += questionScore
           obtainedScore = questionScore
         }
