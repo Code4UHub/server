@@ -84,6 +84,7 @@ export const submitChallenge = async (req: Request, res: Response): Promise<void
 
         const responseText = await result.json()
         totalScore += responseText.score * scoreFactor
+        const { status, ...rest } = responseText
         // console.log('@@@@@@@@@@@@@')
         // console.log(responseText)
         return {
@@ -91,7 +92,7 @@ export const submitChallenge = async (req: Request, res: Response): Promise<void
           type: question_object.type,
           max_score: questionScore,
           score: responseText.score * scoreFactor,
-          solution: { solution: question_object.source_code, tests: responseText },
+          solution: { solution: question_object.source_code, tests: { status: status, data: rest } },
           tests: responseText.tests
         }
       }
@@ -188,12 +189,13 @@ export const submitHomework = async (req: Request, res: Response): Promise<void>
 
         const responseText = await result.json()
         totalScore += responseText.score * scoreFactor
+        const { status, ...rest } = responseText
         return {
           question_h_id: question_object.question_h_id,
           type: question_object.type,
           max_score: questionScore,
           score: responseText.score * scoreFactor,
-          solution: { solution: question_object.source_code, tests: responseText },
+          solution: { solution: question_object.source_code, tests: { status: status, data: rest } },
           tests: responseText.tests
         }
       }
