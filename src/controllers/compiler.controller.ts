@@ -1,7 +1,8 @@
 import { Request, Response } from 'express'
-import { updateStudentHomeworkQuestionScore, updateStudentQuestionScore } from '../database/query/studentQuestion.query'
+import { updateStudentChallengeQuestionScore } from '../database/query/studentQuestion.query'
 import { StudentQuestionType } from '../types/studentQuestion.type'
 import { updateStudentHomeworkQuestion } from '../database/query/homework.query'
+import { updateStudentHomeworkQuestionScore } from '../database/query/studentHomeworkQuestion.query'
 
 const URL = 'http://localhost:65535'
 
@@ -124,7 +125,7 @@ export const submitChallenge = async (req: Request, res: Response): Promise<void
 
     solvedStudentQuestions.forEach(async (studentQuestionScore) => {
       studentQuestionScore.student_id = student_id
-      const result = await updateStudentQuestionScore(studentQuestionScore)
+      const result = await updateStudentChallengeQuestionScore(studentQuestionScore)
       console.log(result)
     })
 
