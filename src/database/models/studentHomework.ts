@@ -27,9 +27,14 @@ export class StudentHomework extends Model {
   score: number
 
   @Column({
-    type: DataType.NUMBER,
+    type: DataType.NUMBER
   })
   start_date: number
+
+  @Column({
+    type: DataType.NUMBER
+  })
+  end_date: number
 
   @Column({
     type: DataType.INTEGER,
