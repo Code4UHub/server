@@ -1,7 +1,7 @@
 import { StudentQuestionType } from '../../types/studentQuestion.type'
 import { StudentQuestion } from '../models/studentQuestion.model'
 
-export const updateStudentQuestionScore = async (student_question: StudentQuestionType): Promise<number[]> => {
+export const updateStudentHomeworkQuestionScore = async (student_question: StudentQuestionType): Promise<number[]> => {
   try {
     console.log('=============')
     console.log(student_question.question_id)

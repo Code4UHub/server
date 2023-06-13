@@ -32,7 +32,7 @@ export const selectStudentHomework = async (homework_id: string, student_id: str
   try {
     const studentHomework = await StudentHomework.findOne({
       raw: true,
-      attributes: ["student_id", "homework_id", "start_date", "homework.title"],
+      attributes: ['student_id', 'homework_id', 'start_date', 'homework.title'],
       where: {
         homework_id: homework_id,
         student_id: student_id
@@ -41,7 +41,7 @@ export const selectStudentHomework = async (homework_id: string, student_id: str
         {
           model: Homework,
           attributes: [],
-          required: true,
+          required: true
         }
       ]
     })
@@ -51,7 +51,6 @@ export const selectStudentHomework = async (homework_id: string, student_id: str
     throw e
   }
 }
-
 
 export const selectQuestions = async () => {
   try {
@@ -153,9 +152,9 @@ export const createHomework = async (newHomework: HomeworkType, arrQuestions: st
     newHomework.total_points = (openQuestions + closedQuestions) * difficultyObj.points_per_question
     const res = await Homework.create(newHomework)
 
-    console.log("open: ", openQuestions)
-    console.log("closed: ", closedQuestions)
-    console.log("arrQuestions: ", arrQuestions)
+    console.log('open: ', openQuestions)
+    console.log('closed: ', closedQuestions)
+    console.log('arrQuestions: ', arrQuestions)
 
     // Link the homework id with the questions
     const homework_id = res.homework_id
@@ -166,7 +165,6 @@ export const createHomework = async (newHomework: HomeworkType, arrQuestions: st
       })
     })
 
-    
     return res
   } catch (e: any) {
     throw e
@@ -235,12 +233,12 @@ export const selectHomeworkQuestionsByStudent = async (homework_id: string, stud
       ]
     })
 
-    const studentHomework = await selectStudentHomework(homework_id, student_id) as any
+    const studentHomework = (await selectStudentHomework(homework_id, student_id)) as any
 
     const listHomeworks = {} as any
-    listHomeworks["start_date"] = studentHomework?.start_date
-    listHomeworks["title"] = studentHomework?.title
-    listHomeworks["homeworks"] = res
+    listHomeworks['start_date'] = studentHomework?.start_date
+    listHomeworks['title'] = studentHomework?.title
+    listHomeworks['homeworks'] = res
 
     return listHomeworks
   } catch (e: any) {
@@ -259,7 +257,7 @@ export const selectHomeworkOpenQuestions = async (homework_id: string) => {
         {
           model: HomeworkQuestion,
           required: true,
-          where:{homework_id: homework_id}
+          where: { homework_id: homework_id }
         }
       ]
     })
@@ -279,7 +277,7 @@ export const selectHomeworkClosedQuestions = async (homework_id: string) => {
         {
           model: HomeworkQuestion,
           required: true,
-          where:{homework_id: homework_id}
+          where: { homework_id: homework_id }
         }
       ]
     })
@@ -340,14 +338,13 @@ export const createHomeworkQuestions = async (homework_id: string, student_id: s
 
     const res = await StudentHomeworkQuestion.bulkCreate(arrStudentHomeworkQuestion)
 
-
     // set the start date for the student homework
     const stuHome = await StudentHomework.update(
-      { start_date: new Date().getTime()},
+      { start_date: new Date().getTime() },
       {
         where: {
           homework_id: homework_id,
-          student_id: student_id,
+          student_id: student_id
         }
       }
     )
@@ -366,7 +363,7 @@ export const selectStudentScoresByClassId = async (homework_id: string): Promise
         [Sequelize.literal('"student"."first_name" || \' \' || "student"."last_name"'), 'student_name'],
         'student_id',
         'score',
-        "out_of_focus_time"
+        'out_of_focus_time'
       ],
       where: {
         homework_id: homework_id
@@ -419,23 +416,20 @@ export const updateStudentHomeworkQuestion = async (
   }
 }
 
-
-export const updateStudentHomeworkTime = async (
-  homework_id: string, student_id: string, added_time: string
-) => {
+export const updateStudentHomeworkTime = async (homework_id: string, student_id: string, added_time: string) => {
   try {
     // If student registered then update his status
     const stuHome = await StudentHomework.findOne({
       where: {
         homework_id: homework_id,
-        student_id: student_id,
+        student_id: student_id
       }
-    });
+    })
 
     if (stuHome) {
-      const previousValue = stuHome.out_of_focus_time;
-      const updatedValue = previousValue + added_time;
-    
+      const previousValue = stuHome.out_of_focus_time
+      const updatedValue = previousValue + added_time
+
       const updateStuHomee = await StudentHomework.update(
         {
           out_of_focus_time: updatedValue
@@ -443,16 +437,14 @@ export const updateStudentHomeworkTime = async (
         {
           where: {
             homework_id: homework_id,
-            student_id: student_id,
+            student_id: student_id
           }
         }
-      );
-        console.log(stuHome)
+      )
+      console.log(stuHome)
 
       return stuHome
     }
-
-    
   } catch (e: any) {
     console.log('ERROR')
     console.log(e)
