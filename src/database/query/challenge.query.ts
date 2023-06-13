@@ -31,7 +31,7 @@ export const selectStudentChallenge = async (student_id: string, challenge_id: s
   try {
     const challenge = await Challenge.findOne({
       raw: true,
-      attributes: ["challenge_id", "title", "student_challenge.student_id", "student_challenge.start_date"],
+      attributes: ['challenge_id', 'title', 'student_challenge.student_id', 'student_challenge.start_date'],
       where: {
         challenge_id: challenge_id
       },
@@ -74,7 +74,16 @@ export const createChallenge = async (challengeDb: ChallengeType): Promise<Chall
 export const selectChallengeQuestionsByStudent = async (challenge_id: string, student_id: string) => {
   try {
     const res = await Question.findAll({
-      attributes: ['question_id', 'question', 'student_question.solution', 'student_question.score', "type", "challenge.difficulty_id", "challenge.module_id", "challenge.title"],
+      attributes: [
+        'question_id',
+        'question',
+        'student_question.solution',
+        'student_question.score',
+        'type',
+        'challenge.difficulty_id',
+        'challenge.module_id',
+        'challenge.title'
+      ],
       raw: true,
       where: {
         challenge_id: challenge_id
@@ -91,20 +100,17 @@ export const selectChallengeQuestionsByStudent = async (challenge_id: string, st
         {
           model: Challenge,
           required: true,
-          attributes: [],
-          
+          attributes: []
         }
       ]
     })
 
-
-    const studentChallenge = await selectStudentChallenge(student_id, challenge_id) as any
+    const studentChallenge = (await selectStudentChallenge(student_id, challenge_id)) as any
 
     const listChallenges = {} as any
-    listChallenges["start_date"] = studentChallenge?.start_date
-    listChallenges["title"] = studentChallenge?.title
-    listChallenges["challenges"] = res
-
+    listChallenges['start_date'] = studentChallenge?.start_date
+    listChallenges['title'] = studentChallenge?.title
+    listChallenges['challenges'] = res
 
     return listChallenges
   } catch (e: any) {
@@ -185,19 +191,16 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
 
     const res = await StudentQuestion.bulkCreate(arrQuestions)
 
-
     // set the start date for the student challenge
     const stuChall = await StudentChallenge.update(
-      { start_date: new Date().getTime()},
+      { start_date: new Date().getTime() },
       {
         where: {
           challenge_id: challenge_id,
-          student_id: student_id,
+          student_id: student_id
         }
       }
     )
-
-
 
     return res
   } catch (e: any) {
