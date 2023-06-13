@@ -26,6 +26,12 @@ export class Module extends Model {
   })
   subject_id: string
 
+  @Column({
+    type: DataType.INTEGER,
+    defaultValue: 0
+  })
+  total_points: number
+
   @BelongsTo(() => Subject)
   subject: Subject
 
