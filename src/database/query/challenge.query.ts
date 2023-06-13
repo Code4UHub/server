@@ -208,6 +208,7 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
   }
 }
 
+
 export const selectChallengesByStudent = async (class_id: string, student_id: string): Promise<Module[]> => {
   try {
     // Modulo -> titulo y score
@@ -218,6 +219,7 @@ export const selectChallengesByStudent = async (class_id: string, student_id: st
       attributes: [
         'module_id',
         'title',
+        'total_points',
         [Sequelize.literal('"enabled_module"."is_active"'), 'is_active'],
         [Sequelize.literal('"student_module"."score"'), 'score']
       ],
