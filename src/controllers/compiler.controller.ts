@@ -3,6 +3,8 @@ import { updateStudentQuestionScore } from '../database/query/studentQuestion.qu
 import { StudentQuestionType } from '../types/studentQuestion.type'
 import { updateStudentHomeworkQuestion } from '../database/query/homework.query'
 import { updateStudentHomeworkQuestionScore } from '../database/query/studentHomeworkQuestion.query'
+import { updateStudentChallengeEndDate } from '../database/query/studentChallenge.query'
+import { updateStudentHomeworkEndDate } from '../database/query/studentHomework.query'
 
 const URL = 'http://localhost:65535'
 
@@ -51,6 +53,7 @@ export const runCode = async (req: Request, res: Response): Promise<void> => {
 export const submitChallenge = async (req: Request, res: Response): Promise<void> => {
   try {
     const student_id = req.body.student_id
+    const challenge_id = req.body.challenge_id
     const questions = req.body.questions
     const difficulty_id = questions[0].difficulty_id
 
@@ -133,12 +136,13 @@ export const submitChallenge = async (req: Request, res: Response): Promise<void
 
     // Update students submission with current code
     // call query that updates a score
-
     solvedStudentQuestions.forEach(async (studentQuestionScore) => {
       studentQuestionScore.student_id = student_id
-      const result = await updateStudentQuestionScore(studentQuestionScore)
-      console.log(result)
+      await updateStudentQuestionScore(studentQuestionScore)
     })
+
+    // Update challenge end time
+    await updateStudentChallengeEndDate(student_id, challenge_id)
 
     return
   } catch (e: any) {
@@ -153,6 +157,7 @@ export const submitChallenge = async (req: Request, res: Response): Promise<void
 export const submitHomework = async (req: Request, res: Response): Promise<void> => {
   try {
     const student_id = req.body.student_id
+    const homework_id = req.body.homework_id
     const questions = req.body.questions
     const difficulty_id = questions[0].difficulty_id
 
@@ -236,9 +241,10 @@ export const submitHomework = async (req: Request, res: Response): Promise<void>
 
     solvedStudentQuestions.forEach(async (studentQuestionScore) => {
       studentQuestionScore.student_id = student_id
-      const result = await updateStudentHomeworkQuestionScore(studentQuestionScore)
-      console.log(result)
+      await updateStudentHomeworkQuestionScore(studentQuestionScore)
     })
+
+    await updateStudentHomeworkEndDate(student_id, homework_id)
 
     return
   } catch (e: any) {
