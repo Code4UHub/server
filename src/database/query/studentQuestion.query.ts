@@ -2,12 +2,10 @@ import { StudentHomeworkQuestionType } from '../../types/studentHomeworkQuestion
 import { StudentQuestionType } from '../../types/studentQuestion.type'
 import { StudentQuestion } from '../models/studentQuestion.model'
 
-export const updateStudentChallengeQuestionScore = async (
-  student_question: StudentHomeworkQuestionType
-): Promise<number[]> => {
+export const updateStudentQuestionScore = async (student_question: StudentQuestionType): Promise<number[]> => {
   try {
     console.log('=============')
-    console.log(student_question.question_h_id)
+    console.log(student_question.question_id)
     console.log(student_question.solution)
     const score = await StudentQuestion.update(
       {
@@ -17,7 +15,7 @@ export const updateStudentChallengeQuestionScore = async (
       {
         where: {
           student_id: student_question.student_id,
-          question_h_id: student_question.question_h_id
+          question_id: student_question.question_id
         }
       }
     )

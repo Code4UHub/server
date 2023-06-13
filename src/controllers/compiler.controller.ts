@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { updateStudentChallengeQuestionScore } from '../database/query/studentQuestion.query'
+import { updateStudentQuestionScore } from '../database/query/studentQuestion.query'
 import { StudentQuestionType } from '../types/studentQuestion.type'
 import { updateStudentHomeworkQuestion } from '../database/query/homework.query'
 import { updateStudentHomeworkQuestionScore } from '../database/query/studentHomeworkQuestion.query'
@@ -85,9 +85,9 @@ export const submitChallenge = async (req: Request, res: Response): Promise<void
           question_id: question_object.question_id,
           type: question_object.type,
           max_score: questionScore,
-          total_score: responseText.score * scoreFactor,
-          solution: { solution: question_object.source_code }
-          // tests: responseText.tests
+          score: responseText.score * scoreFactor,
+          solution: { solution: question_object.source_code },
+          tests: responseText.tests
         }
       }
       // If closed question
@@ -101,7 +101,8 @@ export const submitChallenge = async (req: Request, res: Response): Promise<void
           question_id: question_object.question_id,
           type: question_object.type,
           max_score: questionScore,
-          total_score: obtainedScore,
+          score: obtainedScore,
+          select_choice: question_object.selected_choice,
           solution: { solution: question_object.selected_choice }
         }
       } else {
@@ -115,7 +116,7 @@ export const submitChallenge = async (req: Request, res: Response): Promise<void
       status: 'success',
       data: {
         max_score: maxScore,
-        total_score: totalScore,
+        score: totalScore,
         questions: solvedStudentQuestions
       }
     })
@@ -125,7 +126,7 @@ export const submitChallenge = async (req: Request, res: Response): Promise<void
 
     solvedStudentQuestions.forEach(async (studentQuestionScore) => {
       studentQuestionScore.student_id = student_id
-      const result = await updateStudentChallengeQuestionScore(studentQuestionScore)
+      const result = await updateStudentQuestionScore(studentQuestionScore)
       console.log(result)
     })
 
@@ -176,9 +177,9 @@ export const submitHomework = async (req: Request, res: Response): Promise<void>
           question_h_id: question_object.question_h_id,
           type: question_object.type,
           max_score: questionScore,
-          total_score: responseText.score * scoreFactor,
-          solution: { solution: question_object.source_code }
-          // tests: responseText.tests
+          score: responseText.score * scoreFactor,
+          solution: { solution: question_object.source_code },
+          tests: responseText.tests
         }
       }
       // If closed question
@@ -193,7 +194,8 @@ export const submitHomework = async (req: Request, res: Response): Promise<void>
           question_h_id: question_object.question_h_id,
           type: question_object.type,
           max_score: questionScore,
-          total_score: obtainedScore,
+          score: obtainedScore,
+          select_choice: question_object.selected_choice,
           solution: { solution: question_object.selected_choice }
         }
       } else {
@@ -207,7 +209,7 @@ export const submitHomework = async (req: Request, res: Response): Promise<void>
       status: 'success',
       data: {
         max_score: maxScore,
-        total_score: totalScore,
+        score: totalScore,
         questions: solvedStudentQuestions
       }
     })

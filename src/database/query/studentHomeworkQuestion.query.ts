@@ -6,7 +6,9 @@ export const updateStudentHomeworkQuestionScore = async (
 ): Promise<number[]> => {
   try {
     console.log('=============')
+    console.log('=============')
     console.log(student_question)
+    console.log(`Score is ${student_question.score}`)
     const score = await StudentHomeworkQuestion.update(
       {
         score: student_question.score,
