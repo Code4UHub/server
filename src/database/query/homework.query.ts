@@ -204,7 +204,7 @@ export const selectHomeworkQuestionsByStudent = async (homework_id: string, stud
         'question_h_id',
         'question',
         'student_homework_question.solution',
-        'student_homework_question.passed',
+        'student_homework_question.score',
         'type',
         'difficulty_id',
         'module_id',
@@ -320,7 +320,7 @@ export const createHomeworkQuestions = async (homework_id: string, student_id: s
         question_h_id: openQuestions[i].question_h_id,
         student_id: student_id,
         solution: {},
-        passed: false
+        score: 0
       }
       arrStudentHomeworkQuestion.push(element)
     }
@@ -331,7 +331,7 @@ export const createHomeworkQuestions = async (homework_id: string, student_id: s
         question_h_id: closedQuestions[i].question_h_id,
         student_id: student_id,
         solution: {},
-        passed: false
+        score: 0
       }
       arrStudentHomeworkQuestion.push(element)
     }
