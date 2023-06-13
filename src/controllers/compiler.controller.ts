@@ -81,19 +81,27 @@ export const submitChallenge = async (req: Request, res: Response): Promise<void
 
         const responseText = await result.json()
         totalScore += responseText.score * scoreFactor
+        // console.log('=============')
+        // console.log(responseText.tests)
         return {
           question_id: question_object.question_id,
           type: question_object.type,
           max_score: questionScore,
           score: responseText.score * scoreFactor,
-          solution: { solution: question_object.source_code },
+          solution: { solution: question_object.source_code, tests: responseText.tests },
           tests: responseText.tests
         }
       }
       // If closed question
       else if (question_object.type === 'closed') {
+        const explanation = question_object.question.options[question_object.selected_choice].explanation
         let obtainedScore = 0
+        let isCorrect = false
+
+        // Check if asnwer correct
+        // Doing -1 because answer is 1-indexed
         if (question_object.selected_choice === question_object.question.answer - 1) {
+          isCorrect = true
           totalScore += questionScore
           obtainedScore = questionScore
         }
@@ -103,7 +111,9 @@ export const submitChallenge = async (req: Request, res: Response): Promise<void
           max_score: questionScore,
           score: obtainedScore,
           select_choice: question_object.selected_choice,
-          solution: { solution: question_object.selected_choice }
+          isCorrect: isCorrect,
+          explanation: explanation,
+          solution: { solution: question_object.selected_choice, isCorrect: isCorrect, explanation: explanation }
         }
       } else {
         return { status: 'error' }
@@ -178,15 +188,20 @@ export const submitHomework = async (req: Request, res: Response): Promise<void>
           type: question_object.type,
           max_score: questionScore,
           score: responseText.score * scoreFactor,
-          solution: { solution: question_object.source_code },
+          solution: { solution: question_object.source_code, tests: responseText.tests },
           tests: responseText.tests
         }
       }
       // If closed question
       else if (question_object.type === 'closed') {
+        const explanation = question_object.question.options[question_object.selected_choice].explanation
         let obtainedScore = 0
+        let isCorrect = false
+
+        // Check if asnwer correct
         // Doing -1 because answer is 1-indexed
         if (question_object.selected_choice === question_object.question.answer - 1) {
+          isCorrect = true
           totalScore += questionScore
           obtainedScore = questionScore
         }
@@ -196,7 +211,9 @@ export const submitHomework = async (req: Request, res: Response): Promise<void>
           max_score: questionScore,
           score: obtainedScore,
           select_choice: question_object.selected_choice,
-          solution: { solution: question_object.selected_choice }
+          isCorrect: isCorrect,
+          explanation: explanation,
+          solution: { solution: question_object.selected_choice, isCorrect: isCorrect, explanation: explanation }
         }
       } else {
         return { status: 'error' }

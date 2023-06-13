@@ -1,72 +1,5 @@
-### Run code
-PUT {{host}}/{{version}}/run
-Authorization: Bearer {{token}}
-Content-Type: application/json
-
-{
-  "source_code": "print('Hello world')",
-  "tests": [
-    {
-      "input": ["Juan", "Perez"],
-      "output": "Hola Juan Perez ¡bienvenido!"
-    }
-  ]
-}
-
-### Run code
-PUT {{host}}/{{version}}/run
-Authorization: Bearer {{token}}
-Content-Type: application/json
-
-{
-  "source_code": "name=input();print(\"Hola, \" + name + \"!\")",
-  "tests": [
-    {
-      "input": "Andre",
-      "output": "Hola, Andr!"
-    },
-    {
-      "input": "0001",
-      "output": "Hola, 0001!"
-    },
-    {
-      "input": "_XAMP45",
-      "output": "Hola, _XAMP45!"
-    },
-    {
-      "input": "andre",
-      "output": "Hola, andre"
-    }
-  ]
-}
-
-
-### Submit a challenge
-PUT {{host}}/{{version}}/run
-Authorization: Bearer {{token}}
-Content-Type: application/json
-
-{
-  "source_code": "x=int(input());y=int(input());print([x+y,x*y])",
-  "tests": [
-    {
-      "input": [2, 3],
-      "output": [5, 6]
-    },
-    {
-      "input": [10, -5],
-      "output": [5, -50]
-    },
-    {
-      "input": [0, 8],
-      "output": [8, 0]
-    }
-  ]
-}
-
-
 ### Submit an assignment
-PUT {{host}}/{{version}}/challenge/submit
+PUT {{host}}/{{version}}/homework/submit
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -74,7 +7,7 @@ Content-Type: application/json
   "student_id": "a01734902",
   "questions": [
     {
-      "question_id": 30,
+      "question_h_id": 30,
       "type": "open",
       "difficulty_id": 1,
       "source_code": "#I am here\nname=input();last=input();print(\"Hola\",name,last+\", ¡bienvenido!\")",
@@ -100,7 +33,7 @@ Content-Type: application/json
       }
     },
     {
-      "question_id": 31,
+      "question_h_id": 31,
       "type": "open",
       "source_code": "name=input();last=input();print(\"Hola\",name,last+\", ¡bienvenido!\")",
       "question": {
@@ -125,7 +58,7 @@ Content-Type: application/json
       }
     },
     {
-      "question_id": 79,
+      "question_h_id": 79,
       "type": "closed",
       "difficulty_id": 1,
       "selected_choice": 0,
@@ -141,4 +74,5 @@ Content-Type: application/json
     }
   ]
 }
+
 
