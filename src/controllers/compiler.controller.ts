@@ -6,7 +6,14 @@ import { updateStudentHomeworkQuestionScore } from '../database/query/studentHom
 import { updateStudentChallengeEndDate } from '../database/query/studentChallenge.query'
 import { updateStudentHomeworkEndDate } from '../database/query/studentHomework.query'
 
-const URL = 'http://localhost:65535'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+// const sequelize = createDb()
+const host = process.env.COMPILER_HOST
+const port = process.env.COMPILER_PORT
+const URL = `${host}:${port}`
 
 const scorePerDifficulty: { [difficulty: number]: number } = {
   1: 0.3,
