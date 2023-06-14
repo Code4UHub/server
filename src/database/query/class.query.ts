@@ -673,7 +673,7 @@ export const selectTotalPointsByModule = async (module_id: number) => {
   try {
     const totalPointsByModule: any = await Challenge.findAll({
       raw: true,
-      attributes: [[Sequelize.literal('SUM(total_points)'), 'sumValue']],
+      attributes: [[Sequelize.literal('SUM("Challenge"."total_points")'), 'sumValue']],
       group: ['module.module_id'],
       include: [
         {
