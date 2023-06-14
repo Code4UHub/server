@@ -3,7 +3,6 @@ import app from './app'
 
 dotenv.config()
 
-// const sequelize = createDb()
 const port = process.env.PORT
 
 app.listen(port, () => {
