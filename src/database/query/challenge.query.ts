@@ -334,7 +334,8 @@ export const selectIncomingChallenge = async (class_id: string, student_id: stri
           model: EnabledModule,
           attributes: [],
           where: {
-            class_id: class_id
+            class_id: class_id,
+            is_active: true
           },
           required: true
         },
