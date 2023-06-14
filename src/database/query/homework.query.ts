@@ -32,7 +32,7 @@ export const selectStudentHomework = async (homework_id: string, student_id: str
   try {
     const studentHomework = await StudentHomework.findOne({
       raw: true,
-      attributes: ['student_id', 'homework_id', 'start_date', 'homework.title'],
+      attributes: ['student_id', 'homework_id', 'start_date', 'homework.title', 'end_date'],
       where: {
         homework_id: homework_id,
         student_id: student_id
@@ -238,6 +238,7 @@ export const selectHomeworkQuestionsByStudent = async (homework_id: string, stud
     const listHomeworks = {} as any
     listHomeworks['start_date'] = studentHomework?.start_date
     listHomeworks['title'] = studentHomework?.title
+    listHomeworks['end_date'] = studentHomework?.end_date
     listHomeworks['homeworks'] = res
 
     return listHomeworks

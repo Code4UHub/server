@@ -31,7 +31,13 @@ export const selectStudentChallenge = async (student_id: string, challenge_id: s
   try {
     const challenge = await Challenge.findOne({
       raw: true,
-      attributes: ['challenge_id', 'title', 'student_challenge.student_id', 'student_challenge.start_date'],
+      attributes: [
+        'challenge_id',
+        'title',
+        'student_challenge.student_id',
+        'student_challenge.start_date',
+        'student_challenge.end_date'
+      ],
       where: {
         challenge_id: challenge_id
       },
@@ -110,6 +116,7 @@ export const selectChallengeQuestionsByStudent = async (challenge_id: string, st
     const listChallenges = {} as any
     listChallenges['start_date'] = studentChallenge?.start_date
     listChallenges['title'] = studentChallenge?.title
+    listChallenges['end'] = studentChallenge?.end_date
     listChallenges['challenges'] = res
 
     return listChallenges
@@ -207,7 +214,6 @@ export const createChallengeQuestions = async (challenge_id: string, student_id:
     throw e
   }
 }
-
 
 export const selectChallengesByStudent = async (class_id: string, student_id: string): Promise<Module[]> => {
   try {
