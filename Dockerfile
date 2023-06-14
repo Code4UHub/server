@@ -11,6 +11,7 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 RUN npm install -g typescript
+RUN npm install -g pm2
 # RUN npm install --package-lock-only
 # RUN npm install --only=dev
 # RUN npm i --save-dev @types/express @types/cors @types/morgan @types/jsonwebtoken

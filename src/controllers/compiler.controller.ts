@@ -111,7 +111,7 @@ export const submitChallenge = async (req: Request, res: Response): Promise<void
 
         // Check if asnwer correct
         // Doing -1 because answer is 1-indexed
-        if (question_object.selected_choice === question_object.question.answer - 1) {
+        if (question_object.selected_choice === question_object.question.answer) {
           isCorrect = true
           totalScore += questionScore
           obtainedScore = questionScore
@@ -214,7 +214,7 @@ export const submitHomework = async (req: Request, res: Response): Promise<void>
 
         // Check if asnwer correct
         // Doing -1 because answer is 1-indexed
-        if (question_object.selected_choice === question_object.question.answer - 1) {
+        if (question_object.selected_choice === question_object.question.answer) {
           isCorrect = true
           totalScore += questionScore
           obtainedScore = questionScore

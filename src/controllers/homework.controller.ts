@@ -117,25 +117,24 @@ export const getHomeworkQuestions = async (req: Request, res: Response): Promise
 
     const homeworkExists = await selectHomework(homework_id)
 
-    if(!homeworkExists){
+    if (!homeworkExists) {
       res.status(404).json({
         status: 'failed',
-        data: "Homework does not exist"
+        data: 'Homework does not exist'
       })
       return
     }
 
     const query = await selectHomeworkQuestionsByStudent(homework_id, student_id)
 
-    if (typeof query == "object" && query.homeworks.length > 0) {
-      console.log("HEEEEEREEEE")
+    if (typeof query == 'object' && query.homeworks.length > 0) {
+      console.log('HEEEEEREEEE')
       res.status(201).json({
         status: 'success',
         data: query
       })
       return
     }
-
 
     await createHomeworkQuestions(homework_id, student_id)
     const newQuery = await selectHomeworkQuestionsByStudent(homework_id, student_id)
@@ -198,8 +197,6 @@ export const putStudentHomeworkQuestion = async (req: Request, res: Response): P
   }
 }
 
-
-
 export const putStudentHomeworkTime = async (req: Request, res: Response): Promise<void> => {
   try {
     const homework_id = req.params.homework_id
@@ -209,7 +206,7 @@ export const putStudentHomeworkTime = async (req: Request, res: Response): Promi
 
     const query = await updateStudentHomeworkTime(homework_id, student_id, addedTime)
 
-    if (typeof query == "object" && query?.homework_id) {
+    if (typeof query == 'object' && query?.homework_id) {
       res.status(200).json({
         status: 'success',
         data: 'Student homework updated'

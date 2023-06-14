@@ -26,6 +26,4 @@ router
   .route('/homework/:homework_id/student/:student_id/question/:question_id')
   .put(homeworkController.putStudentHomeworkQuestion)
 
-
-router.route("/homework/:homework_id/student/:student_id/update_time").put(homeworkController.putStudentHomeworkTime)
-
+router.route('/homework/:homework_id/student/:student_id/update_time').put(homeworkController.putStudentHomeworkTime)
