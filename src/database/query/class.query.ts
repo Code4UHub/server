@@ -342,28 +342,43 @@ export const selectLeaderboardByClass = async (class_id: string) => {
       ]
     })
 
+    // return challengesByClass
+
     // Format to leaderboard
     const leaderBoard: { [key: string]: any } = {}
     const leaderBoardArray: { student: string; score: number; name: string; position?: number }[] = []
 
+    console.log("----modules-------")
+    console.log(challengesByClass.length)
+    console.log("-----------")
+
     for (let i = 0; i < challengesByClass.length; i++) {
-      const element: { [index: string]: any } = challengesByClass[i].module.challenge
-      const chal: { [index: string]: any } = element[0]
-      const stu_chal: { [index: string]: any } = chal.student_challenge
+      const element = challengesByClass[i].module.challenge as any
+ 
+      for (let j = 0; j < element.length; j++) {
+        const newElement = element[j].student_challenge
 
-      for (let j = 0; j < stu_chal.length; j++) {
-        const newElement = stu_chal[j]
+        console.log("Second",  newElement.length)
+        
 
-        if (newElement.student_id in leaderBoard) {
-          leaderBoard[newElement.student_id].score += newElement.score
-        } else {
-          leaderBoard[newElement.student_id] = {
-            score: newElement.score,
-            name: newElement.student.first_name + ' ' + newElement.student.last_name
+        for (let k = 0; k < newElement.length; k++) {
+          const stuChall = newElement[k];
+
+          
+          if (stuChall.student_id in leaderBoard) {
+            leaderBoard[stuChall.student_id].score += stuChall.score
+          } else {
+            leaderBoard[stuChall.student_id] = {
+              score: stuChall.score,
+              name: stuChall.student.first_name + ' ' + stuChall.student.last_name
+            }
           }
         }
+        
       }
     }
+
+    console.log(leaderBoard)
 
     Object.keys(leaderBoard).forEach((key) => {
       const value = leaderBoard[key]
@@ -378,6 +393,8 @@ export const selectLeaderboardByClass = async (class_id: string) => {
       el['position'] = idx + 1
       return el
     })
+
+    // return challengesByClass
 
     return finalLeaderboard
   } catch (e: any) {
