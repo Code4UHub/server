@@ -348,17 +348,13 @@ export const selectLeaderboardByClass = async (class_id: string) => {
     const leaderBoard: { [key: string]: any } = {}
     const leaderBoardArray: { student: string; score: number; name: string; position?: number }[] = []
 
-    console.log("----modules-------")
-    console.log(challengesByClass.length)
-    console.log("-----------")
-
     for (let i = 0; i < challengesByClass.length; i++) {
       const element = challengesByClass[i].module.challenge as any
  
       for (let j = 0; j < element.length; j++) {
         const newElement = element[j].student_challenge
 
-        console.log("Second",  newElement.length)
+
         
 
         for (let k = 0; k < newElement.length; k++) {
